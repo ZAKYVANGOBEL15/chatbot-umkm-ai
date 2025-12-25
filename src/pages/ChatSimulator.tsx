@@ -76,7 +76,6 @@ export default function ChatSimulator() {
     };
 
     return (
-    return (
         <div className="h-full flex flex-col lg:flex-row gap-6 overflow-hidden">
             <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden relative min-h-0">
                 {/* Mock Phone Header */}
