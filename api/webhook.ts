@@ -1,55 +1,107 @@
-// This is a Vercel Serverless Function (Edge Runtime preferred)
-// Path: api/webhook.ts
+import { generateAIResponse } from '../src/lib/gemini';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 
-export const config = {
-    runtime: 'edge',
+// Firebase configuration from environment variables
+const firebaseConfig = {
+    apiKey: process.env.VITE_FIREBASE_API_KEY,
+    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
+    projectId: process.env.VITE_FIREBASE_PROJECT_ID,
+    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
+    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
+    appId: process.env.VITE_FIREBASE_APP_ID
 };
 
-export default async function handler(req: Request) {
-    const url = new URL(req.url);
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
+export default async function handler(req: any, res: any) {
     // 1. Handle Webhook Verification (for Meta)
     if (req.method === 'GET') {
-        const mode = url.searchParams.get('hub.mode');
-        const token = url.searchParams.get('hub.verify_token');
-        const challenge = url.searchParams.get('hub.challenge');
+        const mode = req.query['hub.mode'];
+        const token = req.query['hub.verify_token'];
+        const challenge = req.query['hub.challenge'];
 
         if (mode === 'subscribe' && token === process.env.WHATSAPP_VERIFY_TOKEN) {
-            return new Response(challenge, { status: 200 });
+            return res.status(200).send(challenge);
         }
-        return new Response('Forbidden', { status: 403 });
+        return res.status(403).send('Forbidden');
     }
 
     // 2. Handle Incoming Messages
     if (req.method === 'POST') {
         try {
-            const data = await req.json();
+            const data = req.body;
 
-            // WhatsApp message structure
-            const message = data.entry?.[0]?.changes?.[0]?.value?.messages?.[0];
-            const businessId = data.entry?.[0]?.changes?.[0]?.value?.metadata?.phone_number_id;
+            // Extract message and business phone number ID
+            const value = data.entry?.[0]?.changes?.[0]?.value;
+            const message = value?.messages?.[0];
+            const phoneNumberId = value?.metadata?.phone_number_id;
 
-            if (message && message.type === 'text') {
+            if (message && message.type === 'text' && phoneNumberId) {
                 const from = message.from; // Customer phone number
                 const text = message.text.body;
 
-                // LOGIC: 
-                // 1. Cari user/bisnis berdasarkan phone_number_id atau metadata lain.
-                // 2. Ambil context (produk/deskripsi) dari Firestore Admin.
-                // 3. Panggil Gemini AI.
-                // 4. Kirim balik pesan ke WhatsApp menggunakan Cloud API.
+                console.log(`[WhatsApp] Message from ${from}: ${text} (ID: ${phoneNumberId})`);
 
-                console.log(`Received message from ${from}: ${text}`);
+                // A. Find the user associated with this Phone Number ID
+                const usersRef = collection(db, 'users');
+                const q = query(usersRef, where('whatsappPhoneNumberId', '==', phoneNumberId));
+                const querySnapshot = await getDocs(q);
 
-                // UNTUK MVP: Kita butuh database yang memetakan meta_business_id -> firebase_user_id
+                if (!querySnapshot.empty) {
+                    const userDoc = querySnapshot.docs[0];
+                    const userData = userDoc.data();
+                    const userId = userDoc.id;
+
+                    // B. Fetch Products for this user
+                    const productsSnap = await getDocs(collection(db, 'users', userId, 'products'));
+                    const products = productsSnap.docs.map(d => d.data());
+
+                    const businessContext = {
+                        name: userData.businessName || 'Toko Kami',
+                        description: userData.businessDescription || 'Toko UMKM.',
+                        products: products
+                    };
+
+                    // C. Get AI Response
+                    const reply = await generateAIResponse(text, businessContext, []);
+
+                    // D. Send Message Back to WhatsApp
+                    const accessToken = userData.whatsappAccessToken;
+                    if (accessToken) {
+                        try {
+                            const waResponse = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    messaging_product: 'whatsapp',
+                                    to: from,
+                                    text: { body: reply }
+                                })
+                            });
+                            const waData = await waResponse.json();
+                            console.log(`[WhatsApp] Reply sent to ${from}`, waData);
+                        } catch (waErr) {
+                            console.error('[WhatsApp] Failed to send message:', waErr);
+                        }
+                    } else {
+                        console.warn(`[WhatsApp] No access token found for user ${userId}`);
+                    }
+                } else {
+                    console.warn(`[WhatsApp] No user found for Phone Number ID: ${phoneNumberId}`);
+                }
             }
 
-            return new Response('OK', { status: 200 });
-        } catch (e) {
+            return res.status(200).send('OK');
+        } catch (e: any) {
             console.error('Webhook error:', e);
-            return new Response('Internal Error', { status: 500 });
+            return res.status(500).send('Internal Error');
         }
     }
 
-    return new Response('Method Not Allowed', { status: 405 });
+    return res.status(405).send('Method Not Allowed');
 }

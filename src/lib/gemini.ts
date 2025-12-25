@@ -8,10 +8,12 @@ export async function generateAIResponse(
     businessContext: { name: string; description: string; products: any[] },
     history: { role: string; text: string }[]
 ) {
-    const apiKey = import.meta.env.VITE_OPENROUTER_API_KEY;
+    // Support both Vite (import.meta.env) and Node.js (process.env)
+    const apiKey = (typeof process !== 'undefined' && process.env?.VITE_OPENROUTER_API_KEY) ||
+        (import.meta as any).env?.VITE_OPENROUTER_API_KEY;
 
     if (!apiKey) {
-        return "Error: API Key OpenRouter belum dikonfigurasi di .env.local.";
+        return "Error: API Key OpenRouter belum dikonfigurasi.";
     }
 
     const productList = (businessContext.products || [])

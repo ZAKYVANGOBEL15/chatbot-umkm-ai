@@ -13,6 +13,8 @@ interface Product {
 export default function KnowledgeBase() {
     const [businessName, setBusinessName] = useState('');
     const [businessDesc, setBusinessDesc] = useState('');
+    const [waPhoneNumberId, setWaPhoneNumberId] = useState('');
+    const [waAccessToken, setWaAccessToken] = useState('');
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -30,6 +32,8 @@ export default function KnowledgeBase() {
                 const data = docSnap.data();
                 setBusinessName(data.businessName || '');
                 setBusinessDesc(data.businessDescription || '');
+                setWaPhoneNumberId(data.whatsappPhoneNumberId || '');
+                setWaAccessToken(data.whatsappAccessToken || '');
             }
         };
         loadProfile();
@@ -54,7 +58,9 @@ export default function KnowledgeBase() {
             const docRef = doc(db, 'users', auth.currentUser.uid);
             await updateDoc(docRef, {
                 businessName,
-                businessDescription: businessDesc
+                businessDescription: businessDesc,
+                whatsappPhoneNumberId: waPhoneNumberId,
+                whatsappAccessToken: waAccessToken
             });
             alert('Profil bisnis berhasil disimpan!');
         } catch (e) {
@@ -119,6 +125,32 @@ export default function KnowledgeBase() {
                             className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 outline-none transition-all"
                             placeholder="Kami menjual kue basah dan kering. Buka jam 08.00 - 17.00. Jawab dengan ramah dan sopan."
                         />
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1.5 font-bold text-emerald-600">Integrasi WhatsApp (Opsional)</label>
+                        <p className="text-[10px] text-gray-400 mb-2 uppercase tracking-wider">Dapatkan dari Meta Developers Portal</p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-emerald-50/30 p-4 rounded-lg border border-emerald-100">
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-500 mb-1">Phone Number ID</label>
+                                <input
+                                    type="text"
+                                    value={waPhoneNumberId}
+                                    onChange={(e) => setWaPhoneNumberId(e.target.value)}
+                                    className="w-full px-3 py-2 border border-emerald-200 rounded-lg bg-white text-sm"
+                                    placeholder="Misal: 456789123450"
+                                />
+                            </div>
+                            <div>
+                                <label className="block text-[10px] font-bold text-gray-500 mb-1">Permanent Access Token</label>
+                                <input
+                                    type="password"
+                                    value={waAccessToken}
+                                    onChange={(e) => setWaAccessToken(e.target.value)}
+                                    className="w-full px-3 py-2 border border-emerald-200 rounded-lg bg-white text-sm"
+                                    placeholder="EAAB..."
+                                />
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div className="mt-6 flex justify-end">
