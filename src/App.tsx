@@ -9,19 +9,13 @@ import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
 import Settings from './pages/Settings';
 import Terms from './pages/Terms';
-import Home from './pages/Home';
 
 function App() {
-  const isChatbotSubdomain = window.location.hostname.includes('chatbot');
-
   return (
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route
-          path="/"
-          element={isChatbotSubdomain ? <Navigate to="/dashboard" replace /> : <Home />}
-        />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/terms" element={<Terms />} />
@@ -37,7 +31,7 @@ function App() {
         </Route>
 
         {/* Catch-all Redirect */}
-        <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>
     </BrowserRouter>
   );
