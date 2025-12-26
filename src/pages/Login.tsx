@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { Link, useNavigate } from 'react-router-dom';
-import { MessageSquare, Lock, Mail, ArrowRight } from 'lucide-react';
+import { Lock, Mail, ArrowRight } from 'lucide-react';
 
 export default function Login() {
     const [email, setEmail] = useState('');
@@ -23,12 +23,11 @@ export default function Login() {
     return (
         <div className="min-h-screen flex items-center justify-center bg-gray-50">
             <div className="max-w-md w-full p-8 bg-white rounded-xl shadow-lg border border-gray-100">
-                <div className="flex justify-center mb-6">
-                    <div className="p-3 bg-blue-100 rounded-full">
-                        <MessageSquare className="w-8 h-8 text-blue-600" />
-                    </div>
+                <div className="text-center mb-8">
+                    <h1 className="text-3xl font-extrabold text-blue-600 mb-2">Nusavite</h1>
+                    <p className="text-gray-500 text-sm">Asisten AI Pintar untuk Solusi UMKM</p>
                 </div>
-                <h2 className="text-2xl font-bold text-center text-gray-800 mb-8">Masuk ke Dashboard</h2>
+                <h2 className="text-xl font-bold text-center text-gray-800 mb-6">Masuk ke Dashboard</h2>
 
                 {error && (
                     <div className="mb-4 p-3 bg-red-50 text-red-600 text-sm rounded-lg border border-red-100">

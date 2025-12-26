@@ -39,7 +39,6 @@ export default async function handler(req: any, res: any) {
         const amount = 299000; // Standard Pro Plan Price: Rp 299.000
         const orderId = `SUBS-${userId}-${Date.now()}`;
 
-        // 2. Create Transaction Parameters
         const parameter = {
             transaction_details: {
                 order_id: orderId,
@@ -53,7 +52,7 @@ export default async function handler(req: any, res: any) {
                 id: 'subscription_pro',
                 price: amount,
                 quantity: 1,
-                name: 'ChatBot Zaky Pro Subscription (30 Days)'
+                name: 'Nusavite Pro Subscription (30 Days)'
             }],
             callbacks: {
                 finish: `${process.env.VITE_APP_URL || 'https://chatbot-umkm-ai.vercel.app'}/dashboard/settings?status=success`,
