@@ -79,6 +79,11 @@ export default function Login() {
                         Daftar sekarang
                     </Link>
                 </p>
+                <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500">
+                    <Link to="/terms" className="hover:text-blue-600 transition-colors">Syarat & Ketentuan</Link>
+                    <Link to="/terms" className="hover:text-blue-600 transition-colors">Kebijakan Privasi</Link>
+                    <Link to="/terms" className="hover:text-blue-600 transition-colors">Refund</Link>
+                </div>
             </div>
         </div>
     );

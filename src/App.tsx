@@ -8,6 +8,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
 import Settings from './pages/Settings';
+import Terms from './pages/Terms';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/terms" element={<Terms />} />
 
         <Route path="/" element={<ProtectedRoute />}>
           <Route path="/" element={<Navigate to="/dashboard" replace />} />
