@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import type { User } from 'firebase/auth';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../lib/firebase';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { CreditCard, CheckCircle, AlertCircle, Clock, Zap } from 'lucide-react';
 import { clsx } from 'clsx';
 
@@ -11,6 +11,12 @@ interface UserProfile {
     trialExpiresAt?: string;
     subscriptionPlan?: string;
     businessName?: string;
+}
+
+declare global {
+    interface Window {
+        snap: any;
+    }
 }
 
 export default function Settings() {
@@ -50,24 +56,41 @@ export default function Settings() {
         fetchProfile();
     }, [user]);
 
-    const [showPayment, setShowPayment] = useState(false);
+    const [paying, setPaying] = useState(false);
 
     const handleUpgrade = async () => {
-        setShowPayment(true);
-    };
+        if (!user) return;
+        setPaying(true);
+        try {
+            const response = await fetch('/api/payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: user.uid, plan: 'pro' })
+            });
+            const data = await response.json();
 
-    const confirmPaymentMock = async () => {
-        if (user) {
-            try {
-                await updateDoc(doc(db, 'users', user.uid), {
-                    subscriptionStatus: 'active',
-                    subscriptionPlan: 'pro'
+            if (data.token) {
+                window.snap.pay(data.token, {
+                    onSuccess: () => {
+                        alert("Pembayaran Terkonfirmasi! Akun Anda sedang diperbarui...");
+                        window.location.reload();
+                    },
+                    onPending: () => {
+                        alert("Menunggu pembayaran Anda.");
+                    },
+                    onError: () => {
+                        alert("Pembayaran Gagal. Silakan coba lagi.");
+                    },
+                    onClose: () => {
+                        setPaying(false);
+                    }
                 });
-                alert("Pembayaran Berhasil! Akun Anda kini aktif sebagai Pelanggan Pro. 🚀");
-                window.location.reload();
-            } catch (e) {
-                console.error(e);
             }
+        } catch (error) {
+            console.error('Payment Error:', error);
+            alert("Terjadi kesalahan sistem pembayaran.");
+        } finally {
+            setPaying(false);
         }
     };
 
@@ -75,50 +98,6 @@ export default function Settings() {
 
     return (
         <div className="p-4 md:p-8 max-w-4xl mx-auto relative">
-            {/* Payment Modal */}
-            {showPayment && (
-                <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-                    <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl animate-in fade-in zoom-in duration-200">
-                        <h3 className="text-xl font-bold text-gray-800 mb-2">Bayar via QRIS</h3>
-                        <p className="text-sm text-gray-500 mb-6 font-medium">Scan menggunakan DANA, OVO, atau m-Banking</p>
-
-                        <div className="aspect-square bg-white border-4 border-gray-100 rounded-xl mb-6 flex items-center justify-center relative group">
-                            <img
-                                src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=ZAKY_BOT_SUBSCRIPTION_DEMO"
-                                alt="QRIS Placeholder"
-                                className="w-full h-full p-4 grayscale group-hover:grayscale-0 transition-all"
-                            />
-                            <div className="absolute inset-0 flex items-center justify-center bg-white/80 opacity-0 group-hover:opacity-0 transition-opacity">
-                                <p className="text-sm font-bold text-blue-600">DEMO QRIS</p>
-                            </div>
-                        </div>
-
-                        <div className="bg-blue-50 p-4 rounded-xl mb-6">
-                            <div className="flex justify-between text-sm mb-1">
-                                <span className="text-blue-600">Total Tagihan:</span>
-                                <span className="font-bold text-blue-800">Rp 99.000</span>
-                            </div>
-                            <p className="text-[10px] text-blue-400 font-medium">*Berlaku untuk 30 hari layanan</p>
-                        </div>
-
-                        <div className="flex flex-col gap-2">
-                            <button
-                                onClick={confirmPaymentMock}
-                                className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold shadow-lg shadow-blue-100"
-                            >
-                                Konfirmasi Pembayaran
-                            </button>
-                            <button
-                                onClick={() => setShowPayment(false)}
-                                className="w-full py-2 text-gray-400 hover:text-gray-600 font-medium text-sm"
-                            >
-                                Batalkan
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             <h1 className="text-2xl font-bold text-gray-800 mb-6">Pengaturan & Langganan</h1>
 
             {/* Status Card */}
@@ -202,9 +181,13 @@ export default function Settings() {
                     </ul>
                     <button
                         onClick={handleUpgrade}
-                        className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-lg shadow-blue-100"
+                        disabled={paying}
+                        className={clsx(
+                            "w-full py-3 text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-lg",
+                            paying ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 shadow-blue-100"
+                        )}
                     >
-                        Bayar via QRIS / DANA <CreditCard className="w-4 h-4" />
+                        {paying ? 'Memproses...' : 'Lanjut ke Pembayaran'} <CreditCard className="w-4 h-4" />
                     </button>
                     <p className="text-center text-[10px] text-gray-400 mt-4 italic">
                         *Pembayaran otomatis dikonfirmasi seketika
