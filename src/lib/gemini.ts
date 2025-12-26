@@ -1,6 +1,8 @@
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
 /**
- * AI Service using OpenRouter
- * Provides a unified interface to access multiple models (Gemini, Llama, etc.)
+ * AI Service using Direct Google Gemini SDK
+ * Provides faster and more stable access for production UMKM Chatbot.
  */
 
 export async function generateAIResponse(
@@ -8,13 +10,16 @@ export async function generateAIResponse(
     businessContext: { name: string; description: string; products: any[] },
     history: { role: string; text: string }[]
 ) {
-    // Get API key from environment (works in both Node.js and Vite)
-    const apiKey = (typeof process !== 'undefined' && process.env?.VITE_OPENROUTER_API_KEY) ||
-        ((import.meta as any).env?.VITE_OPENROUTER_API_KEY);
+    // Get API key from environment
+    const apiKey = (typeof process !== 'undefined' && process.env?.VITE_GEMINI_API_KEY) ||
+        ((import.meta as any).env?.VITE_GEMINI_API_KEY);
 
     if (!apiKey) {
-        return "Error: API Key OpenRouter belum dikonfigurasi.";
+        return "Error: API Key Gemini belum dikonfigurasi. Silakan tambahkan VITE_GEMINI_API_KEY di environment variables.";
     }
+
+    const genAI = new GoogleGenerativeAI(apiKey);
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
     const productList = (businessContext.products || [])
         .map(p => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
@@ -31,47 +36,36 @@ Tugas: Jawab pertanyaan pelanggan dengan ramah, singkat, dan gunakan data di ata
 Gunakan gaya bahasa yang akrab (Kak/Sist).
 `.trim();
 
-    // Combine history and new message for the payload
-    const messages = [
-        { role: "system", content: systemInstructions },
-        ...history.map(h => ({
-            role: h.role === "user" ? "user" : "assistant",
-            content: h.text
-        })),
-        { role: "user", content: userMessage }
-    ];
-
     try {
-        const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json",
-                "HTTP-Referer": "http://localhost:5173", // Required by OpenRouter
-                "X-Title": "UMKM Chatbot AI", // Optional, for OpenRouter dashboard
-            },
-            body: JSON.stringify({
-                model: "google/gemini-2.0-flash-exp:free",
-                messages: messages,
-                // Fallback list using strictly :free models for zero-balance accounts
-                models: [
-                    "google/gemini-2.0-flash-exp:free",
-                    "google/gemini-flash-1.5:free",
-                    "meta-llama/llama-3.3-70b-instruct:free"
-                ]
-            })
+        // Prepare chat history for the SDK format
+        const chat = model.startChat({
+            history: [
+                {
+                    role: "user",
+                    parts: [{ text: systemInstructions + "\n\nTunggu pertanyaan saya." }],
+                },
+                {
+                    role: "model",
+                    parts: [{ text: "Siap Kak! Saya CS " + businessContext.name + ". Ada yang bisa saya bantu?" }],
+                },
+                ...history.map(h => ({
+                    role: h.role === "user" ? "user" : "model",
+                    parts: [{ text: h.text }]
+                }))
+            ],
         });
 
-        const data = await response.json();
+        const result = await chat.sendMessage(userMessage);
+        const responseText = result.response.text();
 
-        if (data.error) {
-            console.error("OpenRouter Error:", data.error);
-            return `Maaf, terjadi masalah pada layanan AI: ${data.error.message || "Unknown error"}`;
+        return responseText;
+    } catch (error: any) {
+        console.error("Gemini API Error:", error);
+
+        if (error.message?.includes('429')) {
+            return "Maaf, kuota tanya-jawab sedang penuh (Rate Limit). Silakan coba lagi sebentar lagi ya Kak!";
         }
 
-        return data.choices[0].message.content;
-    } catch (error: any) {
-        console.error("AI Fetch Error:", error);
-        return `Maaf, gagal menyambung ke otak AI. Cek koneksi internet Anda. (${error.message})`;
+        return `Maaf, gagal menyambung ke otak AI. (${error.message})`;
     }
 }
