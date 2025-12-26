@@ -59,7 +59,8 @@ export default async function handler(req: any, res: any) {
                 finish: `${process.env.VITE_APP_URL || 'https://chatbot-umkm-ai.vercel.app'}/dashboard/settings?status=success`,
                 error: `${process.env.VITE_APP_URL || 'https://chatbot-umkm-ai.vercel.app'}/dashboard/settings?status=error`,
                 pending: `${process.env.VITE_APP_URL || 'https://chatbot-umkm-ai.vercel.app'}/dashboard/settings?status=pending`
-            }
+            },
+            enabled_payments: ["gopay", "qris", "shopeepay", "bank_transfer"]
         };
 
         // 3. Create Transaction
