@@ -8,10 +8,8 @@ export async function generateAIResponse(
     businessContext: { name: string; description: string; products: any[] },
     history: { role: string; text: string }[]
 ) {
-    // Support both Vite (import.meta.env) and Node.js (process.env)
-    // Support both Vite (import.meta.env) and Node.js (process.env)
-    const env = (import.meta as any).env || {};
-    const apiKey = env.VITE_OPENROUTER_API_KEY || (typeof process !== 'undefined' ? process.env.VITE_OPENROUTER_API_KEY : '');
+    // Get API key from environment (Vite uses import.meta.env)
+    const apiKey = (import.meta as any).env?.VITE_OPENROUTER_API_KEY;
 
     if (!apiKey) {
         return "Error: API Key OpenRouter belum dikonfigurasi.";
