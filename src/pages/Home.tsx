@@ -82,7 +82,7 @@ export default function Home() {
                                 Kelola bisnis laundry Anda dengan sistem kasir yang rapi, laporan keuangan otomatis, dan manajemen customer terbaik.
                             </p>
                             <a
-                                href="https://laundry.nusavite.com"
+                                href="https://laundryku.com"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold transition-all"
                             >
                                 Kunjungi Layanan <ArrowRight className="w-4 h-4" />
