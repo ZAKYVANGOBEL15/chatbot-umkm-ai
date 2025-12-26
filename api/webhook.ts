@@ -1,4 +1,4 @@
-import { generateAIResponse } from '../src/lib/gemini';
+import { generateAIResponse } from '../src/lib/gemini.js';
 import { initializeApp } from 'firebase/app';
 import { getFirestore, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
 
