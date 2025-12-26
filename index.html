@@ -1,14 +1,28 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>ChatBot Zaky - AI UMKM</title>
-    <script type="text/javascript" src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="%VITE_MIDTRANS_CLIENT_KEY%"></script>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChatBot Zaky - AI UMKM</title>
+  <script type="text/javascript">
+    // Dynamically load Midtrans Snap based on client key prefix
+    const clientKey = "%VITE_MIDTRANS_CLIENT_KEY%";
+    const scriptUrl = clientKey.startsWith('Mid-')
+      ? "https://app.midtrans.com/snap/snap.js"
+      : "https://app.sandbox.midtrans.com/snap/snap.js";
+
+    const script = document.createElement('script');
+    script.src = scriptUrl;
+    script.setAttribute('data-client-key', clientKey);
+    document.head.appendChild(script);
+  </script>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>

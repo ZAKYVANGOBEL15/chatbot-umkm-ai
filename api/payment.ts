@@ -15,8 +15,9 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 // Initialize Midtrans
+const isProduction = process.env.MIDTRANS_IS_PRODUCTION === 'true';
 const snap = new (midtransClient as any).Snap({
-    isProduction: false,
+    isProduction: isProduction,
     serverKey: process.env.MIDTRANS_SERVER_KEY,
     clientKey: process.env.VITE_MIDTRANS_CLIENT_KEY
 });
