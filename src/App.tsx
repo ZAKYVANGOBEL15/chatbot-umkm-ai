@@ -9,17 +9,20 @@ import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
 import Settings from './pages/Settings';
 import Terms from './pages/Terms';
+import Home from './pages/Home';
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Public Routes */}
+        <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/terms" element={<Terms />} />
 
-        <Route path="/" element={<ProtectedRoute />}>
-          <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* Protected Dashboard Routes */}
+        <Route element={<ProtectedRoute />}>
           <Route path="/dashboard" element={<Layout />}>
             <Route index element={<Dashboard />} />
             <Route path="chat" element={<ChatSimulator />} />
@@ -27,6 +30,9 @@ function App() {
             <Route path="settings" element={<Settings />} />
           </Route>
         </Route>
+
+        {/* Catch-all Redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
