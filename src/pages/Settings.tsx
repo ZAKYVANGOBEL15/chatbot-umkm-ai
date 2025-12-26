@@ -162,8 +162,8 @@ export default function Settings() {
                     <h4 className="text-blue-600 font-bold mb-1">Paket Pro</h4>
                     <p className="text-sm text-gray-500 mb-4">Layanan asisten AI 24/7</p>
                     <div className="flex items-baseline gap-1 mb-6">
-                        <span className="text-3xl font-bold text-gray-800">Rp 1.000</span>
-                        <span className="text-gray-500 text-sm">/bulan (Test)</span>
+                        <span className="text-3xl font-bold text-gray-800">Rp 299.000</span>
+                        <span className="text-gray-500 text-sm">/bulan</span>
                     </div>
                     <ul className="space-y-3 mb-8 text-sm text-gray-600">
                         <li className="flex items-center gap-2">

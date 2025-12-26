@@ -36,7 +36,7 @@ export default async function handler(req: any, res: any) {
         if (!userDoc.exists()) return res.status(404).json({ message: 'User not found' });
 
         const userData = userDoc.data();
-        const amount = 1000; // Updated Test price: Rp 1.000 (minimum for most channels)
+        const amount = 299000; // Standard Pro Plan Price: Rp 299.000
         const orderId = `SUBS-${userId}-${Date.now()}`;
 
         // 2. Create Transaction Parameters
