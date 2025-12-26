@@ -16,12 +16,17 @@ export default function Register() {
         e.preventDefault();
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            // Create initial user document
+            const now = new Date();
+            const trialExpiresAt = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000); // 5 days later
+
             await setDoc(doc(db, 'users', userCredential.user.uid), {
                 name,
                 email,
                 businessName: '',
-                createdAt: new Date().toISOString()
+                createdAt: now.toISOString(),
+                trialExpiresAt: trialExpiresAt.toISOString(),
+                subscriptionStatus: 'trial',
+                subscriptionPlan: 'basic'
             });
             navigate('/dashboard');
         } catch (err: any) {

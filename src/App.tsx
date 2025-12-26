@@ -7,9 +7,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 
 import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
-
-// Placeholder pages
-const Settings = () => <div>Settings (Coming Soon)</div>;
+import Settings from './pages/Settings';
 
 function App() {
   return (

@@ -54,6 +54,33 @@ export default async function handler(req: any, res: any) {
                     const userData = userDoc.data();
                     const userId = userDoc.id;
 
+                    // Check Trial/Subscription Status
+                    const now = new Date();
+                    const trialExpiresAt = userData.trialExpiresAt ? new Date(userData.trialExpiresAt) : null;
+                    const isSubscribed = userData.subscriptionStatus === 'active';
+                    const accessToken = userData.whatsappAccessToken;
+
+                    if (!isSubscribed && trialExpiresAt && now > trialExpiresAt) {
+                        // Trial Expired
+                        const expiredMsg = `Maaf, masa percobaan 5 hari ChatBot Zaky untuk ${userData.businessName || 'toko Anda'} telah habis. Silakan buka dashboard chatbot Anda untuk melakukan pembayaran agar layanan dapat berlanjut. Terima kasih! 🙏`;
+
+                        if (accessToken) {
+                            await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    messaging_product: 'whatsapp',
+                                    to: from,
+                                    text: { body: expiredMsg }
+                                })
+                            });
+                        }
+                        return res.status(200).send('OK');
+                    }
+
                     // B. Fetch Products for this user
                     const productsSnap = await getDocs(collection(db, 'users', userId, 'products'));
                     const products = productsSnap.docs.map(d => d.data());
@@ -68,7 +95,6 @@ export default async function handler(req: any, res: any) {
                     const reply = await generateAIResponse(text, businessContext, []);
 
                     // D. Send Message Back to WhatsApp
-                    const accessToken = userData.whatsappAccessToken;
                     if (accessToken) {
                         try {
                             const waResponse = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {

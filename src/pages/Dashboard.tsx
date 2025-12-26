@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock } from 'lucide-react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -9,6 +9,8 @@ export default function Dashboard() {
     const [productCount, setProductCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState('');
+    const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
+    const [daysLeft, setDaysLeft] = useState(0);
 
     useEffect(() => {
         // Use onAuthStateChanged to ensure we wait for the user session
@@ -22,7 +24,17 @@ export default function Dashboard() {
                     // Fetch user info for welcome message
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     if (userDoc.exists()) {
-                        setUserName(userDoc.data().name || '');
+                        const data = userDoc.data();
+                        setUserName(data.name || '');
+                        setSubscriptionStatus(data.subscriptionStatus || 'trial');
+
+                        if (data.trialExpiresAt) {
+                            const expiry = new Date(data.trialExpiresAt);
+                            const now = new Date();
+                            const diff = expiry.getTime() - now.getTime();
+                            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                            setDaysLeft(days > 0 ? days : 0);
+                        }
                     }
                 } catch (error) {
                     console.error("Error fetching dashboard stats:", error);
@@ -39,6 +51,27 @@ export default function Dashboard() {
 
     return (
         <div className="space-y-6 max-w-full overflow-hidden">
+            {/* Trial Warning */}
+            {subscriptionStatus === 'trial' && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-amber-100 text-amber-600 rounded-lg">
+                            <Clock size={20} />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-amber-800">Masa Percobaan Aktif</p>
+                            <p className="text-xs text-amber-600 mt-0.5">Layanan Anda akan berakhir dalam <span className="font-bold underline">{daysLeft} hari</span>.</p>
+                        </div>
+                    </div>
+                    <Link
+                        to="/dashboard/settings"
+                        className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 transition-colors text-center"
+                    >
+                        Upgrade Sekarang
+                    </Link>
+                </div>
+            )}
+
             {/* Stats Cards */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
                 <div className="p-5 lg:p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
