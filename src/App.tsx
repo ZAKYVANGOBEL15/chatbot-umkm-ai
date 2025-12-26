@@ -12,11 +12,16 @@ import Terms from './pages/Terms';
 import Home from './pages/Home';
 
 function App() {
+  const isChatbotSubdomain = window.location.hostname.includes('chatbot');
+
   return (
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<Home />} />
+        <Route
+          path="/"
+          element={isChatbotSubdomain ? <Navigate to="/dashboard" replace /> : <Home />}
+        />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/terms" element={<Terms />} />
