@@ -22,7 +22,7 @@ export default function Layout() {
     ];
 
     return (
-        <div className="flex h-screen bg-gray-50 overflow-hidden">
+        <div className="flex h-screen bg-white overflow-hidden text-neutral-900 font-sans selection:bg-black selection:text-white">
             {/* Mobile Overlay */}
             {isMobileMenuOpen && (
                 <div
@@ -33,16 +33,16 @@ export default function Layout() {
 
             {/* Sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 bg-white border-r border-gray-200 flex flex-col ${isMobileMenuOpen
+                className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 bg-black border-r border-neutral-800 flex flex-col ${isMobileMenuOpen
                     ? 'translate-x-0 w-64'
                     : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-64' : 'lg:w-20')
                     }`}
             >
-                <div className="p-4 flex items-center justify-between h-16 border-b border-gray-100">
+                <div className="p-4 flex items-center justify-between h-16 border-b border-neutral-900">
                     {(isSidebarOpen || isMobileMenuOpen) ? (
-                        <span className="font-bold text-xl text-blue-600">Chatbot</span>
+                        <span className="font-bold text-xl text-white tracking-tight">Nusavite</span>
                     ) : (
-                        <span className="font-bold text-xl text-blue-600 mx-auto">AI</span>
+                        <span className="font-bold text-xl text-white mx-auto">N</span>
                     )}
                     <button
                         onClick={() => {
@@ -52,7 +52,7 @@ export default function Layout() {
                                 setIsSidebarOpen(!isSidebarOpen);
                             }
                         }}
-                        className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-500"
+                        className="p-1.5 hover:bg-neutral-900 rounded-lg text-neutral-400 hover:text-white transition-colors"
                     >
                         {isSidebarOpen ? <X size={20} /> : <Menu size={20} />}
                     </button>
@@ -64,47 +64,42 @@ export default function Layout() {
                             key={item.path}
                             to={item.path}
                             onClick={() => setIsMobileMenuOpen(false)}
-                            className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${location.pathname === item.path
-                                ? 'bg-blue-50 text-blue-600'
-                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                            className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${location.pathname === item.path
+                                ? 'bg-white text-black font-medium shadow-lg'
+                                : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'
                                 }`}
                         >
-                            <item.icon size={20} />
-                            {(isSidebarOpen || isMobileMenuOpen) && <span className="font-medium">{item.label}</span>}
+                            <item.icon size={20} className={location.pathname === item.path ? "text-black" : ""} />
+                            {(isSidebarOpen || isMobileMenuOpen) && <span className="font-medium text-sm">{item.label}</span>}
                         </Link>
                     ))}
                 </nav>
 
-                <div className="p-4 border-t border-gray-100">
+                <div className="p-4 border-t border-neutral-900">
                     <button
                         onClick={handleLogout}
-                        className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-red-600 hover:bg-red-50 w-full transition-colors ${(!isSidebarOpen && !isMobileMenuOpen) && 'justify-center'
+                        className={`flex items-center gap-3 px-3 py-3 rounded-xl text-neutral-400 hover:bg-neutral-900 hover:text-red-400 w-full transition-colors ${(!isSidebarOpen && !isMobileMenuOpen) && 'justify-center'
                             }`}
                     >
                         <LogOut size={20} />
-                        {(isSidebarOpen || isMobileMenuOpen) && <span className="font-medium">Keluar</span>}
+                        {(isSidebarOpen || isMobileMenuOpen) && <span className="font-medium text-sm">Keluar Portal</span>}
                     </button>
                 </div>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-                <header className="h-16 bg-white border-b border-gray-200 flex items-center justify-between px-4 lg:px-8 shrink-0">
+            <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-neutral-50">
+                <header className="h-16 bg-white border-b border-neutral-200 flex items-center justify-between px-4 lg:px-8 shrink-0">
                     <div className="flex items-center gap-4">
                         <button
-                            className="lg:hidden p-2 hover:bg-gray-100 rounded-lg text-gray-500"
+                            className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg text-neutral-600"
                             onClick={() => setIsMobileMenuOpen(true)}
                         >
                             <Menu size={20} />
                         </button>
-                        <h1 className="text-lg lg:text-xl font-semibold text-gray-800 truncate">
+                        <h1 className="text-lg lg:text-xl font-bold text-black tracking-tight truncate">
                             {menuItems.find(i => i.path === location.pathname)?.label || 'Dashboard'}
                         </h1>
-                    </div>
-                    <div className="flex items-center gap-4">
-                        <div className="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold">
-                            U
-                        </div>
                     </div>
                 </header>
                 <div className="flex-1 overflow-auto p-4 lg:p-8">

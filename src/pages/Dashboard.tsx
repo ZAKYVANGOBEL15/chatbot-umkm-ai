@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight } from 'lucide-react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -13,15 +13,12 @@ export default function Dashboard() {
     const [daysLeft, setDaysLeft] = useState(0);
 
     useEffect(() => {
-        // Use onAuthStateChanged to ensure we wait for the user session
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
             if (user) {
                 try {
-                    // Fetch product count
                     const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
                     setProductCount(productsSnap.size);
 
-                    // Fetch user info for welcome message
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     if (userDoc.exists()) {
                         const data = userDoc.data();
@@ -50,86 +47,80 @@ export default function Dashboard() {
     }, []);
 
     return (
-        <div className="space-y-6 max-w-full overflow-hidden">
+        <div className="space-y-8 max-w-full overflow-hidden">
             {/* Trial Warning */}
             {subscriptionStatus === 'trial' && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-amber-100 text-amber-600 rounded-lg">
-                            <Clock size={20} />
+                <div className="bg-black text-white rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-neutral-200">
+                    <div className="flex items-center gap-4">
+                        <div className="p-2 border border-white/20 rounded-lg">
+                            <Clock size={20} className="text-neutral-300" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-amber-800">Masa Percobaan Aktif</p>
-                            <p className="text-xs text-amber-600 mt-0.5">Layanan Anda akan berakhir dalam <span className="font-bold underline">{daysLeft} hari</span>.</p>
+                            <p className="text-sm font-bold">Mode Percobaan Aktif</p>
+                            <p className="text-xs text-neutral-400 mt-0.5">Sisa waktu: <span className="text-white font-bold">{daysLeft} hari</span>.</p>
                         </div>
                     </div>
-                    <Link
-                        to="/dashboard/settings"
-                        className="w-full sm:w-auto px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-lg hover:bg-amber-700 transition-colors text-center"
-                    >
-                        Upgrade Sekarang
-                    </Link>
                 </div>
             )}
 
-            {/* Stats Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-                <div className="p-5 lg:p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-blue-50 text-blue-600 rounded-lg shrink-0">
-                            <MessageSquare size={24} />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="text-xs lg:text-sm text-gray-500 font-medium truncate">Total Percakapan</p>
-                            <h3 className="text-xl lg:text-2xl font-bold text-gray-900 leading-tight">0</h3>
-                        </div>
-                    </div>
-                </div>
-                <div className="p-5 lg:p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-green-50 text-green-600 rounded-lg shrink-0">
-                            <Users size={24} />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="text-xs lg:text-sm text-gray-500 font-medium truncate">Pelanggan Aktif</p>
-                            <h3 className="text-xl lg:text-2xl font-bold text-gray-900 leading-tight">0</h3>
-                        </div>
-                    </div>
-                </div>
-                <div className="p-5 lg:p-6 bg-white rounded-xl shadow-sm border border-gray-100 transition-all hover:shadow-md sm:col-span-2 lg:col-span-1">
-                    <div className="flex items-center gap-4">
-                        <div className="p-3 bg-purple-50 text-purple-600 rounded-lg shrink-0">
-                            <ShoppingBag size={24} />
-                        </div>
-                        <div className="min-w-0">
-                            <p className="text-xs lg:text-sm text-gray-500 font-medium truncate">Produk Terdaftar</p>
-                            <h3 className="text-xl lg:text-2xl font-bold text-gray-900 leading-tight">
-                                {loading ? '...' : productCount}
-                            </h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             {/* Welcome Section */}
-            <div className="p-6 lg:p-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-2xl text-white shadow-lg overflow-hidden relative">
+            <div className="p-8 lg:p-12 bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100 overflow-hidden relative group">
                 <div className="relative z-10">
-                    <h2 className="text-2xl lg:text-3xl font-bold mb-3">
-                        Selamat Datang{userName ? `, ${userName}` : ''}!
+                    <span className="text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2 block">System Overview</span>
+                    <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-black">
+                        Halo, {userName || 'Partner'}!
                     </h2>
-                    <p className="text-blue-100 max-w-2xl mb-6 text-base lg:text-lg opacity-90">
-                        Mulai siapkan chatbot Anda dengan mengisi data produk dan informasi bisnis agar AI dapat menjawab pertanyaan pelanggan dengan akurat.
+                    <p className="text-neutral-500 max-w-xl mb-8 text-base lg:text-lg leading-relaxed">
+                        Latih asisten AI Anda sekarang. Semakin lengkap data produk, semakin cerdas jawaban chatbot Anda.
                     </p>
                     <Link
                         to="/dashboard/knowledge"
-                        className="inline-flex items-center justify-center px-6 lg:px-8 py-3 bg-white text-blue-600 rounded-xl font-bold hover:bg-blue-50 transition-all transform hover:scale-105 shadow-md text-sm lg:text-base"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white rounded-xl font-bold hover:bg-neutral-800 transition-all shadow-md group-hover:translate-x-1"
                     >
-                        Mulai Setup Knowledge Base
+                        Mulai Setup Knowledge Base <ArrowRight size={18} />
                     </Link>
                 </div>
-                {/* Decorative elements */}
-                <div className="absolute top-0 right-0 -mt-10 -mr-10 w-48 lg:w-64 h-48 lg:h-64 bg-white opacity-10 rounded-full blur-3xl"></div>
-                <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-64 lg:w-80 h-64 lg:h-80 bg-blue-400 opacity-20 rounded-full blur-3xl"></div>
+                {/* Minimalist Decoration */}
+                <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-neutral-50 to-transparent hidden lg:block"></div>
+            </div>
+
+            {/* Stats Cards */}
+            <h3 className="text-xl font-bold text-black border-l-4 border-black pl-4">Statistik Real-time</h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-black transition-colors">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-3 bg-neutral-100 rounded-xl">
+                            <MessageSquare size={24} className="text-black" />
+                        </div>
+                        <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Total Chat</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-black mb-1">Coming Soon</h3>
+                    <p className="text-xs text-neutral-400">Menunggu integrasi</p>
+                </div>
+
+                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-black transition-colors">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-3 bg-neutral-100 rounded-xl">
+                            <Users size={24} className="text-black" />
+                        </div>
+                        <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Pelanggan</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-black mb-1">Coming Soon</h3>
+                    <p className="text-xs text-neutral-400">Data belum tersedia</p>
+                </div>
+
+                <div className="p-6 bg-black text-white rounded-2xl shadow-xl shadow-neutral-200 transform lg:-translate-y-4">
+                    <div className="flex justify-between items-start mb-4">
+                        <div className="p-3 bg-white/10 rounded-xl">
+                            <ShoppingBag size={24} className="text-white" />
+                        </div>
+                        <span className="text-xs font-bold text-white/60 bg-white/10 px-2 py-1 rounded-md">Knowledge Base</span>
+                    </div>
+                    <h3 className="text-3xl font-bold text-white mb-1">
+                        {loading ? '...' : productCount}
+                    </h3>
+                    <p className="text-xs text-neutral-400">Data Produk Terlatih</p>
+                </div>
             </div>
         </div>
     );
