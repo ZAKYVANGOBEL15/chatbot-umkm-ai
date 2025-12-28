@@ -34,13 +34,13 @@ export default function Layout() {
             {/* Sidebar */}
             <aside
                 className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 bg-white border-r border-gray-200 flex flex-col ${isMobileMenuOpen
-                        ? 'translate-x-0 w-64'
-                        : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-64' : 'lg:w-20')
+                    ? 'translate-x-0 w-64'
+                    : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-64' : 'lg:w-20')
                     }`}
             >
                 <div className="p-4 flex items-center justify-between h-16 border-b border-gray-100">
                     {(isSidebarOpen || isMobileMenuOpen) ? (
-                        <span className="font-bold text-xl text-blue-600">Chatbot AI</span>
+                        <span className="font-bold text-xl text-blue-600">Chatbot</span>
                     ) : (
                         <span className="font-bold text-xl text-blue-600 mx-auto">AI</span>
                     )}
@@ -65,8 +65,8 @@ export default function Layout() {
                             to={item.path}
                             onClick={() => setIsMobileMenuOpen(false)}
                             className={`flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${location.pathname === item.path
-                                    ? 'bg-blue-50 text-blue-600'
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                                ? 'bg-blue-50 text-blue-600'
+                                : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
                                 }`}
                         >
                             <item.icon size={20} />
