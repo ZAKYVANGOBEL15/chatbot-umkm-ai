@@ -72,12 +72,13 @@ export default function Login() {
                     </button>
                 </form>
 
+                {/* Registration disabled
                 <p className="mt-6 text-center text-sm text-gray-600">
                     Belum punya akun?{' '}
                     <Link to="/register" className="text-blue-600 hover:text-blue-700 font-medium">
                         Daftar sekarang
                     </Link>
-                </p>
+                </p> */}
                 <div className="mt-8 pt-6 border-t border-gray-100 flex flex-wrap justify-center gap-x-6 gap-y-2 text-xs text-gray-500">
                     <Link to="/terms" className="hover:text-blue-600 transition-colors">Syarat & Ketentuan</Link>
                     <Link to="/terms" className="hover:text-blue-600 transition-colors">Kebijakan Privasi</Link>

@@ -3,7 +3,7 @@ import type { User } from 'firebase/auth';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
-import { CreditCard, CheckCircle, AlertCircle, Clock, Zap } from 'lucide-react';
+import { AlertCircle, Clock, Zap } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface UserProfile {
@@ -56,43 +56,7 @@ export default function Settings() {
         fetchProfile();
     }, [user]);
 
-    const [paying, setPaying] = useState(false);
 
-    const handleUpgrade = async () => {
-        if (!user) return;
-        setPaying(true);
-        try {
-            const response = await fetch('/api/payment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: user.uid, plan: 'pro' })
-            });
-            const data = await response.json();
-
-            if (data.token) {
-                window.snap.pay(data.token, {
-                    onSuccess: () => {
-                        alert("Pembayaran Terkonfirmasi! Akun Anda sedang diperbarui...");
-                        window.location.reload();
-                    },
-                    onPending: () => {
-                        alert("Menunggu pembayaran Anda.");
-                    },
-                    onError: () => {
-                        alert("Pembayaran Gagal. Silakan coba lagi.");
-                    },
-                    onClose: () => {
-                        setPaying(false);
-                    }
-                });
-            }
-        } catch (error) {
-            console.error('Payment Error:', error);
-            alert("Terjadi kesalahan sistem pembayaran.");
-        } finally {
-            setPaying(false);
-        }
-    };
 
     if (loading) return <div className="p-8 text-center text-gray-500">Memuat profil...</div>;
 
@@ -134,65 +98,21 @@ export default function Settings() {
                 )}
             </div>
 
-            {/* Pricing Section */}
-            <div className="grid md:grid-cols-2 gap-6">
-                {/* Basic Plan (Current/Disabled) */}
-                <div className="bg-gray-50 rounded-2xl p-6 border border-gray-200 opacity-60">
-                    <h4 className="text-gray-600 font-bold mb-1">Paket Gratis</h4>
-                    <p className="text-sm text-gray-500 mb-4">Masa percobaan standar</p>
-                    <div className="text-3xl font-bold text-gray-800 mb-6">Gratis</div>
-                    <ul className="space-y-3 mb-8 text-sm text-gray-600">
-                        <li className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-gray-400" /> WhatsApp Integration
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-gray-400" /> 5-Day Access
-                        </li>
-                    </ul>
-                    <button disabled className="w-full py-2 bg-gray-200 text-gray-500 rounded-lg font-medium cursor-not-allowed">
-                        Paket Aktif
-                    </button>
-                </div>
+            {/* Contact Support Section */}
+            <div className="bg-white rounded-2xl p-8 border border-gray-100 text-center">
+                <h3 className="text-xl font-bold text-gray-800 mb-2">Butuh Bantuan atau Upgrade Paket?</h3>
+                <p className="text-gray-500 mb-6">
+                    Hubungi admin untuk perpanjangan masa aktif, upgrade kuota AI, atau kendala teknis lainnya.
+                </p>
 
-                {/* Pro Plan */}
-                <div className="bg-white rounded-2xl p-6 border-2 border-blue-600 relative overflow-hidden ring-4 ring-blue-50">
-                    <div className="absolute top-0 right-0 bg-blue-600 text-white text-[10px] uppercase font-bold px-3 py-1 rounded-bl-lg">
-                        Rekomendasi
-                    </div>
-                    <h4 className="text-blue-600 font-bold mb-1">Paket Pro</h4>
-                    <p className="text-sm text-gray-500 mb-4">Layanan asisten AI 24/7</p>
-                    <div className="flex items-baseline gap-1 mb-6">
-                        <span className="text-3xl font-bold text-gray-800">Rp 299.000</span>
-                        <span className="text-gray-500 text-sm">/bulan</span>
-                    </div>
-                    <ul className="space-y-3 mb-8 text-sm text-gray-600">
-                        <li className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" /> Unlimited WhatsApp Chat
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" /> Fast Response AI (Gemini 2.0)
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" /> Unlimited Products
-                        </li>
-                        <li className="flex items-center gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500" /> Support Prioritas
-                        </li>
-                    </ul>
-                    <button
-                        onClick={handleUpgrade}
-                        disabled={paying}
-                        className={clsx(
-                            "w-full py-3 text-white rounded-lg font-bold transition-all flex items-center justify-center gap-2 shadow-lg",
-                            paying ? "bg-gray-400 cursor-not-allowed" : "bg-blue-600 hover:bg-blue-700 shadow-blue-100"
-                        )}
-                    >
-                        {paying ? 'Memproses...' : 'Lanjut ke Pembayaran'} <CreditCard className="w-4 h-4" />
-                    </button>
-                    <p className="text-center text-[10px] text-gray-400 mt-4 italic">
-                        *Pembayaran otomatis dikonfirmasi seketika
-                    </p>
-                </div>
+                <a
+                    href="https://wa.me/6281234567890"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl transition-colors"
+                >
+                    <Zap className="w-5 h-5" /> Hubungi Admin via WhatsApp
+                </a>
             </div>
         </div>
     );
