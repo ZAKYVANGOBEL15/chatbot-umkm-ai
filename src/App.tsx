@@ -16,7 +16,9 @@ function App() {
     <BrowserRouter>
       <Routes>
         {/* Public Routes */}
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={
+          window.location.hostname.includes('chatbot') ? <Navigate to="/login" replace /> : <LandingPage />
+        } />
         <Route path="/login" element={<Login />} />
         {/* <Route path="/register" element={<Register />} /> */}
         <Route path="/terms" element={<Terms />} />
