@@ -6,28 +6,28 @@ export default function LandingPage() {
   const navigate = useNavigate();
 
   return (
-    <div className="min-h-screen bg-slate-900 text-slate-100 selection:bg-cyan-500 selection:text-white font-sans">
+    <div className="min-h-screen bg-white text-neutral-900 selection:bg-black selection:text-white font-sans">
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-slate-900/80 backdrop-blur-md border-b border-slate-800">
+      <nav className="fixed w-full z-50 bg-white/80 backdrop-blur-md border-b border-neutral-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
+          <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-cyan-400 to-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">N</span>
+              <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-xl font-serif">N</span>
               </div>
-              <span className="font-bold text-xl tracking-tight text-white">Nusavite</span>
+              <span className="font-bold text-2xl tracking-tight text-black">Nusavite</span>
             </div>
             <div className="hidden md:block">
               <div className="ml-10 flex items-baseline space-x-8">
-                <a href="#services" className="hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium">Layanan</a>
-                <a href="#features" className="hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium">Fitur</a>
-                <a href="#ai-chatbot" className="hover:text-cyan-400 transition-colors px-3 py-2 rounded-md text-sm font-medium">AI Chatbot</a>
+                <a href="#services" className="hover:text-neutral-500 transition-colors px-3 py-2 text-sm font-medium tracking-wide">LAYANAN</a>
+                <a href="#features" className="hover:text-neutral-500 transition-colors px-3 py-2 text-sm font-medium tracking-wide">FITUR</a>
+                <a href="#ai-chatbot" className="hover:text-neutral-500 transition-colors px-3 py-2 text-sm font-medium tracking-wide">AI CHATBOT</a>
               </div>
             </div>
             <div>
               <button
                 onClick={() => navigate('/login')}
-                className="bg-slate-800 hover:bg-slate-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all border border-slate-700 hover:border-slate-600"
+                className="bg-black hover:bg-neutral-800 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all"
               >
                 Login Client
               </button>
@@ -38,237 +38,227 @@ export default function LandingPage() {
 
       {/* Hero Section */}
       <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 overflow-hidden">
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-900/20 via-slate-900/0 to-slate-900/0"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center max-w-3xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-900/30 border border-blue-800/50 mb-6">
-              <span className="flex h-2 w-2 rounded-full bg-cyan-400 animate-pulse"></span>
-              <span className="text-xs font-semibold text-cyan-400 uppercase tracking-wide">Solusi Digital Terdepan</span>
+          <div className="text-center max-w-4xl mx-auto">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-neutral-100 mb-8">
+              <span className="w-2 h-2 rounded-full bg-black"></span>
+              <span className="text-xs font-bold uppercase tracking-widest text-neutral-600">Digital Perfection</span>
             </div>
-            <h1 className="text-5xl md:text-7xl font-bold tracking-tight mb-8 text-white">
-              Bangun Website <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500">
-                Modern & Cerdas
-              </span>
+            <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 text-black leading-tight">
+              We Build <br />
+              <span className="italic font-serif font-medium">Digital Legacies.</span>
             </h1>
-            <p className="text-xl text-slate-400 mb-10 leading-relaxed">
-              Nusavite menghadirkan layanan pembuatan website profesional dengan performa tinggi.
-              Kini dilengkapi dengan <span className="text-white font-semibold">Chatbot AI</span> cerdas untuk meningkatkan interaksi bisnis Anda.
+            <p className="text-xl md:text-2xl text-neutral-600 mb-12 leading-relaxed max-w-2xl mx-auto font-light">
+              Nusavite menghadirkan standar baru dalam pengembangan website dan integrasi AI. Elegan, Cerdas, dan Presisi untuk bisnis Anda.
             </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <a
                 href="https://wa.me/6281234567890"
                 target="_blank"
                 rel="noreferrer"
-                className="px-8 py-4 bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white rounded-xl font-bold text-lg shadow-lg shadow-cyan-500/20 transition-all transform hover:-translate-y-1"
+                className="px-10 py-5 bg-black hover:bg-neutral-800 text-white rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
               >
-                Konsultasi Gratis
+                Mulai Konsultasi
               </a>
               <button
                 onClick={() => document.getElementById('ai-chatbot')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-4 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-white rounded-xl font-bold text-lg transition-all"
+                className="px-10 py-5 bg-white hover:bg-neutral-50 border-2 border-neutral-200 text-black rounded-full font-bold text-lg transition-all"
               >
-                Lihat Demo AI
+                Explore Solution
               </button>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Services Grid */}
-      <section id="services" className="py-24 bg-slate-900 relative">
+      {/* Services Grid (Black Section) */}
+      <section id="services" className="py-32 bg-black text-white relative rounded-t-[3rem]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Jasa Pembuatan & Pengembangan</h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-              Kami menawarkan solusi digital komprehensif untuk membawa bisnis Anda ke level berikutnya.
-            </p>
+          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+            <div className="max-w-2xl">
+              <h2 className="text-4xl md:text-6xl font-bold mb-6 tracking-tight">Craftsmanship & <br />Intelligence</h2>
+              <p className="text-neutral-400 text-xl font-light">
+                Kombinasi seni desain dan kecerdasan buatan untuk hasil yang tak tertandingi.
+              </p>
+            </div>
+            <div className="hidden md:block w-32 h-1 bg-white/20"></div>
           </div>
+
           <div className="grid md:grid-cols-3 gap-8">
             {/* Service 1 */}
-            <div className="p-8 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-cyan-500/30 transition-all group">
-              <div className="w-14 h-14 bg-blue-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Monitor className="w-7 h-7 text-blue-400" />
+            <div className="p-10 rounded-3xl bg-neutral-900 border border-neutral-800 hover:border-white/30 transition-all group">
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                <Monitor className="w-8 h-8 text-black" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">Website Company Profile</h3>
-              <p className="text-slate-400 leading-relaxed">
-                Tampilkan kredibilitas bisnis Anda dengan desain elegan, responsif, dan profesional. Cocok untuk korporasi dan UKM.
+              <h3 className="text-2xl font-bold mb-4">Website Signature</h3>
+              <p className="text-neutral-400 leading-relaxed">
+                Company profile yang dirancang khusus untuk mencerminkan identitas premium brand Anda. Tanpa template, murni karya seni digital.
               </p>
             </div>
 
             {/* Service 2 */}
-            <div className="p-8 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-cyan-500/30 transition-all group">
-              <div className="w-14 h-14 bg-cyan-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Smartphone className="w-7 h-7 text-cyan-400" />
+            <div className="p-10 rounded-3xl bg-neutral-900 border border-neutral-800 hover:border-white/30 transition-all group">
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                <Smartphone className="w-8 h-8 text-black" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">Aplikasi Web Custom</h3>
-              <p className="text-slate-400 leading-relaxed">
-                Sistem manajemen, dashboard, atau aplikasi khusus yang disesuaikan dengan alur kerja bisnis Anda yang unik.
+              <h3 className="text-2xl font-bold mb-4">Bespoke Web App</h3>
+              <p className="text-neutral-400 leading-relaxed">
+                Sistem kompleks yang dibalut antarmuka minimalis. Dashboard, manajemen sistem, dan automasi bisnis yang seamless.
               </p>
             </div>
 
             {/* Service 3 */}
-            <div className="p-8 rounded-2xl bg-slate-800/50 border border-slate-700/50 hover:border-cyan-500/30 transition-all group">
-              <div className="w-14 h-14 bg-emerald-900/30 rounded-xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                <Zap className="w-7 h-7 text-emerald-400" />
+            <div className="p-10 rounded-3xl bg-neutral-900 border border-neutral-800 hover:border-white/30 transition-all group">
+              <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform">
+                <Zap className="w-8 h-8 text-black" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-white">Optimasi Performa & SEO</h3>
-              <p className="text-slate-400 leading-relaxed">
-                Website super cepat dengan struktur SEO friendly agar bisnis Anda mudah ditemukan di mesin pencari Google.
+              <h3 className="text-2xl font-bold mb-4">High Performance</h3>
+              <p className="text-neutral-400 leading-relaxed">
+                Optimasi tingkat lanjut untuk kecepatan loading instan dan struktur SEO yang solid. Fondasi teknis yang sempurna.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Value Added Service: AI Chatbot */}
-      <section id="ai-chatbot" className="py-24 bg-slate-800 relative overflow-hidden">
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 -mt-20 -mr-20 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl"></div>
-        <div className="absolute bottom-0 left-0 -mb-20 -ml-20 w-96 h-96 bg-blue-600/10 rounded-full blur-3xl"></div>
+      {/* Additional Services (Still Black, Distinct Style) */}
+      <section className="py-24 bg-black text-white relative border-t border-neutral-900">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-sm font-bold tracking-widest uppercase text-neutral-500 mb-2 block">Ekosistem Digital</span>
+            <h2 className="text-3xl md:text-5xl font-bold">Layanan Eksklusif Tambahan</h2>
+          </div>
 
+          <div className="grid md:grid-cols-3 gap-px bg-neutral-800 border border-neutral-800 rounded-3xl overflow-hidden">
+            <div className="bg-neutral-950 p-12 hover:bg-neutral-900 transition-colors">
+              <Code className="w-10 h-10 text-white mb-6" />
+              <h3 className="text-xl font-bold mb-2">Custom AI Knowledge</h3>
+              <p className="text-neutral-500">
+                Brain training untuk AI Anda dengan data spesifik perusahaan.
+              </p>
+            </div>
+
+            <div className="bg-neutral-950 p-12 hover:bg-neutral-900 transition-colors">
+              <Smartphone className="w-10 h-10 text-white mb-6" />
+              <h3 className="text-xl font-bold mb-2">WhatsApp Business API</h3>
+              <p className="text-neutral-500">
+                Integrasi chat automatis langsung ke platform messaging #1 dunia.
+              </p>
+            </div>
+
+            <div className="bg-neutral-950 p-12 hover:bg-neutral-900 transition-colors">
+              <Monitor className="w-10 h-10 text-white mb-6" />
+              <h3 className="text-xl font-bold mb-2">Deep Analytics</h3>
+              <p className="text-neutral-500">
+                Insight mendalam tentang interaksi customer dan performa bot.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Value Added Service: AI Chatbot (White Section) */}
+      <section id="ai-chatbot" className="py-32 bg-white relative overflow-hidden rounded-t-[3rem] -mt-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="grid lg:grid-cols-2 gap-16 items-center">
+          <div className="grid lg:grid-cols-2 gap-20 items-center">
             <div>
-              <div className="inline-block px-4 py-1.5 rounded-full border border-cyan-500/30 bg-cyan-500/10 mb-6">
-                <span className="text-sm font-bold text-cyan-400 tracking-wide">VALUE ADDED SERVICE</span>
-              </div>
-              <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-                Website Anda Kini Punya <br />
-                <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-400">
-                  Asisten Cerdas 24/7
-                </span>
+              <h2 className="text-5xl md:text-7xl font-bold mb-8 text-black tracking-tight">
+                24/7 <br />
+                <span className="text-neutral-400">Intelligent Assistant.</span>
               </h2>
-              <p className="text-lg text-slate-300 mb-8 leading-relaxed">
-                Jangan biarkan pengunjung website Anda bingung. Layanan pembuatan website kami sudah termasuk opsi integrasi
-                <span className="text-white font-semibold"> Chatbot AI Premium</span> yang dapat menjawab pertanyaan pelanggan secara otomatis, natural, dan akurat.
+              <p className="text-xl text-neutral-600 mb-10 leading-relaxed font-light">
+                Setiap website buatan kami dilengkapi opsi integritas <span className="font-bold text-black">Chatbot AI Premium</span>. Bukan sekadar penjawab otomatis, tapi representasi cerdas brand Anda yang bekerja tanpa henti.
               </p>
 
-              <ul className="space-y-4 mb-10">
+              <ul className="space-y-6 mb-12">
                 {[
-                  'Menjawab pertanyaan pelanggan secara instan',
-                  'Tersedia 24 jam non-stop tanpa istirahat',
-                  'Menghemat biaya customer service manual',
-                  'Gaya bahasa natural dan bisa disesuaikan'
+                  'Respon instan dalam hitungan detik',
+                  'Operasional 24 jam x 7 hari',
+                  'Gaya bahasa brand-aware yang natural',
+                  'Efisiensi biaya operasional signifikan'
                 ].map((item, index) => (
-                  <li key={index} className="flex items-center gap-3">
-                    <CheckCircle className="w-6 h-6 text-cyan-500 flex-shrink-0" />
-                    <span className="text-slate-300">{item}</span>
+                  <li key={index} className="flex items-center gap-4">
+                    <div className="w-6 h-6 rounded-full bg-black flex items-center justify-center flex-shrink-0">
+                      <CheckCircle className="w-4 h-4 text-white" />
+                    </div>
+                    <span className="text-lg text-neutral-800">{item}</span>
                   </li>
                 ))}
               </ul>
 
               <button
                 onClick={() => navigate('/register')}
-                className="group flex items-center gap-2 text-cyan-400 font-bold text-lg hover:text-cyan-300 transition-colors"
+                className="group flex items-center gap-4 text-black font-bold text-xl hover:translate-x-2 transition-transform"
               >
-                Coba Demo Chatbot Sekarang <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                Lihat Demo Chatbot <ArrowRight className="w-6 h-6" />
               </button>
             </div>
 
             {/* Visual Representation of Chatbot */}
             <div className="relative">
-              <div className="absolute inset-0 bg-gradient-to-tr from-cyan-500 to-blue-600 transform rotate-6 rounded-2xl opacity-20 blur-lg"></div>
-              <div className="relative bg-slate-900 border border-slate-700 rounded-2xl p-6 shadow-2xl">
-                <div className="flex items-center gap-4 mb-6 border-b border-slate-800 pb-4">
-                  <div className="w-12 h-12 bg-blue-600 rounded-full flex items-center justify-center">
-                    <Bot className="w-7 h-7 text-white" />
+              <div className="absolute inset-0 bg-neutral-100 transform rotate-3 rounded-3xl"></div>
+              <div className="relative bg-white border border-neutral-200 rounded-3xl p-8 shadow-2xl">
+                <div className="flex items-center gap-4 mb-8 border-b border-neutral-100 pb-6">
+                  <div className="w-14 h-14 bg-black rounded-full flex items-center justify-center">
+                    <Bot className="w-8 h-8 text-white" />
                   </div>
                   <div>
-                    <h4 className="font-bold text-white">Asisten Virtual Nusavite</h4>
-                    <p className="text-xs text-cyan-400 flex items-center gap-1">
-                      <span className="w-2 h-2 bg-green-500 rounded-full"></span> Online
+                    <h4 className="font-bold text-xl text-black">Nusavite AI</h4>
+                    <p className="text-sm text-neutral-500 font-medium">
+                      Always Online
                     </p>
                   </div>
                 </div>
 
-                <div className="space-y-4 font-mono text-sm">
-                  <div className="bg-slate-800 p-4 rounded-tl-xl rounded-tr-xl rounded-br-xl text-slate-300 max-w-[90%]">
-                    Halo! Selamat datang di Nusavite. Ada yang bisa saya bantu mengenai pembuatan website bisnis Anda?
+                <div className="space-y-6 font-sans text-base">
+                  <div className="bg-neutral-50 p-6 rounded-2xl rounded-tl-none text-neutral-800">
+                    Halo. Saya asisten virtual Nusavite. Ada yang bisa saya bantu untuk transformasi digital bisnis Anda?
                   </div>
-                  <div className="bg-blue-900/40 p-4 rounded-tl-xl rounded-tr-xl rounded-bl-xl text-white ml-auto max-w-[90%] border border-blue-800/50">
-                    Saya butuh website untuk toko online saya, apakah bisa sekalian dengan fitur chat otomatis?
+                  <div className="bg-black p-6 rounded-2xl rounded-tr-none text-white ml-auto max-w-[90%] shadow-lg">
+                    Saya ingin website yang elegan dan tidak pasaran.
                   </div>
-                  <div className="bg-slate-800 p-4 rounded-tl-xl rounded-tr-xl rounded-br-xl text-slate-300 max-w-[90%]">
-                    Tentu saja! Kami spesialis dalam membuat E-commerce modern. Layanan kami sudah termasuk <strong>Value Added Service Chatbot AI</strong> yang bisa menangani pertanyaan stok dan harga secara otomatis.
+                  <div className="bg-neutral-50 p-6 rounded-2xl rounded-tl-none text-neutral-800">
+                    Pilihan tepat. Kami mengusung desain <strong>Monochrome Luxury</strong> yang fokus pada tipografi kuat dan layout bersih. Sangat cocok untuk brand premium.
                   </div>
                 </div>
 
-                <div className="mt-6 pt-4 border-t border-slate-800">
-                  <div className="h-10 bg-slate-800 rounded-lg animate-pulse w-full"></div>
+                <div className="mt-8 pt-6 border-t border-neutral-100">
+                  <div className="flex gap-3">
+                    <div className="h-3 w-3 bg-neutral-300 rounded-full animate-bounce"></div>
+                    <div className="h-3 w-3 bg-neutral-300 rounded-full animate-bounce delay-75"></div>
+                    <div className="h-3 w-3 bg-neutral-300 rounded-full animate-bounce delay-150"></div>
+                  </div>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Additional Services */}
-      <section className="py-24 bg-slate-900 relative border-t border-slate-800">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-6">Layanan Tambahan Chatbot AI</h2>
-            <p className="text-slate-400 text-lg max-w-2xl mx-auto">
-              Maksimalkan potensi asisten virtual Anda dengan layanan eksklusif kami.
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition-all">
-              <div className="w-12 h-12 bg-purple-900/30 rounded-xl flex items-center justify-center mb-4">
-                <Code className="w-6 h-6 text-purple-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Custom Knowledge Base</h3>
-              <p className="text-slate-400">
-                Pelatihan khusus AI dengan data bisnis Anda agar jawaban lebih akurat dan relevan.
-              </p>
-            </div>
-
-            <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition-all">
-              <div className="w-12 h-12 bg-pink-900/30 rounded-xl flex items-center justify-center mb-4">
-                <Smartphone className="w-6 h-6 text-pink-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Integrasi WhatsApp</h3>
-              <p className="text-slate-400">
-                Hubungkan Chatbot AI langsung ke WhatsApp Business API untuk respon otomatis 24 jam.
-              </p>
-            </div>
-
-            <div className="bg-slate-800/50 p-6 rounded-2xl border border-slate-700 hover:border-cyan-500/50 transition-all">
-              <div className="w-12 h-12 bg-orange-900/30 rounded-xl flex items-center justify-center mb-4">
-                <Monitor className="w-6 h-6 text-orange-400" />
-              </div>
-              <h3 className="text-xl font-bold text-white mb-2">Dashboard Analytics</h3>
-              <p className="text-slate-400">
-                Pantau performa chatbot, riwayat percakapan, dan sentimen pelanggan dalam satu dashboard.
-              </p>
             </div>
           </div>
         </div>
       </section>
 
       {/* CTA Footer */}
-      <section className="py-20 bg-slate-900 border-t border-slate-800">
+      <section className="py-24 bg-white border-t border-neutral-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-6">Siap Mengembangkan Bisnis Anda?</h2>
-          <p className="text-slate-400 mb-8 text-lg">
-            Dapatkan website profesional dengan teknologi AI terkini. Konsultasikan kebutuhan Anda sekarang.
+          <h2 className="text-4xl md:text-5xl font-bold text-black mb-8">Ready to Elevate?</h2>
+          <p className="text-neutral-500 mb-10 text-xl font-light">
+            Biarkan kami menangani teknologinya, Anda fokus pada ekspansi bisnis.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
+          <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a
-              href="#"
-              className="px-8 py-3 bg-white text-slate-900 hover:bg-slate-200 rounded-lg font-bold transition-colors"
+              href="https://wa.me/6281234567890"
+              target="_blank"
+              rel="noreferrer"
+              className="px-12 py-4 bg-black text-white hover:bg-neutral-800 rounded-full font-bold text-lg transition-all"
             >
               Hubungi via WhatsApp
             </a>
             <a
               href="mailto:info@nusavite.com"
-              className="px-8 py-3 bg-transparent border border-slate-600 text-white hover:border-white rounded-lg font-bold transition-colors"
+              className="px-12 py-4 bg-transparent border-2 border-neutral-200 text-black hover:border-black rounded-full font-bold text-lg transition-all"
             >
               Kirim Email
             </a>
           </div>
-          <div className="mt-16 text-slate-600 text-sm">
+          <div className="mt-20 text-neutral-400 text-sm font-medium tracking-widest uppercase">
             &copy; {new Date().getFullYear()} Nusavite.com. All rights reserved.
           </div>
         </div>
