@@ -11,6 +11,7 @@ export default function Dashboard() {
     const [userName, setUserName] = useState('');
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
     const [daysLeft, setDaysLeft] = useState(0);
+    const [expiryDateString, setExpiryDateString] = useState('');
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -23,9 +24,14 @@ export default function Dashboard() {
                     if (userDoc.exists()) {
                         const data = userDoc.data();
                         setUserName(data.name || '');
-                        setSubscriptionStatus(data.subscriptionStatus || 'trial');
+                        const status = data.subscriptionStatus || 'trial';
+                        setSubscriptionStatus(status);
 
-                        if (data.trialExpiresAt) {
+                        if (status === 'active' && data.subscriptionExpiresAt) {
+                            // Format: 28 Januari 2026
+                            const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+                            setExpiryDateString(new Date(data.subscriptionExpiresAt).toLocaleDateString('id-ID', options));
+                        } else if (status === 'trial' && data.trialExpiresAt) {
                             const expiry = new Date(data.trialExpiresAt);
                             const now = new Date();
                             const diff = expiry.getTime() - now.getTime();
@@ -48,18 +54,39 @@ export default function Dashboard() {
 
     return (
         <div className="space-y-8 max-w-full overflow-hidden">
-            {/* Trial Warning */}
-            {subscriptionStatus === 'trial' && (
+            {/* Subscription Status Banner */}
+            {subscriptionStatus === 'active' ? (
                 <div className="bg-black text-white rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-neutral-200">
                     <div className="flex items-center gap-4">
                         <div className="p-2 border border-white/20 rounded-lg">
-                            <Clock size={20} className="text-neutral-300" />
+                            <Clock size={20} className="text-emerald-400" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold">Mode Percobaan Aktif</p>
-                            <p className="text-xs text-neutral-400 mt-0.5">Sisa waktu: <span className="text-white font-bold">{daysLeft} hari</span>.</p>
+                            <p className="text-sm font-bold text-white">Paket Premium Aktif</p>
+                            <p className="text-xs text-neutral-400 mt-0.5">Layanan aktif hingga: <span className="text-white font-bold">{expiryDateString || 'Selamanya'}</span>.</p>
                         </div>
                     </div>
+                </div>
+            ) : (
+                /* Trial Warning */
+                <div className="bg-white border border-neutral-200 rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+                    <div className="flex items-center gap-4">
+                        <div className="p-2 bg-neutral-100 rounded-lg">
+                            <Clock size={20} className="text-neutral-500" />
+                        </div>
+                        <div>
+                            <p className="text-sm font-bold text-black">Mode Demo / Trial</p>
+                            <p className="text-xs text-neutral-500 mt-0.5">Sisa waktu demo: <span className="text-black font-bold">{daysLeft} hari</span>.</p>
+                        </div>
+                    </div>
+                    <a
+                        href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20Paket%20Premium"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="w-full sm:w-auto px-4 py-2 bg-black text-white text-xs font-bold rounded-lg hover:bg-neutral-800 transition-colors text-center"
+                    >
+                        Hubungi Admin
+                    </a>
                 </div>
             )}
 
