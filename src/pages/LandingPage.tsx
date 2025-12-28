@@ -24,7 +24,8 @@ export default function LandingPage() {
                 <a href="#ai-chatbot" className="hover:text-neutral-500 transition-colors px-3 py-2 text-sm font-medium tracking-wide">AI CHATBOT</a>
               </div>
             </div>
-            <div>
+            {/* Login Button Removed as per request */}
+            {/* <div>
               <a
                 href="https://chatbot.nusavite.com/login"
                 target="_blank"
@@ -33,7 +34,7 @@ export default function LandingPage() {
               >
                 Login Dashboard
               </a>
-            </div>
+            </div> */}
           </div>
         </div>
       </nav>
