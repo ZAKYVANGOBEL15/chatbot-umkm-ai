@@ -236,6 +236,96 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* Pricing Section */}
+      <section className="py-24 bg-neutral-50 border-t border-neutral-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <span className="text-sm font-bold tracking-widest uppercase text-neutral-500 mb-2 block">Investasi Cerdas</span>
+            <h2 className="text-3xl md:text-5xl font-bold text-black mb-6">Pilih Paket Langganan</h2>
+            <p className="text-neutral-600 text-lg max-w-2xl mx-auto">
+              Biaya transparan. Tanpa komitmen jangka panjang. Batalkan kapan saja.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+            {/* Standard Plan */}
+            <div className="bg-white p-8 rounded-3xl border border-neutral-200 flex flex-col hover:border-black transition-colors relative">
+              <h3 className="text-xl font-bold text-neutral-900 mb-2">Standard Website</h3>
+              <div className="flex items-baseline mb-6">
+                <span className="text-4xl font-bold text-black">Rp 200rb</span>
+                <span className="text-neutral-500 ml-2">/ bulan</span>
+              </div>
+              <p className="text-neutral-600 mb-8 text-sm leading-relaxed">
+                Solusi tepat untuk bisnis yang membutuhkan kehadiran online profesional tanpa fitur interaksi otomatis.
+              </p>
+
+              <ul className="space-y-4 mb-8 flex-1">
+                {[
+                  'Website Profesional & Responsif',
+                  'Gratis Maintenance Server',
+                  'Auto-Perpanjang Domain',
+                  'Update Konten Ringan',
+                  'Standard Support'
+                ].map((item, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-neutral-300 flex-shrink-0" />
+                    <span className="text-neutral-700 text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Standard"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-4 rounded-xl border-2 border-neutral-200 text-black font-bold text-center hover:border-black transition-colors"
+              >
+                Pilih Standard
+              </a>
+            </div>
+
+            {/* Premium AI Plan */}
+            <div className="bg-black p-8 rounded-3xl border border-neutral-900 flex flex-col relative shadow-2xl transform md:-translate-y-4">
+              <div className="absolute top-0 right-0 bg-white text-black text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
+                Best Value
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Premium AI + Web</h3>
+              <div className="flex items-baseline mb-6">
+                <span className="text-4xl font-bold text-white">Rp 300rb</span>
+                <span className="text-neutral-400 ml-2">/ bulan</span>
+              </div>
+              <p className="text-neutral-400 mb-8 text-sm leading-relaxed">
+                Paket lengkap untuk otomatisasi bisnis. Website Anda bekerja 24 jam melayani pelanggan.
+              </p>
+
+              <ul className="space-y-4 mb-8 flex-1">
+                {[
+                  'Semua fitur di paket Standard',
+                  'Akses Chatbot AI Premium',
+                  'Dashboard Training Mandiri',
+                  'Integrasi WhatsApp Business',
+                  'Prioritas Support 24/7'
+                ].map((item, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-white flex-shrink-0" />
+                    <span className="text-neutral-200 text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Premium%20AI"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-4 rounded-xl bg-white text-black font-bold text-center hover:bg-neutral-200 transition-colors"
+              >
+                Mulai Premium
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Footer */}
       <section className="py-24 bg-white border-t border-neutral-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
