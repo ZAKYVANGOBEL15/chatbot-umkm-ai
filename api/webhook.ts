@@ -62,7 +62,7 @@ export default async function handler(req: any, res: any) {
 
                     if (!isSubscribed && trialExpiresAt && now > trialExpiresAt) {
                         // Trial Expired
-                        const expiredMsg = `Maaf, masa percobaan 5 hari ChatBot Zaky untuk ${userData.businessName || 'toko Anda'} telah habis. Silakan buka dashboard chatbot Anda untuk melakukan pembayaran agar layanan dapat berlanjut. Terima kasih! 🙏`;
+                        const expiredMsg = `Maaf, masa percobaan 5 hari Nusavite untuk ${userData.businessName || 'toko Anda'} telah habis. Silakan hubungi Admin untuk perpanjangan layanan. Terima kasih! 🙏`;
 
                         if (accessToken) {
                             await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
