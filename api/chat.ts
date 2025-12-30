@@ -1,4 +1,4 @@
-import { generateAIResponse } from '../src/lib/gemini.js';
+import { generateAIResponse } from '../src/lib/gemini';
 
 export default async function handler(req: any, res: any) {
     if (req.method !== 'POST') {
