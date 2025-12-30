@@ -1,20 +1,32 @@
 import { generateAIResponse } from '../src/lib/gemini.js';
-import { initializeApp, getApp, getApps } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
+import * as admin from 'firebase-admin';
 
-// Helper to initialize Firebase safely
+// Helper to initialize Firebase safely using Admin SDK
 const getDb = () => {
-    const firebaseConfig = {
-        apiKey: process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
-        authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN,
-        projectId: process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID,
-        storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET,
-        messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID,
-        appId: process.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID
-    };
+    if (!admin.apps.length) {
+        const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID;
+        const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+        const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
-    const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
-    return getFirestore(app);
+        if (projectId && clientEmail && privateKey) {
+            // Admin Mode (Service Account)
+            admin.initializeApp({
+                credential: admin.credential.cert({
+                    projectId,
+                    clientEmail,
+                    privateKey: privateKey.replace(/\\n/g, '\n'),
+                }),
+            });
+            console.log('[Firebase] Initialized with Service Account');
+        } else {
+            // Fallback to project ID (only works in some environments or with local emulator)
+            admin.initializeApp({
+                projectId: projectId
+            });
+            console.warn('[Firebase] Initialized with Project ID only (no Service Account)');
+        }
+    }
+    return admin.firestore();
 };
 
 export default async function handler(req: any, res: any) {
@@ -57,9 +69,8 @@ export default async function handler(req: any, res: any) {
                 console.log(`[WhatsApp] Message from ${from}: ${text} (ID: ${phoneNumberId})`);
 
                 // A. Find the user associated with this Phone Number ID
-                const usersRef = collection(db, 'users');
-                const q = query(usersRef, where('whatsappPhoneNumberId', '==', phoneNumberId));
-                const querySnapshot = await getDocs(q);
+                const usersRef = db.collection('users');
+                const querySnapshot = await usersRef.where('whatsappPhoneNumberId', '==', phoneNumberId).get();
 
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
@@ -69,7 +80,7 @@ export default async function handler(req: any, res: any) {
                     const accessToken = userData.whatsappAccessToken;
 
                     // B. Fetch Products for this user
-                    const productsSnap = await getDocs(collection(db, 'users', userId, 'products'));
+                    const productsSnap = await db.collection('users').doc(userId).collection('products').get();
                     const products = productsSnap.docs.map(d => d.data());
 
                     const businessContext = {
@@ -98,6 +109,8 @@ export default async function handler(req: any, res: any) {
                         const waData = await waResponse.json();
                         console.log(`[WhatsApp] Reply sent to ${from}`, waData);
                     }
+                } else {
+                    console.warn(`[WhatsApp] No user found for Phone Number ID: ${phoneNumberId}`);
                 }
             }
 
