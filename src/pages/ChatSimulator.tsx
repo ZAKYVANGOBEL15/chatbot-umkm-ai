@@ -73,23 +73,16 @@ export default function ChatSimulator() {
                 })
             });
 
-            const text = await response.text();
-            let data;
-            try {
-                data = JSON.parse(text);
-            } catch (e) {
-                console.error("Failed to parse JSON:", text);
-                throw new Error(`Server returned non-JSON: ${text.substring(0, 100)}...`);
-            }
+            const data = await response.json();
 
             if (!response.ok || data.error) {
-                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error || 'Server error'}` }]);
+                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error || 'Terjadi kesalahan sistem'}` }]);
             } else {
                 setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
             }
         } catch (error: any) {
-            console.error("Simulator Error Details:", error);
-            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan pada koneksi ke server. (${error.message})` }]);
+            console.error("Simulator Error:", error);
+            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan koneksi server. (${error.message})` }]);
         } finally {
             setLoading(false);
         }
