@@ -246,7 +246,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
             {/* Standard Plan (Annual) */}
             <div className="bg-white p-8 rounded-3xl border border-neutral-200 flex flex-col hover:border-black transition-colors relative">
               <h3 className="text-xl font-bold text-neutral-900 mb-2">Standard Website</h3>
@@ -283,23 +283,62 @@ export default function LandingPage() {
               </a>
             </div>
 
-            {/* Premium AI Plan (Monthly) */}
-            <div className="bg-black p-8 rounded-3xl border border-neutral-900 flex flex-col relative shadow-2xl transform md:-translate-y-4">
-              <div className="absolute top-0 right-0 bg-white text-black text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
-                Best Value
+            {/* NEW: Standalone AI Chatbot Plan */}
+            <div className="bg-white p-8 rounded-3xl border-2 border-dashed border-neutral-300 flex flex-col hover:border-black transition-colors relative">
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-black text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-widest whitespace-nowrap">
+                New: Standalone
               </div>
-              <h3 className="text-xl font-bold text-white mb-2">Premium AI + Web</h3>
+              <h3 className="text-xl font-bold text-neutral-900 mb-2">WhatsApp AI Only</h3>
               <div className="flex items-baseline mb-6">
-                <span className="text-4xl font-bold text-white">Rp 300rb</span>
-                <span className="text-neutral-400 ml-2">/ bulan</span>
+                <span className="text-4xl font-bold text-black">Rp 195rb</span>
+                <span className="text-neutral-500 ml-2">/ bulan</span>
               </div>
-              <p className="text-neutral-400 mb-8 text-sm leading-relaxed">
-                Powerhouse untuk bisnis aktif. Asisten AI bekerja 24 jam menangani tamu Anda secara otomatis.
+              <p className="text-neutral-600 mb-8 text-sm leading-relaxed">
+                Hanya butuh Chatbot AI untuk WhatsApp? Integrasikan "Otak" AI kami ke WhatsApp Bisnis Anda 24/7.
               </p>
 
               <ul className="space-y-4 mb-8 flex-1">
                 {[
-                  'Semua fitur Website Standard',
+                  'Integrasi WhatsApp API',
+                  'Latih AI sesuka hati (Product Knowledge)',
+                  'Respon Otomatis 24 Jam',
+                  'Tanpa Perlu Website Baru',
+                  'Dashboard Kontrol Penuh'
+                ].map((item, index) => (
+                  <li key={index} className="flex items-center gap-3">
+                    <CheckCircle className="w-5 h-5 text-neutral-300 flex-shrink-0" />
+                    <span className="text-neutral-700 text-sm">{item}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <a
+                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20WhatsApp%20AI%20Standalone"
+                target="_blank"
+                rel="noreferrer"
+                className="w-full py-4 rounded-xl border-2 border-black bg-black text-white font-bold text-center hover:bg-neutral-800 transition-colors"
+              >
+                Pilih Paket WhatsApp AI
+              </a>
+            </div>
+
+            {/* Premium AI Plan (Monthly) */}
+            <div className="bg-black p-8 rounded-3xl border border-neutral-900 flex flex-col relative shadow-2xl transform md:-translate-y-4">
+              <div className="absolute top-0 right-0 bg-white text-black text-xs font-bold px-3 py-1 rounded-bl-xl rounded-tr-2xl uppercase tracking-wider">
+                Full Bundle
+              </div>
+              <h3 className="text-xl font-bold text-white mb-2">Premium Master</h3>
+              <div className="flex items-baseline mb-6">
+                <span className="text-4xl font-bold text-white">Rp 350rb</span>
+                <span className="text-neutral-400 ml-2">/ bulan</span>
+              </div>
+              <p className="text-neutral-400 mb-8 text-sm leading-relaxed">
+                Paket lengkap untuk dominasi digital. Website profesional + Chatbot AI + Maintenance Prioritas.
+              </p>
+
+              <ul className="space-y-4 mb-8 flex-1">
+                {[
+                  'Semua fitur Website & WhatsApp AI',
                   'Chatbot AI Integrasi Penuh',
                   'Dashboard Training Data Mandiri',
                   'Maintenance Bulanan Prioritas',
@@ -313,12 +352,12 @@ export default function LandingPage() {
               </ul>
 
               <a
-                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Premium%20AI%20Bulanan"
+                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Premium%20Master%20(Web%20+%20AI)"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-4 rounded-xl bg-white text-black font-bold text-center hover:bg-neutral-200 transition-colors"
               >
-                Mulai Premium Bulanan
+                Mulai Paket Lengkap
               </a>
             </div>
           </div>
