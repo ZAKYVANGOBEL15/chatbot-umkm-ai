@@ -12,6 +12,7 @@ export default function Dashboard() {
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
     const [daysLeft, setDaysLeft] = useState(0);
     const [expiryDateString, setExpiryDateString] = useState('');
+    const [isWhatsAppConfigured, setIsWhatsAppConfigured] = useState(false);
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, async (user) => {
@@ -38,6 +39,7 @@ export default function Dashboard() {
                             const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
                             setDaysLeft(days > 0 ? days : 0);
                         }
+                        setIsWhatsAppConfigured(!!(data.whatsappPhoneNumberId && data.whatsappAccessToken));
                     }
                 } catch (error) {
                     console.error("Error fetching dashboard stats:", error);
@@ -89,6 +91,35 @@ export default function Dashboard() {
                     </a>
                 </div>
             )}
+
+            {/* WhatsApp Connection Status Section */}
+            <div className={`p-4 rounded-xl border flex items-center justify-between gap-4 shadow-sm transition-all ${isWhatsAppConfigured
+                ? 'bg-emerald-50 border-emerald-100'
+                : 'bg-amber-50 border-amber-100 animate-pulse'}`}>
+                <div className="flex items-center gap-4">
+                    <div className={`p-2 rounded-lg ${isWhatsAppConfigured ? 'bg-emerald-500' : 'bg-amber-500'}`}>
+                        <MessageSquare size={20} className="text-white" />
+                    </div>
+                    <div>
+                        <p className={`text-sm font-bold ${isWhatsAppConfigured ? 'text-emerald-900' : 'text-amber-900'}`}>
+                            WhatsApp Status: {isWhatsAppConfigured ? 'Terhubung (Ready)' : 'Belum Dikonfigurasi'}
+                        </p>
+                        <p className={`text-xs ${isWhatsAppConfigured ? 'text-emerald-700' : 'text-amber-700'} mt-0.5`}>
+                            {isWhatsAppConfigured
+                                ? 'Chatbot siap melayani pelanggan Anda di WhatsApp.'
+                                : 'Segera masukkan API Key Meta Anda di menu Pengaturan.'}
+                        </p>
+                    </div>
+                </div>
+                {!isWhatsAppConfigured && (
+                    <Link
+                        to="/dashboard/settings"
+                        className="px-4 py-2 bg-amber-600 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-lg hover:bg-amber-700 transition-colors"
+                    >
+                        Setup Sekarang
+                    </Link>
+                )}
+            </div>
 
             {/* Welcome Section */}
             <div className="p-8 lg:p-12 bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100 overflow-hidden relative group">

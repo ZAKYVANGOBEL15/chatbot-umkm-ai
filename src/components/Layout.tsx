@@ -17,7 +17,7 @@ export default function Layout() {
     const menuItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
         { icon: MessageSquare, label: 'Chat Simulator', path: '/dashboard/chat' },
-        { icon: Box, label: 'Produk & Knowledge', path: '/dashboard/knowledge' },
+        { icon: Box, label: 'AI Knowledge Base', path: '/dashboard/knowledge' }, // Professional rebranding
         { icon: Settings, label: 'Pengaturan', path: '/dashboard/settings' },
     ];
 
