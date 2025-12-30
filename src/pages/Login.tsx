@@ -4,6 +4,8 @@ import { auth } from '../lib/firebase';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 
+import logo from '../assets/image/NV.png';
+
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -30,9 +32,7 @@ export default function Login() {
 
             {/* Brand Logo */}
             <div className="mb-12 flex items-center gap-3">
-                <div className="w-12 h-12 bg-black rounded-xl flex items-center justify-center">
-                    <span className="text-white font-bold text-2xl font-serif">N</span>
-                </div>
+                <img src={logo} alt="Nusavite Logo" className="w-12 h-12 object-contain" />
                 <span className="font-bold text-3xl tracking-tight text-black">Nusavite</span>
             </div>
 
