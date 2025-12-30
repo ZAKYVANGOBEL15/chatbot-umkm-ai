@@ -1,36 +1,48 @@
-import { generateAIResponse } from '../src/lib/gemini';
-import { initializeApp } from 'firebase/app';
-import { getFirestore, collection, query, where, getDocs, getDoc, doc } from 'firebase/firestore';
+import { generateAIResponse } from '../src/lib/gemini.js';
+import { initializeApp, getApp, getApps } from 'firebase/app';
+import { getFirestore, collection, query, where, getDocs } from 'firebase/firestore';
 
-// Firebase configuration from environment variables
-const firebaseConfig = {
-    apiKey: process.env.VITE_FIREBASE_API_KEY,
-    authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: process.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: process.env.VITE_FIREBASE_APP_ID
+// Helper to initialize Firebase safely
+const getDb = () => {
+    const firebaseConfig = {
+        apiKey: process.env.VITE_FIREBASE_API_KEY || process.env.FIREBASE_API_KEY,
+        authDomain: process.env.VITE_FIREBASE_AUTH_DOMAIN || process.env.FIREBASE_AUTH_DOMAIN,
+        projectId: process.env.VITE_FIREBASE_PROJECT_ID || process.env.FIREBASE_PROJECT_ID,
+        storageBucket: process.env.VITE_FIREBASE_STORAGE_BUCKET || process.env.FIREBASE_STORAGE_BUCKET,
+        messagingSenderId: process.env.VITE_FIREBASE_MESSAGING_SENDER_ID || process.env.FIREBASE_MESSAGING_SENDER_ID,
+        appId: process.env.VITE_FIREBASE_APP_ID || process.env.FIREBASE_APP_ID
+    };
+
+    const app = !getApps().length ? initializeApp(firebaseConfig) : getApp();
+    return getFirestore(app);
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 export default async function handler(req: any, res: any) {
+    console.log(`[Webhook] Received ${req.method} request`);
+
     // 1. Handle Webhook Verification (for Meta)
     if (req.method === 'GET') {
         const mode = req.query['hub.mode'];
         const token = req.query['hub.verify_token'];
         const challenge = req.query['hub.challenge'];
 
-        if (mode === 'subscribe' && token === process.env.WHATSAPP_VERIFY_TOKEN) {
+        console.log(`[Webhook] Verification attempt - Token: ${token}`);
+
+        const verifyToken = process.env.WHATSAPP_VERIFY_TOKEN;
+
+        if (mode === 'subscribe' && token === verifyToken) {
+            console.log('[Webhook] Verification successful');
             return res.status(200).send(challenge);
         }
+
+        console.warn(`[Webhook] Verification failed. Expected: ${verifyToken}, Got: ${token}`);
         return res.status(403).send('Forbidden');
     }
 
     // 2. Handle Incoming Messages
     if (req.method === 'POST') {
         try {
+            const db = getDb();
             const data = req.body;
 
             // Extract message and business phone number ID
@@ -39,7 +51,7 @@ export default async function handler(req: any, res: any) {
             const phoneNumberId = value?.metadata?.phone_number_id;
 
             if (message && message.type === 'text' && phoneNumberId) {
-                const from = message.from; // Customer phone number
+                const from = message.from;
                 const text = message.text.body;
 
                 console.log(`[WhatsApp] Message from ${from}: ${text} (ID: ${phoneNumberId})`);
@@ -54,32 +66,7 @@ export default async function handler(req: any, res: any) {
                     const userData = userDoc.data();
                     const userId = userDoc.id;
 
-                    // Check Trial/Subscription Status
-                    const now = new Date();
-                    const trialExpiresAt = userData.trialExpiresAt ? new Date(userData.trialExpiresAt) : null;
-                    const isSubscribed = userData.subscriptionStatus === 'active';
                     const accessToken = userData.whatsappAccessToken;
-
-                    if (!isSubscribed && trialExpiresAt && now > trialExpiresAt) {
-                        // Trial Expired
-                        const expiredMsg = `Maaf, masa percobaan 5 hari Nusavite untuk ${userData.businessName || 'toko Anda'} telah habis. Silakan hubungi Admin untuk perpanjangan layanan. Terima kasih! 🙏`;
-
-                        if (accessToken) {
-                            await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${accessToken}`,
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    messaging_product: 'whatsapp',
-                                    to: from,
-                                    text: { body: expiredMsg }
-                                })
-                            });
-                        }
-                        return res.status(200).send('OK');
-                    }
 
                     // B. Fetch Products for this user
                     const productsSnap = await getDocs(collection(db, 'users', userId, 'products'));
@@ -96,36 +83,28 @@ export default async function handler(req: any, res: any) {
 
                     // D. Send Message Back to WhatsApp
                     if (accessToken) {
-                        try {
-                            const waResponse = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
-                                method: 'POST',
-                                headers: {
-                                    'Authorization': `Bearer ${accessToken}`,
-                                    'Content-Type': 'application/json',
-                                },
-                                body: JSON.stringify({
-                                    messaging_product: 'whatsapp',
-                                    to: from,
-                                    text: { body: reply }
-                                })
-                            });
-                            const waData = await waResponse.json();
-                            console.log(`[WhatsApp] Reply sent to ${from}`, waData);
-                        } catch (waErr) {
-                            console.error('[WhatsApp] Failed to send message:', waErr);
-                        }
-                    } else {
-                        console.warn(`[WhatsApp] No access token found for user ${userId}`);
+                        const waResponse = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
+                            method: 'POST',
+                            headers: {
+                                'Authorization': `Bearer ${accessToken}`,
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({
+                                messaging_product: 'whatsapp',
+                                to: from,
+                                text: { body: reply }
+                            })
+                        });
+                        const waData = await waResponse.json();
+                        console.log(`[WhatsApp] Reply sent to ${from}`, waData);
                     }
-                } else {
-                    console.warn(`[WhatsApp] No user found for Phone Number ID: ${phoneNumberId}`);
                 }
             }
 
             return res.status(200).send('OK');
         } catch (e: any) {
-            console.error('Webhook error:', e);
-            return res.status(500).send('Internal Error');
+            console.error('[Webhook Error]', e.message);
+            return res.status(500).json({ error: 'Internal Error', message: e.message });
         }
     }
 
