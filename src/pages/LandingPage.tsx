@@ -1,9 +1,9 @@
 // import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Bot, Code, CheckCircle, ArrowRight, Monitor, Smartphone, Zap } from 'lucide-react';
+
+import { Bot, Code, CheckCircle, Monitor, Smartphone, Zap } from 'lucide-react';
 
 export default function LandingPage() {
-  const navigate = useNavigate();
+
 
   return (
     <div className="min-h-screen bg-white text-neutral-900 selection:bg-black selection:text-white font-sans">
@@ -189,12 +189,7 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <button
-                onClick={() => navigate('/login')}
-                className="group flex items-center gap-4 text-black font-bold text-xl hover:translate-x-2 transition-transform"
-              >
-                Login ke Dashboard Chatbot <ArrowRight className="w-6 h-6" />
-              </button>
+
             </div>
 
             {/* Visual Representation of Chatbot */}
