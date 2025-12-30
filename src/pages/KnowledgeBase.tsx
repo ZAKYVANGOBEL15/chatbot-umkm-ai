@@ -13,8 +13,6 @@ interface Product {
 export default function KnowledgeBase() {
     const [businessName, setBusinessName] = useState('');
     const [businessDesc, setBusinessDesc] = useState('');
-    const [waPhoneNumberId, setWaPhoneNumberId] = useState('');
-    const [waAccessToken, setWaAccessToken] = useState('');
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -32,8 +30,6 @@ export default function KnowledgeBase() {
                 const data = docSnap.data();
                 setBusinessName(data.businessName || '');
                 setBusinessDesc(data.businessDescription || '');
-                setWaPhoneNumberId(data.whatsappPhoneNumberId || '');
-                setWaAccessToken(data.whatsappAccessToken || '');
             }
         };
         loadProfile();
@@ -58,9 +54,7 @@ export default function KnowledgeBase() {
             const docRef = doc(db, 'users', auth.currentUser.uid);
             await updateDoc(docRef, {
                 businessName,
-                businessDescription: businessDesc,
-                whatsappPhoneNumberId: waPhoneNumberId,
-                whatsappAccessToken: waAccessToken
+                businessDescription: businessDesc
             });
             alert('Profil bisnis berhasil disimpan!');
         } catch (e) {
@@ -128,32 +122,6 @@ export default function KnowledgeBase() {
                             className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all placeholder:text-neutral-300 font-medium"
                             placeholder="Kami menjual kue basah dan kering. Buka jam 08.00 - 17.00. Jawab dengan ramah dan sopan."
                         />
-                    </div>
-                    <div className="border-t border-neutral-100 pt-6 mt-2">
-                        <label className="block text-sm font-bold text-black mb-1">Integrasi WhatsApp (Opsional)</label>
-                        <p className="text-xs text-neutral-400 mb-4">Dapatkan data ini dari Meta Developers Portal</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-neutral-50 p-6 rounded-2xl border border-neutral-100">
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase text-neutral-400 mb-2">Phone Number ID</label>
-                                <input
-                                    type="text"
-                                    value={waPhoneNumberId}
-                                    onChange={(e) => setWaPhoneNumberId(e.target.value)}
-                                    className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white text-sm focus:ring-2 focus:ring-black outline-none"
-                                    placeholder="Misal: 456789123450"
-                                />
-                            </div>
-                            <div>
-                                <label className="block text-[10px] font-bold uppercase text-neutral-400 mb-2">Permanent Access Token</label>
-                                <input
-                                    type="password"
-                                    value={waAccessToken}
-                                    onChange={(e) => setWaAccessToken(e.target.value)}
-                                    className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white text-sm focus:ring-2 focus:ring-black outline-none"
-                                    placeholder="EAAB..."
-                                />
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div className="mt-8 flex justify-end">
