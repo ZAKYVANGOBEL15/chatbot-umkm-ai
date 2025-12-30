@@ -15,23 +15,30 @@ export async function generateAIResponse(
     let GEMINI_API_KEY = '';
 
     try {
+        console.log("[AI Service] Checking environment variables...");
+
         // 1. Try Node.js process.env first (Server side)
         if (typeof process !== 'undefined' && process.env) {
             MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY || '';
             GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '';
+            console.log("[AI Service] Found in process.env:", {
+                hasMistral: !!MISTRAL_API_KEY,
+                hasGemini: !!GEMINI_API_KEY
+            });
         }
 
-        // 2. Fallback to import.meta.env (Client side)
-        // We use a string check to avoid syntax errors in environments that don't support it
-        if (!MISTRAL_API_KEY || !GEMINI_API_KEY) {
-            const meta = (import.meta as any);
-            if (meta && meta.env) {
-                MISTRAL_API_KEY = MISTRAL_API_KEY || meta.env.MISTRAL_API_KEY || meta.env.VITE_MISTRAL_API_KEY || '';
-                GEMINI_API_KEY = GEMINI_API_KEY || meta.env.GEMINI_API_KEY || meta.env.VITE_GEMINI_API_KEY || '';
-            }
+        // 2. Fallback to import.meta.env (Client side if applicable)
+        if (!MISTRAL_API_KEY && typeof import.meta !== 'undefined' && (import.meta as any).env) {
+            const env = (import.meta as any).env;
+            MISTRAL_API_KEY = env.MISTRAL_API_KEY || env.VITE_MISTRAL_API_KEY || '';
+            GEMINI_API_KEY = env.GEMINI_API_KEY || env.VITE_GEMINI_API_KEY || '';
+            console.log("[AI Service] Found in import.meta.env:", {
+                hasMistral: !!MISTRAL_API_KEY,
+                hasGemini: !!GEMINI_API_KEY
+            });
         }
-    } catch (e) {
-        console.warn("Env check warning:", e);
+    } catch (e: any) {
+        console.error("[AI Service] Env detection failed:", e.message);
     }
 
     const productList = (businessContext.products || [])
