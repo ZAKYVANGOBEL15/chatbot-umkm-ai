@@ -69,21 +69,27 @@ export default function ChatSimulator() {
                     message: userMsg,
                     history: history,
                     userId: auth.currentUser?.uid,
-                    businessContext: businessContext // Passing context for speed, actual key stays on server
+                    businessContext: businessContext
                 })
             });
 
-            const data = await response.json();
+            const text = await response.text();
+            let data;
+            try {
+                data = JSON.parse(text);
+            } catch (e) {
+                console.error("Failed to parse JSON:", text);
+                throw new Error(`Server returned non-JSON: ${text.substring(0, 100)}...`);
+            }
 
-            if (data.error) {
-                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error}` }]);
+            if (!response.ok || data.error) {
+                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error || 'Server error'}` }]);
             } else {
                 setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
             }
         } catch (error: any) {
             console.error("Simulator Error Details:", error);
-            // If it's a fetch error, we might want to know if it's a parsing error or a network error
-            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan pada koneksi ke server. (${error.message || 'Unknown error'})` }]);
+            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan pada koneksi ke server. (${error.message})` }]);
         } finally {
             setLoading(false);
         }
