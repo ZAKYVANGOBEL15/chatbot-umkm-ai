@@ -10,14 +10,29 @@ export async function generateAIResponse(
     businessContext: { name: string; description: string; products: any[] },
     history: { role: string; text: string }[]
 ) {
-    // Get API keys from environment (Compatible with Vercel and Vite)
-    const MISTRAL_API_KEY = (typeof process !== 'undefined' && (process.env?.MISTRAL_API_KEY || process.env?.VITE_MISTRAL_API_KEY)) ||
-        ((import.meta as any)?.env?.MISTRAL_API_KEY) ||
-        ((import.meta as any)?.env?.VITE_MISTRAL_API_KEY);
+    // Get API keys safely for both Server (process.env) and Client (import.meta.env)
+    let MISTRAL_API_KEY = '';
+    let GEMINI_API_KEY = '';
 
-    const GEMINI_API_KEY = (typeof process !== 'undefined' && (process.env?.GEMINI_API_KEY || process.env?.VITE_GEMINI_API_KEY)) ||
-        ((import.meta as any)?.env?.GEMINI_API_KEY) ||
-        ((import.meta as any)?.env?.VITE_GEMINI_API_KEY);
+    try {
+        // 1. Try Node.js process.env first (Server side)
+        if (typeof process !== 'undefined' && process.env) {
+            MISTRAL_API_KEY = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY || '';
+            GEMINI_API_KEY = process.env.GEMINI_API_KEY || process.env.VITE_GEMINI_API_KEY || '';
+        }
+
+        // 2. Fallback to import.meta.env (Client side)
+        // We use a string check to avoid syntax errors in environments that don't support it
+        if (!MISTRAL_API_KEY || !GEMINI_API_KEY) {
+            const meta = (import.meta as any);
+            if (meta && meta.env) {
+                MISTRAL_API_KEY = MISTRAL_API_KEY || meta.env.MISTRAL_API_KEY || meta.env.VITE_MISTRAL_API_KEY || '';
+                GEMINI_API_KEY = GEMINI_API_KEY || meta.env.GEMINI_API_KEY || meta.env.VITE_GEMINI_API_KEY || '';
+            }
+        }
+    } catch (e) {
+        console.warn("Env check warning:", e);
+    }
 
     const productList = (businessContext.products || [])
         .map(p => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
