@@ -8,12 +8,13 @@ export async function generateAIResponse(
     businessContext: { name: string; description: string; products: any[] },
     history: { role: string; text: string }[]
 ) {
-    // Get API key from environment
-    const apiKey = (typeof process !== 'undefined' && process.env?.VITE_MISTRAL_API_KEY) ||
+    // Get API key from environment (Secure backend first, then fallback to Vite)
+    const apiKey = (typeof process !== 'undefined' && (process.env?.MISTRAL_API_KEY || process.env?.VITE_MISTRAL_API_KEY)) ||
+        ((import.meta as any).env?.MISTRAL_API_KEY) ||
         ((import.meta as any).env?.VITE_MISTRAL_API_KEY);
 
     if (!apiKey) {
-        return "Error: API Key Mistral belum dikonfigurasi. Silakan tambahkan VITE_MISTRAL_API_KEY di environment variables.";
+        return "Error: API Key Mistral belum dikonfigurasi. Pastikan MISTRAL_API_KEY sudah ada di Environment Variables dan sudah melakukan Redeploy di Vercel.";
     }
 
     const productList = (businessContext.products || [])

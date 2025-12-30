@@ -24,3 +24,29 @@ VITE_FIREBASE_API_KEY=AIzaSy...
 VITE_FIREBASE_AUTH_DOMAIN=project-id.firebaseapp.com
 ...
 ```
+
+### 9. Penting: Keamanan Data (Security Rules)
+
+Ganti Rules di Tab **Rules** Firestore Console agar user hanya bisa melihat datanya sendiri:
+
+```javascript
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /users/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+      
+      match /products/{productId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
+    }
+  }
+}
+```
+
+### 10. Penting: Keamanan API Key
+
+Agar API Key Mistral tidak bocor:
+1. Di Dashboard Vercel, jangan gunakan awalan `VITE_`.
+2. Gunakan nama variabel: `MISTRAL_API_KEY`.
+3. Kodingan sudah otomatis menggunakan proxy aman.
+

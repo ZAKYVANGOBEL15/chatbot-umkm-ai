@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, Trash2, Smartphone } from 'lucide-react';
-import { generateAIResponse } from '../lib/gemini';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 
@@ -62,10 +61,28 @@ export default function ChatSimulator() {
                 text: m.text
             }));
 
-            const reply = await generateAIResponse(userMsg, businessContext, history);
-            setMessages(prev => [...prev, { role: 'model', text: reply }]);
+            // SECURE: Call our own backend proxy instead of direct Mistral call
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userMsg,
+                    history: history,
+                    userId: auth.currentUser?.uid,
+                    businessContext: businessContext // Passing context for speed, actual key stays on server
+                })
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error}` }]);
+            } else {
+                setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
+            }
         } catch (error) {
-            setMessages(prev => [...prev, { role: 'model', text: 'Maaf, terjadi kesalahan pada sistem.' }]);
+            console.error("Simulator Error:", error);
+            setMessages(prev => [...prev, { role: 'model', text: 'Maaf, terjadi kesalahan pada koneksi ke server.' }]);
         } finally {
             setLoading(false);
         }
