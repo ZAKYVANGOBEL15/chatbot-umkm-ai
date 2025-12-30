@@ -1,5 +1,6 @@
 import { generateAIResponse } from '../src/lib/gemini.js';
 import admin from 'firebase-admin';
+import crypto from 'crypto';
 
 // Helper to initialize Firebase safely using Admin SDK
 const getDb = () => {
@@ -37,6 +38,16 @@ const getDb = () => {
     return admin.firestore();
 };
 
+// Helper to verify Meta's X-Hub-Signature-256
+const verifySignature = (payload: string, signature: string, appSecret: string) => {
+    const hash = crypto
+        .createHmac('sha256', appSecret)
+        .update(payload)
+        .digest('hex');
+    const expectedSignature = `sha256=${hash}`;
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expectedSignature));
+};
+
 export default async function handler(req: any, res: any) {
     console.log(`[Webhook] Received ${req.method} request`);
 
@@ -62,6 +73,22 @@ export default async function handler(req: any, res: any) {
     // 2. Handle Incoming Messages
     if (req.method === 'POST') {
         try {
+            const signature = req.headers['x-hub-signature-256'] as string;
+            const appSecret = process.env.WHATSAPP_APP_SECRET;
+
+            if (appSecret && signature) {
+                // Verify signature using the raw body
+                // req.body might be already parsed, for Vercel Serverless we might need raw body
+                const payload = JSON.stringify(req.body);
+                if (!verifySignature(payload, signature, appSecret)) {
+                    console.warn('[Webhook] Invalid signature');
+                    return res.status(401).send('Invalid Signature');
+                }
+                console.log('[Webhook] Signature verified');
+            } else if (!appSecret) {
+                console.warn('[Webhook] WHATSAPP_APP_SECRET is not set. Skipping signature validation.');
+            }
+
             const db = getDb();
             const data = req.body;
 
