@@ -80,9 +80,10 @@ export default function ChatSimulator() {
             } else {
                 setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
             }
-        } catch (error) {
-            console.error("Simulator Error:", error);
-            setMessages(prev => [...prev, { role: 'model', text: 'Maaf, terjadi kesalahan pada koneksi ke server.' }]);
+        } catch (error: any) {
+            console.error("Simulator Error Details:", error);
+            // If it's a fetch error, we might want to know if it's a parsing error or a network error
+            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan pada koneksi ke server. (${error.message || 'Unknown error'})` }]);
         } finally {
             setLoading(false);
         }
