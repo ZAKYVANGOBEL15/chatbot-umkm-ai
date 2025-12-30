@@ -1,25 +1,33 @@
 import { generateAIResponse } from '../src/lib/gemini.js';
-import * as admin from 'firebase-admin';
+import admin from 'firebase-admin';
 
 // Helper to initialize Firebase safely using Admin SDK
 const getDb = () => {
-    if (!admin.apps.length) {
+    // Safety check for ESM environment
+    const apps = admin.apps || [];
+
+    if (apps.length === 0) {
         const projectId = process.env.FIREBASE_PROJECT_ID || process.env.VITE_FIREBASE_PROJECT_ID;
         const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
         const privateKey = process.env.FIREBASE_PRIVATE_KEY;
 
+        console.log(`[Firebase] Initializing... Project: ${projectId}, Email: ${clientEmail ? 'EXISTS' : 'MISSING'}, Key: ${privateKey ? 'EXISTS' : 'MISSING'}`);
+
         if (projectId && clientEmail && privateKey) {
-            // Admin Mode (Service Account)
-            admin.initializeApp({
-                credential: admin.credential.cert({
-                    projectId,
-                    clientEmail,
-                    privateKey: privateKey.replace(/\\n/g, '\n'),
-                }),
-            });
-            console.log('[Firebase] Initialized with Service Account');
+            try {
+                admin.initializeApp({
+                    credential: admin.credential.cert({
+                        projectId,
+                        clientEmail,
+                        privateKey: privateKey.replace(/\\n/g, '\n'),
+                    }),
+                });
+                console.log('[Firebase] Initialized with Service Account');
+            } catch (initErr: any) {
+                console.error('[Firebase] Init Error:', initErr.message);
+            }
         } else {
-            // Fallback to project ID (only works in some environments or with local emulator)
+            // Fallback for local development or missing envs
             admin.initializeApp({
                 projectId: projectId
             });
