@@ -61,6 +61,9 @@ Berikan output dalam format JSON murni (tanpa markdown code block) dengan strukt
 {
   "businessName": "Nama Bisnis",
   "businessDescription": "Deskripsi super lengkap. Sertakan: 1) Siapa kami (tentang bisnis), 2) Keunggulan/Filosofi, 3) Info Tim Ahli/Dokter (jika ada), 4) Info Fasilitas/Galeri, 5) Jam operasional & Lokasi (jika ada). Buat narasi yang profesional.",
+  "instagram": "Username Instagram atau URL lengkap (jika ditemukan)",
+  "facebook": "Nama Halaman FB atau URL lengkap (jika ditemukan)",
+  "businessEmail": "Alamat Email Bisnis (jika ditemukan)",
   "products": [
     { "name": "Nama Produk/Layanan", "price": 0, "description": "Deskripsi detail tentang manfaat, prosedur, atau fitur layanan tersebut." }
   ]
@@ -68,9 +71,10 @@ Berikan output dalam format JSON murni (tanpa markdown code block) dengan strukt
 Catatan Penting:
 1. EKSTRAK SEMUA layanan/produk yang ditemukan. Jangan ada yang terlewat.
 2. Jika ada kategori (misal: Optical Radiance, Dermal Vitality), masukkan tiap item di bawahnya sebagai produk terpisah.
-3. Gunakan Bahasa Indonesia yang sangat ramah dan elegan (Kak/Sist).
-4. Jika harga tidak ada, tulis 0.
-5. Pastikan JSON valid dan deskripsi bisnis sangat informatif.
+3. Cari link Instagram, Facebook, dan Email di bagian Header atau Footer.
+4. Gunakan Bahasa Indonesia yang sangat ramah dan elegan (Kak/Sist).
+5. Jika harga tidak ada, tulis 0.
+6. Pastikan JSON valid dan deskripsi bisnis sangat informatif.
 `.trim();
 
         const aiResponse = await fetch("https://api.mistral.ai/v1/chat/completions", {

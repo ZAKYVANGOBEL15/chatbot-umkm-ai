@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles } from 'lucide-react';
+import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles, Instagram, Facebook, Mail } from 'lucide-react';
 import { doc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc, query } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
@@ -13,6 +13,9 @@ interface Product {
 export default function KnowledgeBase() {
     const [businessName, setBusinessName] = useState('');
     const [businessDesc, setBusinessDesc] = useState('');
+    const [instagram, setInstagram] = useState('');
+    const [facebook, setFacebook] = useState('');
+    const [businessEmail, setBusinessEmail] = useState('');
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -34,6 +37,9 @@ export default function KnowledgeBase() {
                 const data = docSnap.data();
                 setBusinessName(data.businessName || '');
                 setBusinessDesc(data.businessDescription || '');
+                setInstagram(data.instagram || '');
+                setFacebook(data.facebook || '');
+                setBusinessEmail(data.businessEmail || '');
             }
         };
         loadProfile();
@@ -58,7 +64,11 @@ export default function KnowledgeBase() {
             const docRef = doc(db, 'users', auth.currentUser.uid);
             await updateDoc(docRef, {
                 businessName,
-                businessDescription: businessDesc
+                businessDescription: businessDesc,
+                instagram,
+                facebook,
+                businessEmail,
+                updatedAt: new Date().toISOString()
             });
             alert('Profil bisnis berhasil disimpan!');
         } catch (e) {
@@ -107,6 +117,9 @@ export default function KnowledgeBase() {
             // Update Business Profile
             setBusinessName(data.businessName || businessName);
             setBusinessDesc(data.businessDescription || businessDesc);
+            setInstagram(data.instagram || instagram);
+            setFacebook(data.facebook || facebook);
+            setBusinessEmail(data.businessEmail || businessEmail);
 
             // Add Products to Firestore
             if (data.products && Array.isArray(data.products)) {
@@ -214,6 +227,50 @@ export default function KnowledgeBase() {
                         />
                     </div>
                 </div>
+
+                {/* Social Media & Contact Section */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                            <Instagram size={14} className="text-pink-500" />
+                            Instagram
+                        </label>
+                        <input
+                            type="text"
+                            value={instagram}
+                            onChange={(e) => setInstagram(e.target.value)}
+                            placeholder="@username"
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium bg-neutral-50"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                            <Facebook size={14} className="text-blue-600" />
+                            Facebook
+                        </label>
+                        <input
+                            type="text"
+                            value={facebook}
+                            onChange={(e) => setFacebook(e.target.value)}
+                            placeholder="Nama Halaman/Link"
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium bg-neutral-50"
+                        />
+                    </div>
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                            <Mail size={14} className="text-emerald-500" />
+                            Email Bisnis
+                        </label>
+                        <input
+                            type="email"
+                            value={businessEmail}
+                            onChange={(e) => setBusinessEmail(e.target.value)}
+                            placeholder="kontak@bisnis.com"
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium bg-neutral-50"
+                        />
+                    </div>
+                </div>
+
                 <div className="mt-8 flex justify-end">
                     <button
                         onClick={handleSaveProfile}

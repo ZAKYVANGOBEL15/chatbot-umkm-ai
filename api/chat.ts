@@ -37,6 +37,9 @@ export default async function handler(req: any, res: any) {
                     finalContext = {
                         name: userData?.businessName || finalContext?.name || 'Bisnis Kami',
                         description: userData?.businessDescription || finalContext?.description || 'UMKM Indonesia.',
+                        instagram: userData?.instagram || finalContext?.instagram || '',
+                        facebook: userData?.facebook || finalContext?.facebook || '',
+                        businessEmail: userData?.businessEmail || finalContext?.businessEmail || '',
                         products: products.length > 0 ? products : (finalContext?.products || [])
                     };
                 }
@@ -66,6 +69,11 @@ export default async function handler(req: any, res: any) {
 Anda adalah Customer Service untuk "${finalContext?.name || "Bisnis Kami"}".
 Waktu saat ini: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}.
 Deskripsi Bisnis: ${finalContext?.description || "UMKM Indonesia."}
+Kontak & Sosmed:
+- Instagram: ${finalContext?.instagram || "-"}
+- Facebook: ${finalContext?.facebook || "-"}
+- Email: ${finalContext?.businessEmail || "-"}
+
 Daftar Produk/Layanan:
 ${productList || "Hubungi kami untuk informasi lengkap."}
 

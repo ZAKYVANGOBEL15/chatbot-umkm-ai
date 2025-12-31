@@ -43,6 +43,9 @@ export default async function handler(req: any, res: any) {
         const businessContext = {
             name: userData?.businessName || 'Bisnis Kami',
             description: userData?.businessDescription || 'Layanan kami.',
+            instagram: userData?.instagram || '',
+            facebook: userData?.facebook || '',
+            businessEmail: userData?.businessEmail || '',
             products: products
         };
 
