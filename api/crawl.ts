@@ -28,10 +28,14 @@ export default async function handler(req: any, res: any) {
         const response = await fetch(readerUrl);
         const mdContent = await response.text();
 
-        // 3. Limit content size
-        const cleanContent = mdContent
-            .substring(0, 8000) // Limit to 8k chars for AI efficiency
-            .trim();
+        // 3. Smart content selection: Get Head and Tail to ensure Footer is captured
+        // Many footers are at the end of long pages.
+        let cleanContent = mdContent.trim();
+        if (cleanContent.length > 15000) {
+            const head = cleanContent.substring(0, 10000);
+            const tail = cleanContent.substring(cleanContent.length - 5000);
+            cleanContent = `${head}\n\n...[konten tengah dipotong]...\n\n${tail}`;
+        }
 
         if (cleanContent.length < 50) {
             return res.status(400).json({ error: 'Konten website tidak ditemukan atau terlalu sedikit.' });
