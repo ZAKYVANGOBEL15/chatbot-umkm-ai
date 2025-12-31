@@ -20,18 +20,22 @@ export default async function handler(req: any, res: any) {
             return res.status(400).json({ error: 'Missing URL' });
         }
 
-        // 2. Fetch URL Content
-        const response = await fetch(url);
-        const html = await response.text();
+        // 2. Fetch URL Content via Jina Reader (Fix for SPAs)
+        // Jina Reader converts JS-heavy sites into clean markdown for LLMs
+        const targetUrl = url.startsWith('http') ? url : `https://${url}`;
+        const readerUrl = `https://r.jina.ai/${targetUrl}`;
 
-        // 3. Basic Sanitization (Remove script/style)
-        const cleanContent = html
-            .replace(/<script\b[^>]*>([\s\S]*?)<\/script>/gim, "")
-            .replace(/<style\b[^>]*>([\s\S]*?)<\/style>/gim, "")
-            .replace(/<[^>]*>?/gm, " ") // Remove all HTML tags
-            .replace(/\s+/g, " ") // Clean extra whitespace
-            .trim()
-            .substring(0, 10000); // Limit to first 10k chars
+        const response = await fetch(readerUrl);
+        const mdContent = await response.text();
+
+        // 3. Limit content size
+        const cleanContent = mdContent
+            .substring(0, 8000) // Limit to 8k chars for AI efficiency
+            .trim();
+
+        if (cleanContent.length < 50) {
+            return res.status(400).json({ error: 'Konten website tidak ditemukan atau terlalu sedikit.' });
+        }
 
         // 4. Send to Mistral for Extraction
         const apiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY;
@@ -40,8 +44,8 @@ export default async function handler(req: any, res: any) {
         }
 
         const prompt = `
-Context: Teks berikut diambil dari sebuah website bisnis.
-Tujuan: Ekstrak informasi bisnis untuk melatih AI Chatbot.
+Context: Teks berikut dalam format Markdown diambil dari sebuah website bisnis.
+Tujuan: Ekstrak informasi bisnis secara detail untuk melatih AI Chatbot.
 
 Teks Website:
 """
@@ -52,12 +56,16 @@ Tugas:
 Berikan output dalam format JSON murni (tanpa markdown code block) dengan struktur:
 {
   "businessName": "Nama Bisnis",
-  "businessDescription": "Deskripsi singkat layanan, jam buka, dan identitas bisnis",
+  "businessDescription": "Deskripsi lengkap layanan, jam buka, keunggulan, dan identitas bisnis lainnya.",
   "products": [
-    { "name": "Nama Produk/Layanan", "price": 0, "description": "Deskripsi singkat" }
+    { "name": "Nama Produk/Layanan", "price": 0, "description": "Deskripsi singkat yang membantu asisten menjawab pertanyaan pelanggan" }
   ]
 }
-Catatan: Jika harga tidak ditemukan, tulis 0. Gunakan Bahasa Indonesia yang ramah.
+Catatan Penting:
+1. Ekstrak sebanyak mungkin layanan/produk yang ditemukan.
+2. Jika harga tidak ada, tulis 0.
+3. Gunakan Bahasa Indonesia yang ramah (Kak/Sist).
+4. Pastikan JSON valid.
 `.trim();
 
         const aiResponse = await fetch("https://api.mistral.ai/v1/chat/completions", {
