@@ -44,8 +44,8 @@ export default async function handler(req: any, res: any) {
         }
 
         const prompt = `
-Context: Teks berikut dalam format Markdown diambil dari sebuah website bisnis.
-Tujuan: Ekstrak informasi bisnis secara detail untuk melatih AI Chatbot.
+Context: Teks berikut dalam format Markdown diambil dari sebuah website bisnis (Landing Page).
+Tujuan: Ekstrak informasi bisnis secara SANGAT DETAIL untuk melatih AI Chatbot agar bisa menjawab pertanyaan pelanggan layaknya asisten ahli.
 
 Teks Website:
 """
@@ -56,16 +56,17 @@ Tugas:
 Berikan output dalam format JSON murni (tanpa markdown code block) dengan struktur:
 {
   "businessName": "Nama Bisnis",
-  "businessDescription": "Deskripsi lengkap layanan, jam buka, keunggulan, dan identitas bisnis lainnya.",
+  "businessDescription": "Deskripsi super lengkap. Sertakan: 1) Siapa kami (tentang bisnis), 2) Keunggulan/Filosofi, 3) Info Tim Ahli/Dokter (jika ada), 4) Info Fasilitas/Galeri, 5) Jam operasional & Lokasi (jika ada). Buat narasi yang profesional.",
   "products": [
-    { "name": "Nama Produk/Layanan", "price": 0, "description": "Deskripsi singkat yang membantu asisten menjawab pertanyaan pelanggan" }
+    { "name": "Nama Produk/Layanan", "price": 0, "description": "Deskripsi detail tentang manfaat, prosedur, atau fitur layanan tersebut." }
   ]
 }
 Catatan Penting:
-1. Ekstrak sebanyak mungkin layanan/produk yang ditemukan.
-2. Jika harga tidak ada, tulis 0.
-3. Gunakan Bahasa Indonesia yang ramah (Kak/Sist).
-4. Pastikan JSON valid.
+1. EKSTRAK SEMUA layanan/produk yang ditemukan. Jangan ada yang terlewat.
+2. Jika ada kategori (misal: Optical Radiance, Dermal Vitality), masukkan tiap item di bawahnya sebagai produk terpisah.
+3. Gunakan Bahasa Indonesia yang sangat ramah dan elegan (Kak/Sist).
+4. Jika harga tidak ada, tulis 0.
+5. Pastikan JSON valid dan deskripsi bisnis sangat informatif.
 `.trim();
 
         const aiResponse = await fetch("https://api.mistral.ai/v1/chat/completions", {
