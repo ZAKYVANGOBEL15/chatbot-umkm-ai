@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Store, Package } from 'lucide-react';
+import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles } from 'lucide-react';
 import { doc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc, query } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
@@ -18,6 +18,10 @@ export default function KnowledgeBase() {
 
     // Product Form
     const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '' });
+
+    // AI Crawler State
+    const [crawlUrl, setCrawlUrl] = useState('');
+    const [isCrawling, setIsCrawling] = useState(false);
 
     useEffect(() => {
         if (!auth.currentUser) return;
@@ -85,10 +89,96 @@ export default function KnowledgeBase() {
         }
     };
 
+    const handleCrawl = async () => {
+        if (!crawlUrl) return alert('Masukkan URL website dulu bro!');
+        if (!auth.currentUser) return;
+
+        setIsCrawling(true);
+        try {
+            const res = await fetch('/api/crawl', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url: crawlUrl })
+            });
+            const data = await res.json();
+
+            if (data.error) throw new Error(data.error);
+
+            // Update Business Profile
+            setBusinessName(data.businessName || businessName);
+            setBusinessDesc(data.businessDescription || businessDesc);
+
+            // Add Products to Firestore
+            if (data.products && Array.isArray(data.products)) {
+                for (const p of data.products) {
+                    await addDoc(collection(db, 'users', auth.currentUser.uid, 'products'), {
+                        name: p.name,
+                        price: Number(p.price) || 0,
+                        description: p.description || '',
+                        createdAt: new Date().toISOString()
+                    });
+                }
+            }
+
+            alert('Mantap! AI berhasil mempelajari website kamu. Cek hasilnya di bawah.');
+            setCrawlUrl('');
+        } catch (error: any) {
+            console.error('Crawl Error:', error);
+            alert('Waduh, gagal narik data: ' + error.message);
+        } finally {
+            setIsCrawling(false);
+        }
+    };
+
     if (loading) return <div>Loading...</div>;
 
     return (
         <div className="space-y-6 lg:space-y-8 max-w-full overflow-hidden pb-10 font-sans text-neutral-900">
+            {/* AI Scraper Section */}
+            <section className="bg-black text-white p-6 lg:p-10 rounded-3xl shadow-2xl relative overflow-hidden group">
+                <div className="relative z-10">
+                    <div className="flex items-center gap-3 mb-4">
+                        <div className="p-2 bg-emerald-500 rounded-lg">
+                            <Sparkles size={20} className="text-white" />
+                        </div>
+                        <h2 className="text-xl lg:text-2xl font-bold tracking-tight">Setup Kilat dengan AI</h2>
+                    </div>
+                    <p className="text-neutral-400 mb-8 max-w-xl text-sm lg:text-base leading-relaxed">
+                        Punya website? Tempel URL-nya di bawah, biar AI saya yang pelajari bisnis kamu secara otomatis dalam hitungan detik.
+                    </p>
+
+                    <div className="flex flex-col sm:flex-row gap-3">
+                        <div className="relative flex-1">
+                            <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" />
+                            <input
+                                type="url"
+                                value={crawlUrl}
+                                onChange={(e) => setCrawlUrl(e.target.value)}
+                                placeholder="https://website-kamu.com"
+                                className="w-full pl-12 pr-4 py-4 bg-neutral-900 border border-neutral-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-medium"
+                                disabled={isCrawling}
+                            />
+                        </div>
+                        <button
+                            onClick={handleCrawl}
+                            disabled={isCrawling || !crawlUrl}
+                            className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-neutral-800 text-white font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95"
+                        >
+                            {isCrawling ? (
+                                <>
+                                    <Loader2 size={18} className="animate-spin" />
+                                    Mempelajari...
+                                </>
+                            ) : (
+                                'Mulai Pelajari Website'
+                            )}
+                        </button>
+                    </div>
+                </div>
+                {/* Decoration */}
+                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-500/10 transition-all duration-700"></div>
+            </section>
+
             {/* Business Profile Section */}
             <section className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl shadow-neutral-100 border border-neutral-200">
                 <div className="flex items-center gap-4 mb-8">
