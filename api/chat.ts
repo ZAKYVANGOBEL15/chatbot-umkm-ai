@@ -1,36 +1,55 @@
 export default async function handler(req: any, res: any) {
+    // 1. Handle CORS
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
+    res.setHeader('Access-Control-Allow-Origin', '*'); // In production, replace with your actual allowed domains
+    res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
+    res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
+
+    if (req.method === 'OPTIONS') {
+        return res.status(200).end();
+    }
+
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
 
     try {
-        const { message, history, businessContext } = req.body || {};
+        const { message, history, businessContext, userId } = req.body || {};
 
-        if (!message || !businessContext) {
-            return res.status(400).json({ error: 'Missing message or businessContext' });
+        if (!message) {
+            return res.status(400).json({ error: 'Missing message' });
         }
 
-        // 1. Get API Key safely
+        let finalContext = businessContext;
+
+        // If context is missing but userId is present, we could fetch it from Firestore
+        // Note: For now, we expect the widget to pass the context to keep the API stateless
+        // but adding fallback logic or requirements here.
+        if (!finalContext && !userId) {
+            return res.status(400).json({ error: 'Missing businessContext or userId' });
+        }
+
+        // 2. Get API Key safely
         const apiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY;
 
         if (!apiKey) {
-            return res.status(500).json({ error: 'MISTRAL_API_KEY is not configured in Vercel environment variables.' });
+            return res.status(500).json({ error: 'MISTRAL_API_KEY is not configured.' });
         }
 
-        // 2. Prepare System Instructions
-        const productList = (businessContext.products || [])
+        // 3. Prepare System Instructions
+        const productList = (finalContext?.products || [])
             .map((p: any) => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
             .join('\n');
 
         const systemInstructions = `
-Anda adalah Customer Service untuk "${businessContext.name}".
+Anda adalah Customer Service untuk "${finalContext?.name || "Bisnis Kami"}".
 Waktu saat ini: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}.
-Deskripsi Bisnis: ${businessContext.description || "UMKM Indonesia."}
-Daftar Produk:
-${productList || "Hubungi kami untuk informasi produk lengkap."}
+Deskripsi Bisnis: ${finalContext?.description || "UMKM Indonesia."}
+Daftar Produk/Layanan:
+${productList || "Hubungi kami untuk informasi lengkap."}
 
 Tugas: Jawab pertanyaan pelanggan dengan ramah, singkat, dan gunakan data di atas. Jangan mengarang informasi.
-Gunakan gaya bahasa yang akrab (Kak/Sist).
+Gunakan gaya bahasa yang akrab (Kak/Sist). Jika tidak tahu jawabannya, arahkan ke kontak admin.
 `.trim();
 
         const messages = [
@@ -42,7 +61,7 @@ Gunakan gaya bahasa yang akrab (Kak/Sist).
             { role: "user", content: message }
         ];
 
-        // 3. Call Mistral API directly from here
+        // 4. Call Mistral API
         const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
             method: "POST",
             headers: {
