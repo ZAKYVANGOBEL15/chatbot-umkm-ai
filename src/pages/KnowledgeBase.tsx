@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles, Instagram, Facebook, Mail } from 'lucide-react';
+import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles, Instagram, Facebook, Mail, Pencil, X } from 'lucide-react';
 import { doc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc, query } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
@@ -21,6 +21,8 @@ export default function KnowledgeBase() {
 
     // Product Form
     const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '' });
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
 
     // AI Crawler State
     const [crawlUrl, setCrawlUrl] = useState('');
@@ -80,16 +82,48 @@ export default function KnowledgeBase() {
         e.preventDefault();
         if (!auth.currentUser) return;
         try {
-            await addDoc(collection(db, 'users', auth.currentUser.uid, 'products'), {
-                name: newProduct.name,
-                price: Number(newProduct.price),
-                description: newProduct.description,
-                createdAt: new Date().toISOString()
-            });
+            if (isEditing && editingId) {
+                // Update Existing
+                await updateDoc(doc(db, 'users', auth.currentUser.uid, 'products', editingId), {
+                    name: newProduct.name,
+                    price: Number(newProduct.price),
+                    description: newProduct.description,
+                    updatedAt: new Date().toISOString()
+                });
+                setIsEditing(false);
+                setEditingId(null);
+            } else {
+                // Add New
+                await addDoc(collection(db, 'users', auth.currentUser.uid, 'products'), {
+                    name: newProduct.name,
+                    price: Number(newProduct.price),
+                    description: newProduct.description,
+                    createdAt: new Date().toISOString()
+                });
+            }
             setNewProduct({ name: '', price: '', description: '' });
         } catch (e) {
-            alert('Gagal menambah produk.');
+            alert(isEditing ? 'Gagal mengupdate produk.' : 'Gagal menambah produk.');
         }
+    };
+
+    const handleEditProduct = (product: Product) => {
+        setNewProduct({
+            name: product.name,
+            price: String(product.price),
+            description: product.description || ''
+        });
+        setIsEditing(true);
+        setEditingId(product.id);
+
+        // Scroll to form
+        window.scrollTo({ top: 300, behavior: 'smooth' });
+    };
+
+    const cancelEdit = () => {
+        setIsEditing(false);
+        setEditingId(null);
+        setNewProduct({ name: '', price: '', description: '' });
     };
 
     const handleDeleteProduct = async (id: string) => {
@@ -295,8 +329,21 @@ export default function KnowledgeBase() {
                 </div>
 
                 {/* Add Product Form */}
-                <form onSubmit={handleAddProduct} className="bg-neutral-50 p-6 rounded-2xl mb-8 border border-neutral-200">
-                    <h3 className="text-sm font-bold text-black mb-4 uppercase tracking-wider">Tambah Data Baru</h3>
+                <form onSubmit={handleAddProduct} className={`p-6 rounded-2xl mb-8 border transition-all ${isEditing ? 'bg-emerald-50 border-emerald-200' : 'bg-neutral-50 border-neutral-200'}`}>
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-sm font-bold text-black uppercase tracking-wider">
+                            {isEditing ? 'Edit Data Produk' : 'Tambah Data Baru'}
+                        </h3>
+                        {isEditing && (
+                            <button
+                                type="button"
+                                onClick={cancelEdit}
+                                className="text-xs flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-bold"
+                            >
+                                <X size={14} /> Batal Edit
+                            </button>
+                        )}
+                    </div>
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                         <div className="sm:col-span-2 lg:col-span-2">
                             <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-2">Nama Produk</label>
@@ -330,9 +377,10 @@ export default function KnowledgeBase() {
                                 className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-black outline-none"
                             />
                         </div>
-                        <div className="flex items-end">
-                            <button type="submit" className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-black text-white rounded-xl hover:bg-neutral-800 font-bold shadow-md transition-all">
-                                <Plus size={18} /> Tambah
+                        <div className="flex items-end gap-2">
+                            <button type="submit" className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-bold shadow-md transition-all ${isEditing ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-black hover:bg-neutral-800'}`}>
+                                {isEditing ? <Save size={18} /> : <Plus size={18} />}
+                                {isEditing ? 'Simpan' : 'Tambah'}
                             </button>
                         </div>
                     </div>
@@ -359,13 +407,22 @@ export default function KnowledgeBase() {
                                         Rp {product.price.toLocaleString('id-ID')}
                                     </td>
                                     <td className="px-6 py-4 text-right">
-                                        <button
-                                            onClick={() => handleDeleteProduct(product.id)}
-                                            className="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
-                                            title="Hapus Produk"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
+                                        <div className="flex items-center justify-end gap-1">
+                                            <button
+                                                onClick={() => handleEditProduct(product)}
+                                                className="p-2 text-neutral-400 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-all"
+                                                title="Edit Produk"
+                                            >
+                                                <Pencil size={18} />
+                                            </button>
+                                            <button
+                                                onClick={() => handleDeleteProduct(product.id)}
+                                                className="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                                title="Hapus Produk"
+                                            >
+                                                <Trash2 size={18} />
+                                            </button>
+                                        </div>
                                     </td>
                                 </tr>
                             ))}
