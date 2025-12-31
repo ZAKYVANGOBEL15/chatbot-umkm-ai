@@ -1,7 +1,9 @@
+import { getDb } from './lib/db';
+
 export default async function handler(req: any, res: any) {
     // 1. Handle CORS
     res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Origin', '*'); // In production, replace with your actual allowed domains
+    res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version');
 
@@ -22,10 +24,29 @@ export default async function handler(req: any, res: any) {
 
         let finalContext = businessContext;
 
-        // If context is missing but userId is present, we could fetch it from Firestore
-        // Note: For now, we expect the widget to pass the context to keep the API stateless
-        // but adding fallback logic or requirements here.
-        if (!finalContext && !userId) {
+        // Fetch context from DB if userId is present (Source of Truth)
+        if (userId) {
+            try {
+                const db = getDb();
+                const userDoc = await db.collection('users').doc(userId).get();
+                if (userDoc.exists) {
+                    const userData = userDoc.data();
+                    const productsSnap = await db.collection('users').doc(userId).collection('products').get();
+                    const products = productsSnap.docs.map(d => d.data());
+
+                    finalContext = {
+                        name: userData?.businessName || finalContext?.name || 'Bisnis Kami',
+                        description: userData?.businessDescription || finalContext?.description || 'UMKM Indonesia.',
+                        products: products.length > 0 ? products : (finalContext?.products || [])
+                    };
+                }
+            } catch (dbErr) {
+                console.error('Error fetching context from DB:', dbErr);
+                // Fallback to what was passed in body
+            }
+        }
+
+        if (!finalContext) {
             return res.status(400).json({ error: 'Missing businessContext or userId' });
         }
 
