@@ -77,8 +77,17 @@ Kontak & Sosmed:
 Daftar Produk/Layanan:
 ${productList || "Hubungi kami untuk informasi lengkap."}
 
-Tugas: Jawab pertanyaan pelanggan dengan ramah, singkat, dan gunakan data di atas. Jangan mengarang informasi.
-Gunakan gaya bahasa yang akrab (Kak/Sist). Jika tidak tahu jawabannya, arahkan ke kontak admin.
+Tugas Utama:
+1. Jawab pertanyaan pelanggan dengan ramah, singkat, dan gunakan data di atas.
+2. PENTING: Jika pelanggan menunjukkan minat beli atau booking, Anda WAJIB meminta "Nama" dan "Nomor WhatsApp" mereka.
+3. JIKA (dan hanya jika) pelanggan sudah memberikan Nama dan Nomor WhatsApp, Anda WAJIB menyertakan kode rahasia ini di akhir jawaban Anda (tanpa spasi antar baris):
+:::LEAD_DATA={"name":"[Nama Pelanggan]","phone":"[Nomor WA]"}:::
+
+Contoh:
+User: "Nama saya Budi, wa 08123"
+Anda: "Terima kasih Kak Budi! Tim kami akan segera menghubungi via WA ya. Ditunggu! :::LEAD_DATA={"name":"Budi","phone":"08123"}:::"
+
+Gunakan gaya bahasa yang akrab (Kak/Sist).
 `.trim();
 
         const messages = [
@@ -111,7 +120,44 @@ Gunakan gaya bahasa yang akrab (Kak/Sist). Jika tidak tahu jawabannya, arahkan k
             return res.status(500).json({ error: `Mistral Error: ${data.error.message}` });
         }
 
-        const reply = data.choices?.[0]?.message?.content || "Maaf, saya tidak mendapatkan jawaban.";
+        let reply = data.choices?.[0]?.message?.content || "Maaf, saya tidak mendapatkan jawaban.";
+
+        // --- LEAD GENERATION LOGIC ---
+        // Check for the secret LEAD_DATA tag
+        const match = reply.match(/:::LEAD_DATA=(.*?):::/);
+
+        if (match && match[1]) {
+            try {
+                const leadData = JSON.parse(match[1]);
+                console.log("Lead Captured:", leadData);
+
+                // Save to Firestore users/{userId}/customers
+                if (userId) {
+                    const db = getDb();
+                    await db.collection('users').doc(userId).collection('customers').add({
+                        name: leadData.name,
+                        phone: leadData.phone,
+                        status: 'new', // new, contacted, converted
+                        source: 'chatbot',
+                        createdAt: new Date().toISOString(),
+                        lastInteraction: new Date().toISOString()
+                    });
+                    console.log("Lead saved to DB");
+                }
+
+                // Remove the tag from the visible reply
+                reply = reply.replace(match[0], '').trim();
+
+            } catch (e) {
+                console.error("Failed to parse/save lead data:", e);
+                // Don't fail the request, just log it. 
+                // We typically still want to remove the raw tag if parsing failed but regex matched, 
+                // but for safety let's leave valid text.
+                reply = reply.replace(match[0], '').trim();
+            }
+        }
+        // -----------------------------
+
         return res.status(200).json({ reply });
 
     } catch (error: any) {

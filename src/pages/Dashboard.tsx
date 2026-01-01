@@ -7,6 +7,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Dashboard() {
     const [productCount, setProductCount] = useState(0);
+    const [customerCount, setCustomerCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState('');
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
@@ -22,6 +23,9 @@ export default function Dashboard() {
                 try {
                     const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
                     setProductCount(productsSnap.size);
+
+                    const customersSnap = await getDocs(collection(db, 'users', user.uid, 'customers'));
+                    setCustomerCount(customersSnap.size);
 
                     const userDoc = await getDoc(doc(db, 'users', user.uid));
                     if (userDoc.exists()) {
@@ -166,8 +170,10 @@ export default function Dashboard() {
                         </div>
                         <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Pelanggan</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-black mb-1">Coming Soon</h3>
-                    <p className="text-xs text-neutral-400">Data belum tersedia</p>
+                    <h3 className="text-3xl font-bold text-black mb-1">
+                        {loading ? '...' : customerCount}
+                    </h3>
+                    <p className="text-xs text-neutral-400">Prospek / Leads Baru</p>
                 </div>
 
                 <div className="p-6 bg-black text-white rounded-2xl shadow-xl shadow-neutral-200 transform lg:-translate-y-4">

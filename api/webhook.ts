@@ -125,7 +125,34 @@ export default async function handler(req: any, res: any) {
                     };
 
                     // C. Get AI Response
-                    const reply = await generateAIResponse(text, businessContext, []);
+                    let reply = await generateAIResponse(text, businessContext, []);
+
+                    // --- LEAD GENERATION LOGIC ---
+                    const match = reply.match(/:::LEAD_DATA=(.*?):::/);
+                    if (match && match[1]) {
+                        try {
+                            const leadData = JSON.parse(match[1]);
+                            console.log("[WhatsApp] Lead Captured:", leadData);
+
+                            // Save to Firestore
+                            await db.collection('users').doc(userId).collection('customers').add({
+                                name: leadData.name,
+                                phone: leadData.phone,
+                                phoneNumberId: phoneNumberId, // Store source ID
+                                status: 'new',
+                                source: 'whatsapp',
+                                createdAt: new Date().toISOString(),
+                                lastInteraction: new Date().toISOString()
+                            });
+
+                            // Clean reply
+                            reply = reply.replace(match[0], '').trim();
+                        } catch (e) {
+                            console.error("[WhatsApp] Failed to parse lead:", e);
+                            reply = reply.replace(match[0], '').trim();
+                        }
+                    }
+                    // -----------------------------
 
                     // D. Send Message Back to WhatsApp
                     if (accessToken) {
