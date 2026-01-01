@@ -22,7 +22,7 @@ export default function Layout() {
     ];
 
     return (
-        <div className="flex h-screen bg-white overflow-hidden text-neutral-900 font-sans selection:bg-black selection:text-white">
+        <div className="flex h-screen bg-white overflow-hidden text-neutral-900 font-sans selection:bg-[#061E29] selection:text-white">
             {/* Mobile Overlay */}
             {isMobileMenuOpen && (
                 <div
@@ -33,7 +33,7 @@ export default function Layout() {
 
             {/* Sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 bg-black border-r border-neutral-800 flex flex-col ${isMobileMenuOpen
+                className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 bg-[#061E29] border-r border-neutral-800 flex flex-col ${isMobileMenuOpen
                     ? 'translate-x-0 w-64'
                     : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-64' : 'lg:w-20')
                     }`}
@@ -65,11 +65,11 @@ export default function Layout() {
                             to={item.path}
                             onClick={() => setIsMobileMenuOpen(false)}
                             className={`flex items-center gap-3 px-3 py-3 rounded-xl transition-all ${location.pathname === item.path
-                                ? 'bg-white text-black font-medium shadow-lg'
+                                ? 'bg-white text-[#061E29] font-medium shadow-lg'
                                 : 'text-neutral-400 hover:bg-neutral-900 hover:text-white'
                                 }`}
                         >
-                            <item.icon size={20} className={location.pathname === item.path ? "text-black" : ""} />
+                            <item.icon size={20} className={location.pathname === item.path ? "text-[#061E29]" : ""} />
                             {(isSidebarOpen || isMobileMenuOpen) && <span className="font-medium text-sm">{item.label}</span>}
                         </Link>
                     ))}
@@ -97,7 +97,7 @@ export default function Layout() {
                         >
                             <Menu size={20} />
                         </button>
-                        <h1 className="text-lg lg:text-xl font-bold text-black tracking-tight truncate">
+                        <h1 className="text-lg lg:text-xl font-bold text-[#061E29] tracking-tight truncate">
                             {menuItems.find(i => i.path === location.pathname)?.label || 'Dashboard'}
                         </h1>
                     </div>
