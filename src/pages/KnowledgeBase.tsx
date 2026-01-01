@@ -182,7 +182,7 @@ export default function KnowledgeBase() {
     return (
         <div className="space-y-6 lg:space-y-8 max-w-full overflow-hidden pb-10 font-sans text-neutral-900">
             {/* AI Scraper Section */}
-            <section className="bg-black text-white p-6 lg:p-10 rounded-3xl shadow-2xl relative overflow-hidden group">
+            <section className="bg-[#061E29] text-white p-6 lg:p-10 rounded-3xl shadow-2xl relative overflow-hidden group">
                 <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-4">
                         <div className="p-2 bg-emerald-500 rounded-lg">
@@ -229,11 +229,11 @@ export default function KnowledgeBase() {
             {/* Business Profile Section */}
             <section className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl shadow-neutral-100 border border-neutral-200">
                 <div className="flex items-center gap-4 mb-8">
-                    <div className="p-3 bg-black rounded-xl text-white">
+                    <div className="p-3 bg-[#061E29] rounded-xl text-white">
                         <Store size={22} />
                     </div>
                     <div>
-                        <h2 className="text-xl lg:text-2xl font-bold text-black">Profil Bisnis</h2>
+                        <h2 className="text-xl lg:text-2xl font-bold text-[#061E29]">Profil Bisnis</h2>
                         <p className="text-sm text-neutral-500">Informasi dasar untuk identitas chatbot Anda.</p>
                     </div>
                 </div>
@@ -245,7 +245,7 @@ export default function KnowledgeBase() {
                             type="text"
                             value={businessName}
                             onChange={(e) => setBusinessName(e.target.value)}
-                            className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all placeholder:text-neutral-300 font-medium"
+                            className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-[#061E29] outline-none transition-all placeholder:text-neutral-300 font-medium"
                             placeholder="Contoh: Toko Kue Bu Ani"
                         />
                     </div>
@@ -256,7 +256,7 @@ export default function KnowledgeBase() {
                             value={businessDesc}
                             onChange={(e) => setBusinessDesc(e.target.value)}
                             rows={4}
-                            className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-black outline-none transition-all placeholder:text-neutral-300 font-medium"
+                            className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-[#061E29] outline-none transition-all placeholder:text-neutral-300 font-medium"
                             placeholder="Kami menjual kue basah dan kering. Buka jam 08.00 - 17.00. Jawab dengan ramah dan sopan."
                         />
                     </div>
@@ -274,7 +274,7 @@ export default function KnowledgeBase() {
                             value={instagram}
                             onChange={(e) => setInstagram(e.target.value)}
                             placeholder="@username"
-                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium bg-neutral-50"
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-[#061E29] outline-none transition-all text-sm font-medium bg-neutral-50"
                         />
                     </div>
                     <div className="space-y-2">
@@ -287,7 +287,7 @@ export default function KnowledgeBase() {
                             value={facebook}
                             onChange={(e) => setFacebook(e.target.value)}
                             placeholder="Nama Halaman/Link"
-                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium bg-neutral-50"
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-[#061E29] outline-none transition-all text-sm font-medium bg-neutral-50"
                         />
                     </div>
                     <div className="space-y-2">
@@ -300,7 +300,7 @@ export default function KnowledgeBase() {
                             value={businessEmail}
                             onChange={(e) => setBusinessEmail(e.target.value)}
                             placeholder="kontak@bisnis.com"
-                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-black outline-none transition-all text-sm font-medium bg-neutral-50"
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-[#061E29] outline-none transition-all text-sm font-medium bg-neutral-50"
                         />
                     </div>
                 </div>
@@ -308,7 +308,7 @@ export default function KnowledgeBase() {
                 <div className="mt-8 flex justify-end">
                     <button
                         onClick={handleSaveProfile}
-                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-black text-white rounded-xl hover:bg-neutral-800 font-bold transition-all shadow-lg hover:translate-y-px"
+                        className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-3 bg-[#061E29] text-white rounded-xl hover:bg-[#0a2d3d] font-bold transition-all shadow-lg hover:translate-y-px"
                     >
                         <Save size={18} />
                         Simpan Profil
@@ -319,11 +319,11 @@ export default function KnowledgeBase() {
             {/* Products Section */}
             <section className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl shadow-neutral-100 border border-neutral-200">
                 <div className="flex items-center gap-4 mb-8">
-                    <div className="p-3 bg-neutral-100 rounded-xl text-black">
+                    <div className="p-3 bg-neutral-100 rounded-xl text-[#061E29]">
                         <Package size={22} />
                     </div>
                     <div>
-                        <h2 className="text-xl lg:text-2xl font-bold text-black">Knowledge Produk</h2>
+                        <h2 className="text-xl lg:text-2xl font-bold text-[#061E29]">Knowledge Produk</h2>
                         <p className="text-sm text-neutral-500">Ajarkan AI tentang produk atau layanan Anda.</p>
                     </div>
                 </div>
@@ -331,7 +331,7 @@ export default function KnowledgeBase() {
                 {/* Add Product Form */}
                 <form onSubmit={handleAddProduct} className={`p-6 rounded-2xl mb-8 border transition-all ${isEditing ? 'bg-emerald-50 border-emerald-200' : 'bg-neutral-50 border-neutral-200'}`}>
                     <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-sm font-bold text-black uppercase tracking-wider">
+                        <h3 className="text-sm font-bold text-[#061E29] uppercase tracking-wider">
                             {isEditing ? 'Edit Data Produk' : 'Tambah Data Baru'}
                         </h3>
                         {isEditing && (
@@ -352,7 +352,7 @@ export default function KnowledgeBase() {
                                 value={newProduct.name}
                                 onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
                                 placeholder="Misal: Brownies Cokelat"
-                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-black outline-none"
+                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-[#061E29] outline-none"
                                 required
                             />
                         </div>
@@ -363,7 +363,7 @@ export default function KnowledgeBase() {
                                 value={newProduct.price}
                                 onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
                                 placeholder="0"
-                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-black outline-none"
+                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-[#061E29] outline-none"
                                 required
                             />
                         </div>
@@ -374,11 +374,11 @@ export default function KnowledgeBase() {
                                 value={newProduct.description}
                                 onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
                                 placeholder="Deskripsi rasa, ukuran, atau fitur..."
-                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-black outline-none"
+                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-[#061E29] outline-none"
                             />
                         </div>
                         <div className="flex items-end gap-2">
-                            <button type="submit" className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-bold shadow-md transition-all ${isEditing ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-black hover:bg-neutral-800'}`}>
+                            <button type="submit" className={`w-full flex items-center justify-center gap-2 px-4 py-3 text-white rounded-xl font-bold shadow-md transition-all ${isEditing ? 'bg-emerald-600 hover:bg-emerald-700' : 'bg-[#061E29] hover:bg-[#0a2d3d]'}`}>
                                 {isEditing ? <Save size={18} /> : <Plus size={18} />}
                                 {isEditing ? 'Simpan' : 'Tambah'}
                             </button>
@@ -400,10 +400,10 @@ export default function KnowledgeBase() {
                             {products.map((product) => (
                                 <tr key={product.id} className="hover:bg-neutral-50 transition-colors">
                                     <td className="px-6 py-4">
-                                        <div className="text-sm font-bold text-black">{product.name}</div>
+                                        <div className="text-sm font-bold text-[#061E29]">{product.name}</div>
                                         <div className="text-xs text-neutral-500 line-clamp-1 mt-0.5">{product.description || '-'}</div>
                                     </td>
-                                    <td className="px-6 py-4 text-sm text-black font-semibold whitespace-nowrap">
+                                    <td className="px-6 py-4 text-sm text-[#061E29] font-semibold whitespace-nowrap">
                                         Rp {product.price.toLocaleString('id-ID')}
                                     </td>
                                     <td className="px-6 py-4 text-right">
