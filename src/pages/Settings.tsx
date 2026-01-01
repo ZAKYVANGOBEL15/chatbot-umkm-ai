@@ -316,7 +316,7 @@ export default function Settings() {
                 </p>
 
                 <a
-                    href="https://wa.me/6281234567890"
+                    href="https://wa.me/62895402945495"
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#061E29] font-bold rounded-xl hover:bg-neutral-100 transition-colors"

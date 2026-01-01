@@ -128,7 +128,7 @@ export default function Dashboard() {
                         </div>
                     </div>
                     <a
-                        href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20Paket%20Premium"
+                        href="https://wa.me/62895402945495?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20Paket%20Premium"
                         target="_blank"
                         rel="noreferrer"
                         className="w-full sm:w-auto px-4 py-2 bg-[#061E29] text-white text-xs font-bold rounded-lg hover:bg-[#0a2d3d] transition-colors text-center"

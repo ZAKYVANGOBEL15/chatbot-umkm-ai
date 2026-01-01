@@ -55,7 +55,7 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <a
-                href="https://wa.me/6281234567890"
+                href="https://wa.me/62895402945495"
                 target="_blank"
                 rel="noreferrer"
                 className="px-10 py-5 bg-black hover:bg-neutral-800 text-white rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
@@ -268,7 +268,7 @@ export default function LandingPage() {
               </ul>
 
               <a
-                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Standard%20Tahunan"
+                href="https://wa.me/62895402945495?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Standard%20Tahunan"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-4 rounded-xl border-2 border-neutral-200 text-black font-bold text-center hover:border-black transition-colors"
@@ -307,7 +307,7 @@ export default function LandingPage() {
               </ul>
 
               <a
-                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20WhatsApp%20AI%20Standalone"
+                href="https://wa.me/62895402945495?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20WhatsApp%20AI%20Standalone"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-4 rounded-xl border-2 border-black bg-black text-white font-bold text-center hover:bg-neutral-800 transition-colors"
@@ -346,7 +346,7 @@ export default function LandingPage() {
               </ul>
 
               <a
-                href="https://wa.me/6281234567890?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Premium%20Master%20(Web%20+%20AI)"
+                href="https://wa.me/62895402945495?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Premium%20Master%20(Web%20+%20AI)"
                 target="_blank"
                 rel="noreferrer"
                 className="w-full py-4 rounded-xl bg-white text-black font-bold text-center hover:bg-neutral-200 transition-colors"
@@ -367,7 +367,7 @@ export default function LandingPage() {
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-6">
             <a
-              href="https://wa.me/6281234567890"
+              href="https://wa.me/62895402945495"
               target="_blank"
               rel="noreferrer"
               className="px-12 py-4 bg-black text-white hover:bg-neutral-800 rounded-full font-bold text-lg transition-all"

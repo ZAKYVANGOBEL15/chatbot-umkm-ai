@@ -195,7 +195,7 @@ export default function ChatSimulator() {
                                 Paket Trial/Premium Anda telah berakhir. Silakan upgrade untuk melanjutkan.
                             </p>
                             <a
-                                href="https://wa.me/6282123456789?text=Halo%20Admin,%20saya%20ingin%20perpanjang%20paket%20chatbot"
+                                href="https://wa.me/62895402945495?text=Halo%20Admin,%20saya%20ingin%20perpanjang%20paket%20chatbot"
                                 target="_blank"
                                 rel="noreferrer"
                                 className="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-full hover:bg-emerald-700 transition-colors"

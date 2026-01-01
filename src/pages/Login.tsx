@@ -93,7 +93,7 @@ export default function Login() {
                     </p>
                     <div className="flex justify-center gap-6 text-xs text-neutral-400 font-medium">
                         <Link to="/" className="hover:text-black transition-colors">Utama</Link>
-                        <a href="https://wa.me/6281234567890" target="_blank" rel="noreferrer" className="hover:text-black transition-colors">Bantuan</a>
+                        <a href="https://wa.me/62895402945495" target="_blank" rel="noreferrer" className="hover:text-black transition-colors">Bantuan</a>
                     </div>
                 </div>
             </div>
