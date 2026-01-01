@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Code, Copy, Check } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Code, Copy, Check, Phone, Calendar, User, ExternalLink } from 'lucide-react';
 import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -17,6 +17,7 @@ export default function Dashboard() {
     const [userId, setUserId] = useState('');
     const [copied, setCopied] = useState(false);
     const [fetchError, setFetchError] = useState<string | null>(null);
+    const [customers, setCustomers] = useState<any[]>([]); // Array to store customer data
 
     useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -37,9 +38,20 @@ export default function Dashboard() {
             setProductCount(productsSnap.size);
 
             // 2. Customers (Realtime Listener)
+            // 2. Customers (Realtime Listener)
             onSnapshot(collection(db, 'users', user.uid, 'customers'),
                 (snapshot) => {
                     setCustomerCount(snapshot.size);
+                    const loadedCustomers = snapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    })).sort((a: any, b: any) => {
+                        // Sort by newest first (handling potential missing fields safely)
+                        const dateA = new Date(a.createdAt || 0).getTime();
+                        const dateB = new Date(b.createdAt || 0).getTime();
+                        return dateB - dateA;
+                    });
+                    setCustomers(loadedCustomers);
                 },
                 (err) => {
                     console.error("Snapshot error:", err);
@@ -209,6 +221,83 @@ export default function Dashboard() {
                         {loading ? '...' : productCount}
                     </h3>
                     <p className="text-xs text-neutral-400">Data Produk Terlatih</p>
+                </div>
+            </div>
+
+            {/* Customer List Section */}
+            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
+                <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
+                    <div>
+                        <h3 className="text-lg font-bold text-black">Daftar Prospek Pelanggan</h3>
+                        <p className="text-sm text-neutral-500">Data lead yang berhasil didapatkan oleh AI.</p>
+                    </div>
+                    <div className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">
+                        {customerCount} Total
+                    </div>
+                </div>
+
+                <div className="overflow-x-auto">
+                    {customers.length === 0 ? (
+                        <div className="p-8 text-center text-neutral-400">
+                            <Users className="mx-auto mb-2 opacity-20" size={48} />
+                            <p>Belum ada data pelanggan.</p>
+                            <p className="text-xs">Coba test chat di simulator atau tunggu pelanggan asli.</p>
+                        </div>
+                    ) : (
+                        <table className="w-full text-left border-collapse">
+                            <thead>
+                                <tr className="bg-neutral-50 text-xs font-bold text-neutral-500 uppercase tracking-wider">
+                                    <th className="p-4 border-b border-neutral-100">Nama Pelanggan</th>
+                                    <th className="p-4 border-b border-neutral-100">Kontak WhatsApp</th>
+                                    <th className="p-4 border-b border-neutral-100">Waktu</th>
+                                    <th className="p-4 border-b border-neutral-100 text-center">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-neutral-100">
+                                {customers.map((customer) => (
+                                    <tr key={customer.id} className="hover:bg-neutral-50/50 transition-colors group">
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-3">
+                                                <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold text-xs group-hover:bg-black group-hover:text-white transition-colors">
+                                                    <User size={14} />
+                                                </div>
+                                                <span className="font-semibold text-neutral-800">{customer.name || 'Tanpa Nama'}</span>
+                                            </div>
+                                        </td>
+                                        <td className="p-4">
+                                            {customer.phone ? (
+                                                <a
+                                                    href={`https://wa.me/${customer.phone.replace(/^0/, '62').replace(/\D/g, '')}`}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg transition-colors text-xs font-bold"
+                                                >
+                                                    <Phone size={12} />
+                                                    {customer.phone}
+                                                    <ExternalLink size={10} className="opacity-50" />
+                                                </a>
+                                            ) : (
+                                                <span className="text-neutral-400 text-xs">-</span>
+                                            )}
+                                        </td>
+                                        <td className="p-4">
+                                            <div className="flex items-center gap-2 text-neutral-500 text-sm">
+                                                <Calendar size={14} />
+                                                {customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('id-ID', {
+                                                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
+                                                }) : '-'}
+                                            </div>
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            <span className="inline-block px-2 py-1 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100">
+                                                {customer.status || 'New'}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    )}
                 </div>
             </div>
 
