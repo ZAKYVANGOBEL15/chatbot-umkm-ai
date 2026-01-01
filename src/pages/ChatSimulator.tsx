@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, Trash2, Smartphone } from 'lucide-react';
+import { Send, Bot, Trash2, Smartphone, Lock } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
@@ -17,6 +17,7 @@ export default function ChatSimulator() {
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [businessContext, setBusinessContext] = useState<any>(null);
+    const [isExpired, setIsExpired] = useState(false);
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -36,6 +37,24 @@ export default function ChatSimulator() {
                     description: userData.businessDescription || 'Toko serba ada.',
                     products: products
                 });
+
+                // Check Expiration
+                const status = userData.subscriptionStatus || 'trial';
+                const now = new Date();
+                let expired = false;
+
+                if (status === 'active' && userData.subscriptionExpiresAt) {
+                    const expiry = new Date(userData.subscriptionExpiresAt);
+                    if (now > expiry) expired = true;
+                } else if (status === 'trial' && userData.trialExpiresAt) {
+                    const expiry = new Date(userData.trialExpiresAt);
+                    if (now > expiry) expired = true;
+                }
+
+                // For testing purposes during development, you can uncomment this:
+                // expired = true; 
+
+                setIsExpired(expired);
             }
         };
         loadContext();
@@ -165,19 +184,36 @@ export default function ChatSimulator() {
                 </div>
 
                 {/* Input Area */}
-                <div className="p-3 lg:p-4 bg-gray-100 border-t border-gray-200 shrink-0">
+                <div className="p-3 lg:p-4 bg-gray-100 border-t border-gray-200 shrink-0 relative">
+                    {isExpired && (
+                        <div className="absolute inset-0 bg-gray-100/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-center p-4">
+                            <Lock size={32} className="text-red-500 mb-2" />
+                            <h3 className="text-gray-900 font-bold text-sm">Masa Berlaku Habis</h3>
+                            <p className="text-xs text-gray-500 mb-3 max-w-xs">
+                                Paket Trial/Premium Anda telah berakhir. Silakan upgrade untuk melanjutkan.
+                            </p>
+                            <a
+                                href="https://wa.me/6282123456789?text=Halo%20Admin,%20saya%20ingin%20perpanjang%20paket%20chatbot"
+                                target="_blank"
+                                rel="noreferrer"
+                                className="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-full hover:bg-emerald-700 transition-colors"
+                            >
+                                Hubungi Admin
+                            </a>
+                        </div>
+                    )}
                     <form onSubmit={handleSend} className="flex gap-2 max-w-4xl mx-auto">
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder="Ketik pesan..."
-                            className="flex-1 px-4 py-2 lg:py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 bg-white text-sm lg:text-base"
-                            disabled={loading || !businessContext}
+                            placeholder={isExpired ? "Layanan Nonaktif" : "Ketik pesan..."}
+                            className="flex-1 px-4 py-2 lg:py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 bg-white text-sm lg:text-base disabled:bg-gray-200 disabled:text-gray-500"
+                            disabled={loading || !businessContext || isExpired}
                         />
                         <button
                             type="submit"
-                            disabled={loading || !input.trim()}
+                            disabled={loading || !input.trim() || isExpired}
                             className="p-3 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-95 shrink-0"
                         >
                             <Send size={18} />
