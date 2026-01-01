@@ -100,10 +100,7 @@ export default function ChatSimulator() {
 
                 // Show visual feedback if lead captured
                 if (data.leadCaptured) {
-                    // Small delay to make it feel natural after the message
-                    setTimeout(() => {
-                        alert(`[Simulator Only] Data Pelanggan Tersimpan!\nNama: ${data.leadInfo?.name}\nWa: ${data.leadInfo?.phone}\n\nSilakan cek Dashboard.`);
-                    }, 500);
+                    console.log("Lead captured:", data.leadInfo);
                 }
             }
         } catch (error: any) {
