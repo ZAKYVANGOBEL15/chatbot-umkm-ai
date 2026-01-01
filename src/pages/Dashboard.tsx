@@ -111,7 +111,7 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <p className="text-sm font-bold text-white">Paket Premium Aktif</p>
-                            <p className="text-xs text-neutral-400 mt-0.5">Layanan aktif hingga: <span className="text-white font-bold">{expiryDateString || 'Selamanya'}</span>.</p>
+                            <p className="text-xs text-neutral-400 mt-0.5">Layanan aktif hingga: <span className="text-white font-bold">{expiryDateString || '1 Bulan'}</span>.</p>
                         </div>
                     </div>
                 </div>
