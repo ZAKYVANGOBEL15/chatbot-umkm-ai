@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Code, Copy, Check, Phone, Calendar, User, ExternalLink } from 'lucide-react';
-import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Code, Copy, Check, Phone, Calendar, User, ExternalLink, Trash2 } from 'lucide-react';
+import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -84,6 +84,20 @@ export default function Dashboard() {
             setFetchError(`Terjadi kesalahan: ${error.message}`);
         } finally {
             setLoading(false);
+        }
+    };
+
+    const handleDeleteCustomer = async (customerId: string, customerName: string) => {
+        if (!userId) return;
+
+        if (window.confirm(`Apakah Anda yakin ingin menghapus data "${customerName}"? Data yang dihapus tidak dapat dikembalikan.`)) {
+            try {
+                await deleteDoc(doc(db, 'users', userId, 'customers', customerId));
+                // No need to manually update state, onSnapshot will handle it!
+            } catch (error: any) {
+                console.error("Error deleting customer:", error);
+                alert("Gagal menghapus data: " + error.message);
+            }
         }
     };
 
@@ -251,6 +265,7 @@ export default function Dashboard() {
                                     <th className="p-4 border-b border-neutral-100">Kontak WhatsApp</th>
                                     <th className="p-4 border-b border-neutral-100">Waktu</th>
                                     <th className="p-4 border-b border-neutral-100 text-center">Status</th>
+                                    <th className="p-4 border-b border-neutral-100 text-center">Aksi</th>
                                 </tr>
                             </thead>
                             <tbody className="divide-y divide-neutral-100">
@@ -292,6 +307,15 @@ export default function Dashboard() {
                                             <span className="inline-block px-2 py-1 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100">
                                                 {customer.status || 'New'}
                                             </span>
+                                        </td>
+                                        <td className="p-4 text-center">
+                                            <button
+                                                onClick={() => handleDeleteCustomer(customer.id, customer.name)}
+                                                className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                                title="Hapus Data"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
                                         </td>
                                     </tr>
                                 ))}
