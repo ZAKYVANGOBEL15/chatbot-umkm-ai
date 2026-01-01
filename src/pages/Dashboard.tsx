@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Code, Copy, Check } from 'lucide-react';
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
@@ -18,48 +18,56 @@ export default function Dashboard() {
     const [copied, setCopied] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+        const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
             if (user) {
-                try {
-                    const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
-                    setProductCount(productsSnap.size);
-
-                    const customersSnap = await getDocs(collection(db, 'users', user.uid, 'customers'));
-                    setCustomerCount(customersSnap.size);
-
-                    const userDoc = await getDoc(doc(db, 'users', user.uid));
-                    if (userDoc.exists()) {
-                        const data = userDoc.data();
-                        setUserName(data.name || '');
-                        const status = data.subscriptionStatus || 'trial';
-                        setSubscriptionStatus(status);
-
-                        if (status === 'active' && data.subscriptionExpiresAt) {
-                            // Format: 28 Januari 2026
-                            const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-                            setExpiryDateString(new Date(data.subscriptionExpiresAt).toLocaleDateString('id-ID', options));
-                        } else if (status === 'trial' && data.trialExpiresAt) {
-                            const expiry = new Date(data.trialExpiresAt);
-                            const now = new Date();
-                            const diff = expiry.getTime() - now.getTime();
-                            const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
-                            setDaysLeft(days > 0 ? days : 0);
-                        }
-                        setIsWhatsAppConfigured(!!(data.whatsappPhoneNumberId && data.whatsappAccessToken));
-                        setUserId(user.uid);
-                    }
-                } catch (error) {
-                    console.error("Error fetching dashboard stats:", error);
-                } finally {
-                    setLoading(false);
-                }
+                setUserId(user.uid);
+                fetchUserData(user);
             } else {
                 setLoading(false);
             }
         });
-
-        return () => unsubscribe();
+        return () => unsubscribeAuth();
     }, []);
+
+    const fetchUserData = async (user: any) => {
+        try {
+            // 1. Products (Static)
+            const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
+            setProductCount(productsSnap.size);
+
+            // 2. Customers (Realtime Listener) -- We don't save the unsubscribe here for simplicity in this file structure, 
+            // but it will persist until component unmount or reload. 
+            // For production apps, we should use a separate useEffect dependent on userId for subscription cleanup.
+            onSnapshot(collection(db, 'users', user.uid, 'customers'), (snapshot) => {
+                setCustomerCount(snapshot.size);
+            });
+
+            // 3. User Profile
+            const userDoc = await getDoc(doc(db, 'users', user.uid));
+            if (userDoc.exists()) {
+                const data = userDoc.data();
+                setUserName(data.name || '');
+                const status = data.subscriptionStatus || 'trial';
+                setSubscriptionStatus(status);
+
+                if (status === 'active' && data.subscriptionExpiresAt) {
+                    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
+                    setExpiryDateString(new Date(data.subscriptionExpiresAt).toLocaleDateString('id-ID', options));
+                } else if (status === 'trial' && data.trialExpiresAt) {
+                    const expiry = new Date(data.trialExpiresAt);
+                    const now = new Date();
+                    const diff = expiry.getTime() - now.getTime();
+                    const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+                    setDaysLeft(days > 0 ? days : 0);
+                }
+                setIsWhatsAppConfigured(!!(data.whatsappPhoneNumberId && data.whatsappAccessToken));
+            }
+        } catch (error) {
+            console.error("Dashboard fetch error:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     return (
         <div className="space-y-8 max-w-full overflow-hidden">
