@@ -2,6 +2,8 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, Trash2, Smartphone } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
     role: 'user' | 'model';
@@ -125,7 +127,26 @@ export default function ChatSimulator() {
                                     : 'bg-white text-gray-800 rounded-tl-none'
                                     }`}
                             >
-                                <p className="whitespace-pre-wrap leading-relaxed">{msg.text}</p>
+                                <div className="text-[13px] lg:text-sm leading-relaxed overflow-hidden">
+                                    <ReactMarkdown
+                                        remarkPlugins={[remarkGfm]}
+                                        components={{
+                                            p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
+                                            ul: ({ node, ...props }) => <ul className="list-disc list-outside ml-5 mb-2 space-y-1" {...props} />,
+                                            ol: ({ node, ...props }) => <ol className="list-decimal list-outside ml-5 mb-2 space-y-1" {...props} />,
+                                            li: ({ node, ...props }) => <li className="" {...props} />,
+                                            h1: ({ node, ...props }) => <h1 className="text-base font-bold mb-2 mt-4" {...props} />,
+                                            h2: ({ node, ...props }) => <h2 className="text-sm font-bold mb-2 mt-3" {...props} />,
+                                            h3: ({ node, ...props }) => <h3 className="text-xs lg:text-sm font-bold mb-1 mt-2" {...props} />,
+                                            strong: ({ node, ...props }) => <span className="font-bold" {...props} />,
+                                            a: ({ node, ...props }) => <a className="text-emerald-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
+                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-2 border-emerald-300 pl-3 italic my-2 bg-emerald-50/50 py-1 pr-1 rounded-r opacity-80" {...props} />,
+                                            code: ({ node, ...props }) => <code className="bg-black/10 px-1 py-0.5 rounded font-mono text-xs" {...props} />,
+                                        }}
+                                    >
+                                        {msg.text}
+                                    </ReactMarkdown>
+                                </div>
                             </div>
                         </div>
                     ))}
