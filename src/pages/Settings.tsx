@@ -115,7 +115,7 @@ export default function Settings() {
 
     return (
         <div className="p-4 md:p-8 max-w-4xl mx-auto relative space-y-8">
-            <h1 className="text-3xl font-bold text-black tracking-tight mb-2">Pengaturan & Integrasi</h1>
+            <h1 className="text-3xl font-bold text-[#061E29] tracking-tight mb-2">Pengaturan & Integrasi</h1>
             <p className="text-neutral-500 mb-8">Kelola akun dan hubungkan chatbot Anda ke layanan pihak ketiga.</p>
 
             {/* Status Card */}
@@ -124,7 +124,7 @@ export default function Settings() {
                     <div className="flex items-center gap-3">
                         <div className={clsx(
                             "p-3 rounded-xl",
-                            profile?.subscriptionStatus === 'active' ? "bg-black text-white" : "bg-neutral-100 text-neutral-600"
+                            profile?.subscriptionStatus === 'active' ? "bg-[#061E29] text-white" : "bg-neutral-100 text-neutral-600"
                         )}>
                             {profile?.subscriptionStatus === 'active' ? (
                                 <Zap className="w-6 h-6" />
@@ -134,7 +134,7 @@ export default function Settings() {
                         </div>
                         <div>
                             <p className="text-xs text-neutral-400 uppercase tracking-widest font-bold">Status Layanan</p>
-                            <h3 className="text-lg font-bold text-black mt-0.5">
+                            <h3 className="text-lg font-bold text-[#061E29] mt-0.5">
                                 {profile?.subscriptionStatus === 'active' ? 'Paket Premium Aktif' : `Mode Percobaan (${daysLeft} hari lagi)`}
                             </h3>
                         </div>
@@ -145,7 +145,7 @@ export default function Settings() {
                     <div className="bg-neutral-50 border border-neutral-200 rounded-xl p-4 flex items-start gap-3">
                         <AlertCircle className="w-5 h-5 text-neutral-400 mt-0.5" />
                         <div>
-                            <p className="text-sm text-black font-bold">Masa Percobaan Terbatas</p>
+                            <p className="text-sm text-[#061E29] font-bold">Masa Percobaan Terbatas</p>
                             <p className="text-xs text-neutral-500 mt-1">Chatbot Anda akan berhenti merespon setelah masa berlaku habis. Hubungi admin untuk aktivasi permanen.</p>
                         </div>
                     </div>
@@ -161,7 +161,7 @@ export default function Settings() {
                                 <MessageSquare size={20} />
                             </div>
                             <div>
-                                <h3 className="text-lg font-bold text-black">Integrasi WhatsApp (Meta API)</h3>
+                                <h3 className="text-lg font-bold text-[#061E29]">Integrasi WhatsApp (Meta API)</h3>
                                 <p className="text-xs text-neutral-500">Hubungkan chatbot ke nomor WhatsApp bisnis Anda.</p>
                             </div>
                         </div>
@@ -177,7 +177,7 @@ export default function Settings() {
                     {isExpired && (
                         <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center text-center p-4">
                             <Clock size={32} className="text-red-500 mb-2" />
-                            <h3 className="text-black font-bold text-sm">Fitur Terkunci</h3>
+                            <h3 className="text-[#061E29] font-bold text-sm">Fitur Terkunci</h3>
                             <p className="text-xs text-neutral-500 mb-4 max-w-xs">
                                 Masa aktif Anda telah berakhir. Perpanjang layanan untuk mengubah konfigurasi.
                             </p>
@@ -192,7 +192,7 @@ export default function Settings() {
                                 onChange={(e) => setWaPhoneNumberId(e.target.value)}
                                 placeholder="Contoh: 1098234..."
                                 disabled={isExpired}
-                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-[#061E29] outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                         <div className="space-y-2">
@@ -203,7 +203,7 @@ export default function Settings() {
                                 onChange={(e) => setWaBusinessAccountId(e.target.value)}
                                 placeholder="Contoh: 9876543..."
                                 disabled={isExpired}
-                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-[#061E29] outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
@@ -216,7 +216,7 @@ export default function Settings() {
                             placeholder="EAAG2..."
                             rows={3}
                             disabled={isExpired}
-                            className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
+                            className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-[#061E29] outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                     </div>
 
@@ -246,7 +246,7 @@ export default function Settings() {
                         <button
                             onClick={handleSaveWhatsApp}
                             disabled={saving || isExpired}
-                            className="w-full sm:w-auto px-8 py-3 bg-black text-white rounded-xl font-bold text-sm hover:bg-neutral-800 transition-all flex items-center justify-center gap-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
+                            className="w-full sm:w-auto px-8 py-3 bg-[#061E29] text-white rounded-xl font-bold text-sm hover:bg-[#0a2d3d] transition-all flex items-center justify-center gap-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
                         >
                             <Save size={18} />
                             {saving ? 'Menyimpan...' : 'Simpan Konfigurasi'}
@@ -257,7 +257,7 @@ export default function Settings() {
 
 
             {/* Widget Integration Section */}
-            <div className="p-8 lg:p-12 bg-neutral-900 text-white rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
+            <div className="p-8 lg:p-12 bg-[#061E29] text-white rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
                 <div className="relative z-10">
                     <div className="flex items-center gap-3 mb-6">
                         <div className="p-2 bg-white/10 rounded-lg">
@@ -309,7 +309,7 @@ export default function Settings() {
             </div>
 
             {/* Contact Support Section */}
-            <div className="bg-black text-white rounded-2xl p-8 text-center shadow-xl shadow-neutral-200">
+            <div className="bg-[#061E29] text-white rounded-2xl p-8 text-center shadow-xl shadow-neutral-200">
                 <h3 className="text-xl font-bold mb-2">Butuh Bantuan Teknis?</h3>
                 <p className="text-neutral-400 mb-8 max-w-md mx-auto">
                     Jika Anda kesulitan melakukan integrasi Meta API, tim ahli kami siap membantu melakukan setup dari awal sampai aktif.
@@ -319,7 +319,7 @@ export default function Settings() {
                     href="https://wa.me/6281234567890"
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-white text-black font-bold rounded-xl hover:bg-neutral-100 transition-colors"
+                    className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#061E29] font-bold rounded-xl hover:bg-neutral-100 transition-colors"
                 >
                     <Zap className="w-5 h-5" /> Hubungi Admin via WhatsApp
                 </a>
