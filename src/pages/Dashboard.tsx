@@ -104,7 +104,7 @@ export default function Dashboard() {
         <div className="space-y-8 max-w-full overflow-hidden">
             {/* Subscription Status Banner */}
             {subscriptionStatus === 'active' ? (
-                <div className="bg-black text-white rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-neutral-200">
+                <div className="bg-[#061E29] text-white rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-neutral-200">
                     <div className="flex items-center gap-4">
                         <div className="p-2 border border-white/20 rounded-lg">
                             <Clock size={20} className="text-emerald-400" />
@@ -123,15 +123,15 @@ export default function Dashboard() {
                             <Clock size={20} className="text-neutral-500" />
                         </div>
                         <div>
-                            <p className="text-sm font-bold text-black">Mode Demo / Trial</p>
-                            <p className="text-xs text-neutral-500 mt-0.5">Sisa waktu demo: <span className="text-black font-bold">{daysLeft} hari</span>.</p>
+                            <p className="text-sm font-bold text-[#061E29]">Mode Demo / Trial</p>
+                            <p className="text-xs text-neutral-500 mt-0.5">Sisa waktu demo: <span className="text-[#061E29] font-bold">{daysLeft} hari</span>.</p>
                         </div>
                     </div>
                     <a
                         href="https://wa.me/6281234567890?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20Paket%20Premium"
                         target="_blank"
                         rel="noreferrer"
-                        className="w-full sm:w-auto px-4 py-2 bg-black text-white text-xs font-bold rounded-lg hover:bg-neutral-800 transition-colors text-center"
+                        className="w-full sm:w-auto px-4 py-2 bg-[#061E29] text-white text-xs font-bold rounded-lg hover:bg-[#0a2d3d] transition-colors text-center"
                     >
                         Hubungi Admin
                     </a>
@@ -179,7 +179,7 @@ export default function Dashboard() {
             <div className="p-8 lg:p-12 bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100 overflow-hidden relative group">
                 <div className="relative z-10">
                     <span className="text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2 block">System Overview</span>
-                    <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-black">
+                    <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-[#061E29]">
                         Halo, {userName || 'Partner'}!
                     </h2>
                     <p className="text-neutral-500 max-w-xl mb-8 text-base lg:text-lg leading-relaxed">
@@ -187,7 +187,7 @@ export default function Dashboard() {
                     </p>
                     <Link
                         to="/dashboard/knowledge"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-black text-white rounded-xl font-bold hover:bg-neutral-800 transition-all shadow-md group-hover:translate-x-1"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-[#061E29] text-white rounded-xl font-bold hover:bg-[#0a2d3d] transition-all shadow-md group-hover:translate-x-1"
                     >
                         Mulai Setup Knowledge Base <ArrowRight size={18} />
                     </Link>
@@ -197,33 +197,33 @@ export default function Dashboard() {
             </div>
 
             {/* Stats Cards */}
-            <h3 className="text-xl font-bold text-black border-l-4 border-black pl-4">Statistik Real-time</h3>
+            <h3 className="text-xl font-bold text-[#061E29] border-l-4 border-[#061E29] pl-4">Statistik Real-time</h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-black transition-colors">
+                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-[#061E29] transition-colors">
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-3 bg-neutral-100 rounded-xl">
-                            <MessageSquare size={24} className="text-black" />
+                            <MessageSquare size={24} className="text-[#061E29]" />
                         </div>
                         <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Total Chat</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-black mb-1">Coming Soon</h3>
+                    <h3 className="text-3xl font-bold text-[#061E29] mb-1">Coming Soon</h3>
                     <p className="text-xs text-neutral-400">Menunggu integrasi</p>
                 </div>
 
-                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-black transition-colors">
+                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-[#061E29] transition-colors">
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-3 bg-neutral-100 rounded-xl">
-                            <Users size={24} className="text-black" />
+                            <Users size={24} className="text-[#061E29]" />
                         </div>
                         <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Pelanggan</span>
                     </div>
-                    <h3 className="text-3xl font-bold text-black mb-1">
+                    <h3 className="text-3xl font-bold text-[#061E29] mb-1">
                         {loading ? '...' : customerCount}
                     </h3>
                     <p className="text-xs text-neutral-400">Prospek / Leads Baru</p>
                 </div>
 
-                <div className="p-6 bg-black text-white rounded-2xl shadow-xl shadow-neutral-200 transform lg:-translate-y-4">
+                <div className="p-6 bg-[#061E29] text-white rounded-2xl shadow-xl shadow-neutral-200 transform lg:-translate-y-4">
                     <div className="flex justify-between items-start mb-4">
                         <div className="p-3 bg-white/10 rounded-xl">
                             <ShoppingBag size={24} className="text-white" />
@@ -241,7 +241,7 @@ export default function Dashboard() {
             <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
                 <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
                     <div>
-                        <h3 className="text-lg font-bold text-black">Daftar Prospek Pelanggan</h3>
+                        <h3 className="text-lg font-bold text-[#061E29]">Daftar Prospek Pelanggan</h3>
                         <p className="text-sm text-neutral-500">Data lead yang berhasil didapatkan oleh AI.</p>
                     </div>
                     <div className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">
@@ -272,7 +272,7 @@ export default function Dashboard() {
                                     <tr key={customer.id} className="hover:bg-neutral-50/50 transition-colors group">
                                         <td className="p-4">
                                             <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold text-xs group-hover:bg-black group-hover:text-white transition-colors">
+                                                <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold text-xs group-hover:bg-[#061E29] group-hover:text-white transition-colors">
                                                     <User size={14} />
                                                 </div>
                                                 <span className="font-semibold text-neutral-800">{customer.name || 'Tanpa Nama'}</span>
