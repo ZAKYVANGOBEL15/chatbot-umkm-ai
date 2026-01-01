@@ -123,12 +123,16 @@ Gunakan gaya bahasa yang akrab (Kak/Sist).
         let reply = data.choices?.[0]?.message?.content || "Maaf, saya tidak mendapatkan jawaban.";
 
         // --- LEAD GENERATION LOGIC ---
-        // Check for the secret LEAD_DATA tag
-        const match = reply.match(/:::LEAD_DATA=(.*?):::/);
+        // Check for the secret LEAD_DATA tag, allowing for optional spaces
+        const match = reply.match(/:::LEAD_DATA\s*=\s*(.*?):::/);
+        let leadCaptured = false;
+        let leadInfo = null;
 
         if (match && match[1]) {
             try {
-                const leadData = JSON.parse(match[1]);
+                // Sanitize JSON string just in case AI adds weird quotes
+                const jsonStr = match[1].trim();
+                const leadData = JSON.parse(jsonStr);
                 console.log("Lead Captured:", leadData);
 
                 // Save to Firestore users/{userId}/customers
@@ -143,6 +147,8 @@ Gunakan gaya bahasa yang akrab (Kak/Sist).
                         lastInteraction: new Date().toISOString()
                     });
                     console.log("Lead saved to DB");
+                    leadCaptured = true;
+                    leadInfo = leadData;
                 }
 
                 // Remove the tag from the visible reply
@@ -150,15 +156,13 @@ Gunakan gaya bahasa yang akrab (Kak/Sist).
 
             } catch (e) {
                 console.error("Failed to parse/save lead data:", e);
-                // Don't fail the request, just log it. 
-                // We typically still want to remove the raw tag if parsing failed but regex matched, 
-                // but for safety let's leave valid text.
+                // Clean tag anyway
                 reply = reply.replace(match[0], '').trim();
             }
         }
         // -----------------------------
 
-        return res.status(200).json({ reply });
+        return res.status(200).json({ reply, leadCaptured, leadInfo });
 
     } catch (error: any) {
         console.error('Chat API Fatal Error:', error);

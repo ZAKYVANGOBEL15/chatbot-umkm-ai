@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Send, Bot, Trash2, Smartphone, Lock } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth'; // Import auth listener
 import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -21,43 +22,39 @@ export default function ChatSimulator() {
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
-        // Load Business Context (Profile + Products)
-        const loadContext = async () => {
-            if (!auth.currentUser) return;
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Load Business Context
+                const userDoc = await getDoc(doc(db, 'users', user.uid));
+                const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
 
-            const userDoc = await getDoc(doc(db, 'users', auth.currentUser.uid));
-            const productsSnap = await getDocs(collection(db, 'users', auth.currentUser.uid, 'products'));
+                const products = productsSnap.docs.map(d => d.data());
+                const userData = userDoc.data();
 
-            const products = productsSnap.docs.map(d => d.data());
-            const userData = userDoc.data();
+                if (userData) {
+                    setBusinessContext({
+                        name: userData.businessName || 'Toko Kami',
+                        description: userData.businessDescription || 'Toko serba ada.',
+                        products: products
+                    });
 
-            if (userData) {
-                setBusinessContext({
-                    name: userData.businessName || 'Toko Kami',
-                    description: userData.businessDescription || 'Toko serba ada.',
-                    products: products
-                });
+                    // Check Expiration
+                    const status = userData.subscriptionStatus || 'trial';
+                    const now = new Date();
+                    let expired = false;
 
-                // Check Expiration
-                const status = userData.subscriptionStatus || 'trial';
-                const now = new Date();
-                let expired = false;
-
-                if (status === 'active' && userData.subscriptionExpiresAt) {
-                    const expiry = new Date(userData.subscriptionExpiresAt);
-                    if (now > expiry) expired = true;
-                } else if (status === 'trial' && userData.trialExpiresAt) {
-                    const expiry = new Date(userData.trialExpiresAt);
-                    if (now > expiry) expired = true;
+                    if (status === 'active' && userData.subscriptionExpiresAt) {
+                        const expiry = new Date(userData.subscriptionExpiresAt);
+                        if (now > expiry) expired = true;
+                    } else if (status === 'trial' && userData.trialExpiresAt) {
+                        const expiry = new Date(userData.trialExpiresAt);
+                        if (now > expiry) expired = true;
+                    }
+                    setIsExpired(expired);
                 }
-
-                // For testing purposes during development, you can uncomment this:
-                // expired = true; 
-
-                setIsExpired(expired);
             }
-        };
-        loadContext();
+        });
+        return () => unsubscribe();
     }, []);
 
     const scrollToBottom = () => {
@@ -100,6 +97,14 @@ export default function ChatSimulator() {
                 setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error || 'Terjadi kesalahan sistem'}` }]);
             } else {
                 setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
+
+                // Show visual feedback if lead captured
+                if (data.leadCaptured) {
+                    // Small delay to make it feel natural after the message
+                    setTimeout(() => {
+                        alert(`[Simulator Only] Data Pelanggan Tersimpan!\nNama: ${data.leadInfo?.name}\nWa: ${data.leadInfo?.phone}\n\nSilakan cek Dashboard.`);
+                    }, 500);
+                }
             }
         } catch (error: any) {
             console.error("Simulator Error:", error);
