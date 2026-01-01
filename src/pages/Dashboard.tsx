@@ -16,6 +16,7 @@ export default function Dashboard() {
     const [isWhatsAppConfigured, setIsWhatsAppConfigured] = useState(false);
     const [userId, setUserId] = useState('');
     const [copied, setCopied] = useState(false);
+    const [fetchError, setFetchError] = useState<string | null>(null);
 
     useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -35,12 +36,16 @@ export default function Dashboard() {
             const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
             setProductCount(productsSnap.size);
 
-            // 2. Customers (Realtime Listener) -- We don't save the unsubscribe here for simplicity in this file structure, 
-            // but it will persist until component unmount or reload. 
-            // For production apps, we should use a separate useEffect dependent on userId for subscription cleanup.
-            onSnapshot(collection(db, 'users', user.uid, 'customers'), (snapshot) => {
-                setCustomerCount(snapshot.size);
-            });
+            // 2. Customers (Realtime Listener)
+            onSnapshot(collection(db, 'users', user.uid, 'customers'),
+                (snapshot) => {
+                    setCustomerCount(snapshot.size);
+                },
+                (err) => {
+                    console.error("Snapshot error:", err);
+                    setFetchError(`Gagal memuat data pelanggan: ${err.message}`);
+                }
+            );
 
             // 3. User Profile
             const userDoc = await getDoc(doc(db, 'users', user.uid));
@@ -62,8 +67,9 @@ export default function Dashboard() {
                 }
                 setIsWhatsAppConfigured(!!(data.whatsappPhoneNumberId && data.whatsappAccessToken));
             }
-        } catch (error) {
+        } catch (error: any) {
             console.error("Dashboard fetch error:", error);
+            setFetchError(`Terjadi kesalahan: ${error.message}`);
         } finally {
             setLoading(false);
         }
@@ -104,6 +110,14 @@ export default function Dashboard() {
                     >
                         Hubungi Admin
                     </a>
+                </div>
+            )}
+            {/* Error Alert */}
+            {fetchError && (
+                <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl relative" role="alert">
+                    <strong className="font-bold">Error: </strong>
+                    <span className="block sm:inline">{fetchError}</span>
+                    <span className="block text-xs mt-1">Coba refresh halaman atau hubungi admin.</span>
                 </div>
             )}
 
