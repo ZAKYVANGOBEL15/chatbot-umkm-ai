@@ -228,7 +228,7 @@ export default function Settings() {
                                 <li>Buka <a href="https://developers.facebook.com" target="_blank" className="underline">Meta for Developers</a> dan pilih App Anda.</li>
                                 <li>Pilih menu <b>WhatsApp</b> &gt; <b>API Setup</b> untuk ID.</li>
                                 <li>Buat <b>Permanent Token</b> via menu <b>System Users</b> di Business Suite.</li>
-                                <li>Gunakan Webhook URL berikut di Dashboard Meta: <code className="bg-blue-100 px-1 rounded">https://chatbot.nusavite.com/api/webhook</code></li>
+                                <li>Gunakan Webhook URL berikut di Dashboard Meta: <code className="bg-blue-100 px-1 rounded break-all">https://chatbot.nusavite.com/api/webhook</code></li>
                             </ol>
                         </div>
                     </div>
