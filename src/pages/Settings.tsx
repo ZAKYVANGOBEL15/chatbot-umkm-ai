@@ -9,6 +9,7 @@ import { clsx } from 'clsx';
 interface UserProfile {
     subscriptionStatus: 'trial' | 'active' | 'expired';
     trialExpiresAt?: string;
+    subscriptionExpiresAt?: string;
     subscriptionPlan?: string;
     businessName?: string;
     whatsappPhoneNumberId?: string;
@@ -28,6 +29,7 @@ export default function Settings() {
     const [profile, setProfile] = useState<UserProfile | null>(null);
     const [loading, setLoading] = useState(true);
     const [daysLeft, setDaysLeft] = useState(0);
+    const [isExpired, setIsExpired] = useState(false);
     const [saving, setSaving] = useState(false);
     const [message, setMessage] = useState<{ type: 'success' | 'error', text: string } | null>(null);
 
@@ -62,6 +64,24 @@ export default function Settings() {
                         const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
                         setDaysLeft(days > 0 ? days : 0);
                     }
+
+                    // Check Expiration
+                    const status = data.subscriptionStatus || 'trial';
+                    const now = new Date();
+                    let expired = false;
+
+                    if (status === 'active' && data.subscriptionExpiresAt) {
+                        const expiry = new Date(data.subscriptionExpiresAt);
+                        if (now > expiry) expired = true;
+                    } else if (status === 'trial' && data.trialExpiresAt) {
+                        const expiry = new Date(data.trialExpiresAt);
+                        if (now > expiry) expired = true;
+                    }
+
+                    // For testing purposes
+                    // expired = true;
+
+                    setIsExpired(expired);
                 }
                 setLoading(false);
             }
@@ -134,18 +154,34 @@ export default function Settings() {
             {/* WhatsApp Integration Section */}
             <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
                 <div className="p-6 border-b border-neutral-100 bg-neutral-50/50">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
-                            <MessageSquare size={20} />
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                            <div className="p-2 bg-emerald-100 text-emerald-600 rounded-lg">
+                                <MessageSquare size={20} />
+                            </div>
+                            <div>
+                                <h3 className="text-lg font-bold text-black">Integrasi WhatsApp (Meta API)</h3>
+                                <p className="text-xs text-neutral-500">Hubungkan chatbot ke nomor WhatsApp bisnis Anda.</p>
+                            </div>
                         </div>
-                        <div>
-                            <h3 className="text-lg font-bold text-black">Integrasi WhatsApp (Meta API)</h3>
-                            <p className="text-xs text-neutral-500">Hubungkan chatbot ke nomor WhatsApp bisnis Anda.</p>
-                        </div>
+                        {isExpired && (
+                            <span className="px-3 py-1 bg-red-100 text-red-600 text-xs font-bold rounded-full flex items-center gap-1">
+                                <AlertCircle size={14} /> Terkunci
+                            </span>
+                        )}
                     </div>
                 </div>
 
-                <div className="p-6 space-y-6">
+                <div className="p-6 space-y-6 relative">
+                    {isExpired && (
+                        <div className="absolute inset-0 bg-white/60 backdrop-blur-[2px] z-10 flex flex-col items-center justify-center text-center p-4">
+                            <Clock size={32} className="text-red-500 mb-2" />
+                            <h3 className="text-black font-bold text-sm">Fitur Terkunci</h3>
+                            <p className="text-xs text-neutral-500 mb-4 max-w-xs">
+                                Masa aktif Anda telah berakhir. Perpanjang layanan untuk mengubah konfigurasi.
+                            </p>
+                        </div>
+                    )}
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div className="space-y-2">
                             <label className="text-xs font-bold text-neutral-600 uppercase tracking-wider">Phone Number ID</label>
@@ -154,7 +190,8 @@ export default function Settings() {
                                 value={waPhoneNumberId}
                                 onChange={(e) => setWaPhoneNumberId(e.target.value)}
                                 placeholder="Contoh: 1098234..."
-                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono"
+                                disabled={isExpired}
+                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                         <div className="space-y-2">
@@ -164,7 +201,8 @@ export default function Settings() {
                                 value={waBusinessAccountId}
                                 onChange={(e) => setWaBusinessAccountId(e.target.value)}
                                 placeholder="Contoh: 9876543..."
-                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono"
+                                disabled={isExpired}
+                                className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                             />
                         </div>
                     </div>
@@ -176,7 +214,8 @@ export default function Settings() {
                             onChange={(e) => setWaAccessToken(e.target.value)}
                             placeholder="EAAG2..."
                             rows={3}
-                            className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono"
+                            disabled={isExpired}
+                            className="w-full px-4 py-3 bg-neutral-50 border border-neutral-200 rounded-xl text-sm focus:ring-2 focus:ring-black outline-none transition-all font-mono disabled:opacity-50 disabled:cursor-not-allowed"
                         />
                     </div>
 
@@ -205,8 +244,8 @@ export default function Settings() {
                         )}
                         <button
                             onClick={handleSaveWhatsApp}
-                            disabled={saving}
-                            className="w-full sm:w-auto px-8 py-3 bg-black text-white rounded-xl font-bold text-sm hover:bg-neutral-800 transition-all flex items-center justify-center gap-2 disabled:bg-neutral-400"
+                            disabled={saving || isExpired}
+                            className="w-full sm:w-auto px-8 py-3 bg-black text-white rounded-xl font-bold text-sm hover:bg-neutral-800 transition-all flex items-center justify-center gap-2 disabled:bg-neutral-400 disabled:cursor-not-allowed"
                         >
                             <Save size={18} />
                             {saving ? 'Menyimpan...' : 'Simpan Konfigurasi'}
