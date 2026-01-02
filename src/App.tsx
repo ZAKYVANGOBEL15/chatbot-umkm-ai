@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import Login from './pages/Login';
-// import Register from './pages/Register';
+import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -20,7 +20,7 @@ function App() {
           window.location.hostname.includes('chatbot') ? <Navigate to="/login" replace /> : <LandingPage />
         } />
         <Route path="/login" element={<Login />} />
-        {/* <Route path="/register" element={<Register />} /> */}
+        <Route path="/register" element={<Register />} />
         <Route path="/terms" element={<Terms />} />
 
         {/* Protected Dashboard Routes */}

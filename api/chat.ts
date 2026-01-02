@@ -31,6 +31,25 @@ export default async function handler(req: any, res: any) {
                 const userDoc = await db.collection('users').doc(userId).get();
                 if (userDoc.exists) {
                     const userData = userDoc.data();
+
+                    // --- SUBSCRIPTION CHECK ---
+                    const status = userData?.subscriptionStatus || 'trial';
+                    let isExpired = false;
+
+                    if (status === 'active' && userData?.subscriptionExpiresAt) {
+                        isExpired = new Date(userData.subscriptionExpiresAt).getTime() < Date.now();
+                    } else if (status === 'trial' && userData?.trialExpiresAt) {
+                        isExpired = new Date(userData.trialExpiresAt).getTime() < Date.now();
+                    }
+
+                    if (isExpired) {
+                        return res.status(403).json({
+                            error: 'Subscription Expired',
+                            message: `Masa ${status} Anda telah habis. Silakan hubungi admin untuk melanjutkan layanan.`
+                        });
+                    }
+                    // --------------------------
+
                     const productsSnap = await db.collection('users').doc(userId).collection('products').get();
                     const products = productsSnap.docs.map(d => d.data());
 

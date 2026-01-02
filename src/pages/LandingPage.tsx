@@ -23,17 +23,20 @@ export default function LandingPage() {
                 <a href="#ai-chatbot" className="hover:text-neutral-500 transition-colors px-3 py-2 text-sm font-medium tracking-wide">AI CHATBOT</a>
               </div>
             </div>
-            {/* Login Button Removed as per request */}
-            {/* <div>
+            <div className="flex items-center gap-4">
               <a
                 href="https://chatbot.nusavite.com/login"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="bg-black hover:bg-neutral-800 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all inline-block"
+                className="text-neutral-500 hover:text-black font-medium text-sm transition-colors px-4"
               >
-                Login Dashboard
+                Login
               </a>
-            </div> */}
+              <a
+                href="https://chatbot.nusavite.com/register"
+                className="bg-black hover:bg-neutral-800 text-white px-6 py-2.5 rounded-full text-sm font-medium transition-all shadow-lg shadow-black/10"
+              >
+                Daftar Gratis
+              </a>
+            </div>
           </div>
         </div>
       </nav>
@@ -55,12 +58,10 @@ export default function LandingPage() {
             </p>
             <div className="flex flex-col sm:flex-row gap-6 justify-center">
               <a
-                href="https://wa.me/62895402945495"
-                target="_blank"
-                rel="noreferrer"
+                href="https://chatbot.nusavite.com/register"
                 className="px-10 py-5 bg-black hover:bg-neutral-800 text-white rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
               >
-                Pesan Website Sekarang
+                Mulai Trial Gratis 5 Hari
               </a>
               <button
                 onClick={() => document.getElementById('ai-chatbot')?.scrollIntoView({ behavior: 'smooth' })}

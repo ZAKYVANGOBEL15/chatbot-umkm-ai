@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+
+Sitemap: https://www.nusavite.com/sitemap.xml
+Sitemap: https://chatbot.nusavite.com/sitemap.xml

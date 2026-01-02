@@ -250,14 +250,14 @@ export default function KnowledgeBase() {
                         />
                     </div>
                     <div>
-                        <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">System Prompt (Instruksi)</label>
-                        <p className="text-xs text-neutral-400 mb-3">Jelaskan apa yang dijual, jam operasional, dan gaya bahasa bot.</p>
+                        <label className="block text-xs font-bold uppercase tracking-widest text-neutral-500 mb-2">Profil & Deskripsi Bisnis (Alamat, Jam Buka, dll)</label>
+                        <p className="text-xs text-neutral-400 mb-3">Informasikan alamat cabang, jam operasional, dan profil umum bisnis Anda di sini.</p>
                         <textarea
                             value={businessDesc}
                             onChange={(e) => setBusinessDesc(e.target.value)}
                             rows={4}
                             className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-[#061E29] outline-none transition-all placeholder:text-neutral-300 font-medium"
-                            placeholder="Kami menjual kue basah dan kering. Buka jam 08.00 - 17.00. Jawab dengan ramah dan sopan."
+                            placeholder="Alamat: Jl. Sam Ratulangi No. 159. Jam Buka: Senin-Sabtu 09.00-20.00. Kami adalah klinik kecantikan profesional..."
                         />
                     </div>
                 </div>

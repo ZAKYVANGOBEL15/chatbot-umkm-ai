@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2 } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2, Zap } from 'lucide-react';
 import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -100,6 +100,29 @@ export default function Dashboard() {
         }
     };
 
+    const handleUpgrade = async () => {
+        if (!userId) return;
+        setLoading(true);
+        try {
+            const res = await fetch('/api/create-invoice', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId, plan: 'Monthly' })
+            });
+            const data = await res.json();
+            if (data.invoiceUrl) {
+                window.location.href = data.invoiceUrl;
+            } else {
+                alert('Gagal membuat invoice: ' + (data.error || 'Unknown error'));
+                setLoading(false);
+            }
+        } catch (err: any) {
+            console.error('Upgrade error:', err);
+            alert('Terjadi kesalahan saat menghubungi server.');
+            setLoading(false);
+        }
+    };
+
     return (
         <div className="space-y-8 max-w-full overflow-hidden">
             {/* Subscription Status Banner */}
@@ -127,14 +150,14 @@ export default function Dashboard() {
                             <p className="text-xs text-neutral-500 mt-0.5">Sisa waktu demo: <span className="text-[#061E29] font-bold">{daysLeft} hari</span>.</p>
                         </div>
                     </div>
-                    <a
-                        href="https://wa.me/62895402945495?text=Halo%20Admin,%20saya%20ingin%20upgrade%20ke%20Paket%20Premium"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="w-full sm:w-auto px-4 py-2 bg-[#061E29] text-white text-xs font-bold rounded-lg hover:bg-[#0a2d3d] transition-colors text-center"
+                    <button
+                        onClick={handleUpgrade}
+                        disabled={loading}
+                        className="w-full sm:w-auto px-6 py-2.5 bg-[#061E29] text-white text-xs font-bold rounded-lg hover:bg-[#0a2d3d] transition-all flex items-center justify-center gap-2 shadow-md active:scale-95 disabled:bg-neutral-400"
                     >
-                        Hubungi Admin
-                    </a>
+                        <Zap size={14} className="text-emerald-400" />
+                        {loading ? 'Memproses...' : 'Daftar Premium'}
+                    </button>
                 </div>
             )}
             {/* Error Alert */}

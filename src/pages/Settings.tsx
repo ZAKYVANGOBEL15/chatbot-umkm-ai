@@ -11,7 +11,6 @@ interface UserProfile {
     trialExpiresAt?: string;
     subscriptionExpiresAt?: string;
     subscriptionPlan?: string;
-    businessName?: string;
     whatsappPhoneNumberId?: string;
     whatsappBusinessAccountId?: string;
     whatsappAccessToken?: string;
@@ -78,9 +77,6 @@ export default function Settings() {
                         const expiry = new Date(data.trialExpiresAt);
                         if (now > expiry) expired = true;
                     }
-
-                    // For testing purposes
-                    // expired = true;
 
                     setIsExpired(expired);
                 }

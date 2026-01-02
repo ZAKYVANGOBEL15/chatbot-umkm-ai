@@ -112,6 +112,21 @@ export default async function handler(req: any, res: any) {
                     const userData = userDoc.data();
                     const userId = userDoc.id;
 
+                    // --- SUBSCRIPTION CHECK ---
+                    const status = userData.subscriptionStatus || 'trial';
+                    let isExpired = false;
+
+                    if (status === 'active' && userData.subscriptionExpiresAt) {
+                        isExpired = new Date(userData.subscriptionExpiresAt).getTime() < Date.now();
+                    } else if (status === 'trial' && userData.trialExpiresAt) {
+                        isExpired = new Date(userData.trialExpiresAt).getTime() < Date.now();
+                    }
+
+                    if (isExpired) {
+                        console.warn(`[WhatsApp] User ${userId} (${userData.businessName}) has an expired ${status}. Skipping response.`);
+                        return res.status(200).send('OK'); // Acknowledge Meta but don't reply
+                    }
+                    // --------------------------
 
                     const accessToken = userData.whatsappAccessToken;
                     const businessPhone = userData.businessPhone; // Optional fallback
@@ -131,7 +146,7 @@ export default async function handler(req: any, res: any) {
 
                     // C. Identify Customer & Fetch History
                     let customerId = '';
-                    let history = [];
+                    let history: { role: string; text: string }[] = [];
                     const customersRef = db.collection('users').doc(userId).collection('customers');
                     const customerQuery = await customersRef.where('phone', '==', from).limit(1).get();
 

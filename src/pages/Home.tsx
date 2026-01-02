@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MessageSquare, ShoppingBag, ArrowRight, Zap, Shield, Smartphone } from 'lucide-react';
+import { MessageSquare, ArrowRight, Zap, Shield, Smartphone } from 'lucide-react';
 
 export default function Home() {
     return (
@@ -18,11 +18,12 @@ export default function Home() {
                     </div>
                     <span className="text-2xl font-bold tracking-tight">Nusavite</span>
                 </div>
-                <div className="hidden md:flex items-center gap-8 text-sm font-medium text-gray-400">
-                    <a href="#solutions" className="hover:text-white transition-colors">Solusi</a>
-                    <a href="#about" className="hover:text-white transition-colors">Tentang</a>
-                    <Link to="/login" className="px-5 py-2 bg-white/5 hover:bg-white/10 border border-white/10 rounded-full transition-all">
-                        Login Dashboard
+                <div className="hidden md:flex items-center gap-4 text-sm font-medium">
+                    <Link to="/login" className="text-gray-400 hover:text-white transition-colors">
+                        Login
+                    </Link>
+                    <Link to="/register" className="px-5 py-2 bg-blue-600 hover:bg-blue-500 text-white rounded-full transition-all shadow-lg shadow-blue-600/20">
+                        Daftar Gratis
                     </Link>
                 </div>
             </nav>
@@ -49,7 +50,7 @@ export default function Home() {
                 </p>
 
                 {/* Solution Cards */}
-                <div id="solutions" className="grid md:grid-cols-2 gap-8 max-w-5xl mx-auto mt-20">
+                <div id="solutions" className="max-w-2xl mx-auto mt-20">
                     {/* Solution 1: AI Chatbot */}
                     <div className="group relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-blue-500/50 transition-all duration-500 overflow-hidden">
                         <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
@@ -62,31 +63,11 @@ export default function Home() {
                                 Asisten pintar yang menjawab pertanyaan pelanggan via WhatsApp otomatis 24/7. Tingkatkan konversi penjualan Anda tanpa lelah.
                             </p>
                             <Link
-                                to="/login"
+                                to="/register"
                                 className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 hover:bg-blue-500 rounded-xl font-semibold transition-all shadow-lg shadow-blue-600/20"
                             >
-                                Mulai Sekarang <ArrowRight className="w-4 h-4" />
+                                Daftar Gratis Sekarang <ArrowRight className="w-4 h-4" />
                             </Link>
-                        </div>
-                    </div>
-
-                    {/* Solution 2: Laundry System */}
-                    <div className="group relative p-8 rounded-3xl bg-white/5 border border-white/10 hover:border-purple-500/50 transition-all duration-500 overflow-hidden">
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                        <div className="relative z-10 text-left">
-                            <div className="w-14 h-14 bg-purple-600/20 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-                                <ShoppingBag className="w-8 h-8 text-purple-500" />
-                            </div>
-                            <h3 className="text-2xl font-bold mb-3 text-white">Nusavite Laundry</h3>
-                            <p className="text-gray-400 mb-8 text-sm leading-relaxed">
-                                Kelola bisnis laundry Anda dengan sistem kasir yang rapi, laporan keuangan otomatis, dan manajemen customer terbaik.
-                            </p>
-                            <a
-                                href="https://laundryku.nusavite.com"
-                                className="inline-flex items-center gap-2 px-6 py-3 bg-white/5 hover:bg-white/10 border border-white/10 rounded-xl font-semibold transition-all"
-                            >
-                                Kunjungi Layanan <ArrowRight className="w-4 h-4" />
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -108,7 +89,6 @@ export default function Home() {
                         <h4 className="font-bold mb-6 text-white">Produk</h4>
                         <ul className="space-y-4 text-sm text-gray-500">
                             <li><Link to="/login" className="hover:text-blue-400 transition-colors">AI Chatbot</Link></li>
-                            <li><a href="#" className="hover:text-blue-400 transition-colors">Kasir Laundry</a></li>
                             <li><a href="#" className="hover:text-blue-400 transition-colors">Point of Sales</a></li>
                         </ul>
                     </div>
