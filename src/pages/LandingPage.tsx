@@ -282,12 +282,18 @@ export default function LandingPage() {
                 New: Standalone
               </div>
               <h3 className="text-xl font-bold text-neutral-900 mb-2">WhatsApp AI Only</h3>
-              <div className="flex items-baseline mb-6">
-                <span className="text-4xl font-bold text-[#2D3C59]">Rp 195rb</span>
+              <div className="flex items-baseline mb-2">
+                <span className="text-4xl font-bold text-[#2D3C59]">Rp 200rb</span>
                 <span className="text-neutral-500 ml-2">/ bulan</span>
               </div>
-              <p className="text-neutral-600 mb-8 text-sm leading-relaxed">
-                Hanya butuh Chatbot AI untuk WhatsApp? Integrasikan "Otak" AI kami ke WhatsApp Bisnis Anda 24/7.
+              <div className="mb-6">
+                <p className="text-[10px] text-neutral-400 line-through">Biaya Aktivasi: Rp 500rb</p>
+                <p className="text-[11px] text-emerald-600 font-bold uppercase tracking-wider">
+                  Promo: Gratis Biaya Setup (3 Klien Pertama)
+                </p>
+              </div>
+              <p className="text-neutral-600 mb-8 text-sm leading-relaxed italic">
+                Sangat praktis untuk layanan informasi pasien & reservasi klinik secara otomatis.
               </p>
 
               <ul className="space-y-4 mb-8 flex-1">
