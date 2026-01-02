@@ -4,6 +4,7 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Lock, Mail, ArrowRight } from 'lucide-react';
+import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
 import logo from '../assets/image/NV.png';
 
@@ -43,7 +44,7 @@ export default function Register() {
             }
             navigate('/dashboard');
         } catch (err: any) {
-            setError('Gagal masuk dengan Google: ' + err.message);
+            setError(getFriendlyErrorMessage(err.code));
         } finally {
             setLoading(false);
         }
@@ -69,7 +70,7 @@ export default function Register() {
             });
             navigate('/dashboard');
         } catch (err: any) {
-            setError('Registrasi gagal. ' + err.message);
+            setError(getFriendlyErrorMessage(err.code));
         } finally {
             setLoading(false);
         }

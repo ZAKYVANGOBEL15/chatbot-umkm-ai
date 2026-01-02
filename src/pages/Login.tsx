@@ -4,6 +4,7 @@ import { auth, db, googleProvider } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
+import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
 import logo from '../assets/image/NV.png';
 
@@ -42,7 +43,7 @@ export default function Login() {
             }
             navigate('/dashboard');
         } catch (err: any) {
-            setError('Gagal masuk dengan Google: ' + err.message);
+            setError(getFriendlyErrorMessage(err.code));
         } finally {
             setLoading(false);
         }
@@ -56,7 +57,7 @@ export default function Login() {
             await signInWithEmailAndPassword(auth, email, password);
             navigate('/dashboard');
         } catch (err: any) {
-            setError('Akses ditolak. Periksa email dan password Anda.');
+            setError(getFriendlyErrorMessage(err.code));
         } finally {
             setLoading(false);
         }
