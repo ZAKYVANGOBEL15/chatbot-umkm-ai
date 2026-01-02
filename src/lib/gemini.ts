@@ -5,7 +5,14 @@
 
 export async function generateAIResponse(
     userMessage: string,
-    businessContext: { name: string; description: string; products: any[] },
+    businessContext: {
+        name: string;
+        description: string;
+        products: any[];
+        instagram?: string;
+        facebook?: string;
+        businessEmail?: string;
+    },
     history: { role: string; text: string }[]
 ) {
     // Get API key safely for both Server (Node) and Client (Browser)
@@ -34,6 +41,12 @@ export async function generateAIResponse(
 Anda adalah Customer Service untuk "${businessContext.name}".
 Waktu saat ini: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}.
 Deskripsi Bisnis: ${businessContext.description || "UMKM Indonesia."}
+
+Kontak & Sosmed:
+- Instagram: ${businessContext.instagram || "-"}
+- Facebook: ${businessContext.facebook || "-"}
+- Email: ${businessContext.businessEmail || "-"}
+
 Daftar Produk:
 ${productList || "Hubungi kami untuk informasi produk lengkap."}
 

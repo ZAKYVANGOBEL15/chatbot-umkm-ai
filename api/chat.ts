@@ -53,74 +53,25 @@ export default async function handler(req: any, res: any) {
             return res.status(400).json({ error: 'Missing businessContext or userId' });
         }
 
-        // 2. Get API Key safely
-        const apiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY;
+        // 3. Call Shared AI Logic
+        // We import it dynamically or assume it's available via previous import. 
+        // Since this is a file replacement, I need to add the import at the top if it's missing, 
+        // but this tool only replaces a chunk. 
+        // I'll assume I need to do a separate edit for imports or rely on the fact that I will replace the WHOLE file logic in a smarter way if I could.
+        // Actually, I should use multi_replace to add the import as well. 
+        // Wait, I can't easily add the import with this tool if I'm targeting the body.
+        // I will actally use `replace_file_content` to replace the WHOLE logic block.
 
-        if (!apiKey) {
-            return res.status(500).json({ error: 'MISTRAL_API_KEY is not configured.' });
-        }
+        let reply = await import('../src/lib/gemini.js').then(m =>
+            m.generateAIResponse(message, finalContext, history || [])
+        );
 
-        // 3. Prepare System Instructions
-        const productList = (finalContext?.products || [])
-            .map((p: any) => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
-            .join('\n');
+        // 4. (Removed manual fetch)
 
-        const systemInstructions = `
-Anda adalah Customer Service untuk "${finalContext?.name || "Bisnis Kami"}".
-Waktu saat ini: ${new Date().toLocaleString('id-ID', { timeZone: 'Asia/Jakarta' })}.
-Deskripsi Bisnis: ${finalContext?.description || "UMKM Indonesia."}
-Kontak & Sosmed:
-- Instagram: ${finalContext?.instagram || "-"}
-- Facebook: ${finalContext?.facebook || "-"}
-- Email: ${finalContext?.businessEmail || "-"}
 
-Daftar Produk/Layanan:
-${productList || "Hubungi kami untuk informasi lengkap."}
 
-Tugas Utama:
-1. Jawab pertanyaan pelanggan dengan ramah, singkat, dan gunakan data di atas.
-2. PENTING: Jika pelanggan menunjukkan minat beli atau booking, Anda WAJIB meminta "Nama" dan "Nomor WhatsApp" mereka.
-3. JIKA (dan hanya jika) pelanggan sudah memberikan Nama dan Nomor WhatsApp, Anda WAJIB menyertakan kode rahasia ini di akhir jawaban Anda (tanpa spasi antar baris):
-:::LEAD_DATA={"name":"[Nama Pelanggan]","phone":"[Nomor WA]"}:::
+        // (No verification needed, the shared lib handles it)
 
-Contoh:
-User: "Nama saya Budi, wa 08123"
-Anda: "Terima kasih Kak Budi! Tim kami akan segera menghubungi via WA ya. Ditunggu! :::LEAD_DATA={"name":"Budi","phone":"08123"}:::"
-
-Gunakan gaya bahasa yang akrab (Kak/Sist).
-`.trim();
-
-        const messages = [
-            { role: "system", content: systemInstructions },
-            ...(history || []).map((h: any) => ({
-                role: h.role === "user" ? "user" : "assistant",
-                content: h.text
-            })),
-            { role: "user", content: message }
-        ];
-
-        // 4. Call Mistral API
-        const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "mistral-small-latest",
-                messages: messages,
-                temperature: 0.7,
-                max_tokens: 500
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-            return res.status(500).json({ error: `Mistral Error: ${data.error.message}` });
-        }
-
-        let reply = data.choices?.[0]?.message?.content || "Maaf, saya tidak mendapatkan jawaban.";
 
         // --- LEAD GENERATION LOGIC ---
         // Check for the secret LEAD_DATA tag, allowing for optional spaces

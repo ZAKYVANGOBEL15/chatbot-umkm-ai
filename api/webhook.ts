@@ -112,20 +112,68 @@ export default async function handler(req: any, res: any) {
                     const userData = userDoc.data();
                     const userId = userDoc.id;
 
-                    const accessToken = userData.whatsappAccessToken;
 
-                    // B. Fetch Products for this user
+                    const accessToken = userData.whatsappAccessToken;
+                    const businessPhone = userData.businessPhone; // Optional fallback
+
+                    // B. Fetch Products & Social Media for this user
                     const productsSnap = await db.collection('users').doc(userId).collection('products').get();
                     const products = productsSnap.docs.map(d => d.data());
 
                     const businessContext = {
                         name: userData.businessName || 'Toko Kami',
                         description: userData.businessDescription || 'Toko UMKM.',
-                        products: products
+                        products: products,
+                        instagram: userData.instagram,
+                        facebook: userData.facebook,
+                        businessEmail: userData.businessEmail
                     };
 
-                    // C. Get AI Response
-                    let reply = await generateAIResponse(text, businessContext, []);
+                    // C. Identify Customer & Fetch History
+                    let customerId = '';
+                    let history = [];
+                    const customersRef = db.collection('users').doc(userId).collection('customers');
+                    const customerQuery = await customersRef.where('phone', '==', from).limit(1).get();
+
+                    if (!customerQuery.empty) {
+                        customerId = customerQuery.docs[0].id;
+                        // Fetch last 15 messages
+                        const messagesSnap = await customersRef.doc(customerId)
+                            .collection('messages')
+                            .orderBy('createdAt', 'asc') // Create index if needed, or filter in memory
+                            .limitToLast(15)
+                            .get();
+
+                        history = messagesSnap.docs.map(doc => ({
+                            role: doc.data().role,
+                            text: doc.data().text
+                        }));
+                    } else {
+                        // Create new customer proactively to store history
+                        const newCustomer = await customersRef.add({
+                            phone: from,
+                            name: "Pelanggan Baru", // Will be updated by lead gen later
+                            status: 'new',
+                            source: 'whatsapp',
+                            createdAt: new Date().toISOString(),
+                            lastInteraction: new Date().toISOString()
+                        });
+                        customerId = newCustomer.id;
+                    }
+
+                    // Save User Message to History
+                    if (customerId) {
+                        await customersRef.doc(customerId).collection('messages').add({
+                            role: 'user',
+                            text: text,
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+
+                    // D. Get AI Response
+                    let reply = await import('../src/lib/gemini.js').then(m =>
+                        m.generateAIResponse(text, businessContext, history)
+                    );
 
                     // --- LEAD GENERATION LOGIC ---
                     const match = reply.match(/:::LEAD_DATA=(.*?):::/);
@@ -134,16 +182,16 @@ export default async function handler(req: any, res: any) {
                             const leadData = JSON.parse(match[1]);
                             console.log("[WhatsApp] Lead Captured:", leadData);
 
-                            // Save to Firestore
-                            await db.collection('users').doc(userId).collection('customers').add({
-                                name: leadData.name,
-                                phone: leadData.phone,
-                                phoneNumberId: phoneNumberId, // Store source ID
-                                status: 'new',
-                                source: 'whatsapp',
-                                createdAt: new Date().toISOString(),
-                                lastInteraction: new Date().toISOString()
-                            });
+                            // Update existing customer doc
+                            if (customerId) {
+                                await customersRef.doc(customerId).update({
+                                    name: leadData.name,
+                                    phone: leadData.phone, // Ensure phone is consistent
+                                    phoneNumberId: phoneNumberId,
+                                    status: 'new', // Or 'lead'
+                                    lastInteraction: new Date().toISOString()
+                                });
+                            }
 
                             // Clean reply
                             reply = reply.replace(match[0], '').trim();
@@ -154,7 +202,16 @@ export default async function handler(req: any, res: any) {
                     }
                     // -----------------------------
 
-                    // D. Send Message Back to WhatsApp
+                    // Save AI Reply to History
+                    if (customerId) {
+                        await customersRef.doc(customerId).collection('messages').add({
+                            role: 'assistant',
+                            text: reply,
+                            createdAt: new Date().toISOString()
+                        });
+                    }
+
+                    // E. Send Message Back to WhatsApp
                     if (accessToken) {
                         const waResponse = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
                             method: 'POST',
