@@ -6,8 +6,6 @@ import { useNavigate, Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
-import logo from '../assets/image/NV.png';
-
 export default function Login() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -74,14 +72,11 @@ export default function Login() {
                     <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#2D3C59]" />
                 </div>
 
-                <div className="relative z-10 flex flex-col items-center gap-6">
-                    <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-[2.5rem] shadow-2xl shadow-neutral-200 border border-neutral-100 flex items-center justify-center p-6 transform hover:rotate-3 transition-transform duration-500">
-                        <img src={logo} alt="Nusavite Logo" className="w-full h-full object-contain" fetchPriority="high" loading="eager" />
-                    </div>
+                <div className="relative z-10 flex flex-col items-center gap-8">
                     <div className="text-center">
-                        <h1 className="font-black text-3xl lg:text-5xl tracking-[0.3em] uppercase text-[#2D3C59] mb-3">Nusavite</h1>
-                        <div className="h-1.5 w-16 bg-[#2D3C59] mx-auto rounded-full opacity-20 mb-6" />
-                        <p className="hidden lg:block text-neutral-500 font-medium tracking-[0.2em] text-sm uppercase">AI Digital Assistant</p>
+                        <h1 className="font-black text-4xl lg:text-6xl tracking-[0.3em] uppercase text-[#2D3C59] mb-4">Nusavite</h1>
+                        <div className="h-2 w-20 bg-[#2D3C59] mx-auto rounded-full opacity-20 mb-8" />
+                        <p className="hidden lg:block text-neutral-500 font-bold tracking-[0.2em] text-sm uppercase">Smart Business AI</p>
                     </div>
                 </div>
             </div>
