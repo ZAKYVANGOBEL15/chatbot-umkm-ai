@@ -123,7 +123,7 @@ export default function LandingPage() {
       </section>
 
       {/* Additional Services */}
-      <section className="py-24 bg-[#2D3C59] text-white relative border-t border-[#1e293b]">
+      <section id="features" className="py-24 bg-[#2D3C59] text-white relative border-t border-[#1e293b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <span className="text-sm font-bold tracking-widest uppercase text-neutral-500 mb-2 block">Fitur Unggulan</span>
