@@ -310,12 +310,12 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <Link
-                to="/register"
+              <a
+                href="https://chatbot.nusavite.com/register"
                 className="w-full py-4 rounded-xl border-2 border-[#2D3C59] bg-[#2D3C59] text-white font-bold text-center hover:bg-[#1e293b] transition-colors"
               >
                 Pilih Paket WhatsApp AI
-              </Link>
+              </a>
             </div>
 
             {/* Premium AI Plan (Monthly) */}
