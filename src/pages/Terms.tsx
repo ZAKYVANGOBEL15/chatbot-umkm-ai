@@ -72,8 +72,7 @@ export default function Terms() {
                                 Jika Anda memiliki pertanyaan terkait layanan atau pembayaran, silakan hubungi tim kami:
                             </p>
                             <div className="bg-gray-100 p-4 rounded-lg inline-block">
-                                <p className="text-gray-800 font-mono">Email: support@nusavite.com</p>
-                                <p className="text-gray-800 font-mono">WhatsApp: +62 812-3456-7890</p>
+                                <p className="text-gray-800 font-mono">WhatsApp: +62 895-4029-45495</p>
                             </div>
                         </section>
                     </div>
