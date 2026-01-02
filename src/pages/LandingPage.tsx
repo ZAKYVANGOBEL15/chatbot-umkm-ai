@@ -266,7 +266,7 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                to="/register"
+                to="/register?plan=annual"
                 className="w-full py-4 rounded-xl border-2 border-neutral-200 text-[#2D3C59] font-bold text-center hover:border-[#2D3C59] transition-colors"
               >
                 Pilih Paket Tahunan
@@ -309,7 +309,7 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                to="/register"
+                to="/register?plan=whatsapp"
                 className="w-full py-4 rounded-xl border-2 border-[#2D3C59] bg-[#2D3C59] text-white font-bold text-center hover:bg-[#1e293b] transition-colors"
               >
                 Pilih Paket WhatsApp AI
@@ -346,7 +346,7 @@ export default function LandingPage() {
               </ul>
 
               <Link
-                to="/register"
+                to="/register?plan=premium"
                 className="w-full py-4 rounded-xl bg-white text-[#2D3C59] font-bold text-center hover:bg-neutral-200 transition-colors"
               >
                 Mulai Paket Lengkap

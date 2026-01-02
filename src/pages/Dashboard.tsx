@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2, Zap } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2, Zap, Monitor } from 'lucide-react';
 import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -11,6 +11,7 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState('');
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
+    const [subscriptionPlan, setSubscriptionPlan] = useState('basic');
     const [daysLeft, setDaysLeft] = useState(0);
     const [expiryDateString, setExpiryDateString] = useState('');
     const [isWhatsAppConfigured, setIsWhatsAppConfigured] = useState(false);
@@ -65,6 +66,7 @@ export default function Dashboard() {
                 setUserName(data.name || '');
                 const status = data.subscriptionStatus || 'trial';
                 setSubscriptionStatus(status);
+                setSubscriptionPlan(data.subscriptionPlan || 'basic');
 
                 if (status === 'active' && data.subscriptionExpiresAt) {
                     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
@@ -197,6 +199,34 @@ export default function Dashboard() {
                     </Link>
                 )}
             </div>
+
+            {/* Website Claim Banner (Only for Annual & Premium plans) */}
+            {(subscriptionPlan === 'annual' || subscriptionPlan === 'premium') && (
+                <div className="bg-gradient-to-r from-[#061E29] to-[#0a2d3d] text-white rounded-3xl p-8 lg:p-10 border border-white/10 shadow-2xl relative overflow-hidden group">
+                    <div className="relative z-10 flex flex-col md:flex-row items-center justify-between gap-8">
+                        <div className="flex-1 text-center md:text-left">
+                            <div className="inline-flex items-center gap-2 px-3 py-1 bg-emerald-500/20 text-emerald-400 rounded-full text-[10px] font-bold uppercase tracking-widest mb-4">
+                                <Monitor size={12} /> Website Benefit
+                            </div>
+                            <h3 className="text-2xl lg:text-3xl font-bold mb-4">Waktunya Bikin Website Kamu!</h3>
+                            <p className="text-neutral-400 max-w-xl text-sm lg:text-base leading-relaxed">
+                                Kamu memilih paket yang menyertakan pembuatan website profesional. Hubungi admin sekarang untuk mengirimkan data bisnis/klinik Anda dan mulai proses pembuatan website.
+                            </p>
+                        </div>
+                        <a
+                            href={`https://wa.me/62895402945495?text=Halo%20Nusavite,%20saya%20sudah%20daftar%20akun%20(${userName})%20dengan%20paket%20${subscriptionPlan}.%20Saya%20ingin%20klaim%20pembuatan%20website.`}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center gap-3 px-8 py-4 bg-white text-[#061E29] font-bold rounded-xl hover:bg-neutral-100 transition-all shadow-lg active:scale-95 whitespace-nowrap"
+                        >
+                            <Zap size={20} className="text-emerald-500" />
+                            Hubungi Admin Sekarang
+                        </a>
+                    </div>
+                    {/* Decorative Background Icon */}
+                    <Monitor className="absolute -right-10 -bottom-10 w-64 h-64 text-white/5 rotate-12 group-hover:rotate-0 transition-all duration-700" />
+                </div>
+            )}
 
             {/* Welcome Section */}
             <div className="p-8 lg:p-12 bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100 overflow-hidden relative group">
