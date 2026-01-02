@@ -70,7 +70,7 @@ export default function Login() {
                     <div className="bg-white p-8 md:p-10 border border-neutral-100 rounded-[2rem] shadow-xl shadow-neutral-100/50">
                         <div className="text-center mb-10">
                             <h2 className="text-3xl font-bold text-black mb-2">Selamat Datang</h2>
-                            <p className="text-neutral-500 text-sm italic">"Masuk menggunakan Akun Google untuk keamanan maksimal."</p>
+
                         </div>
 
                         {error && (
