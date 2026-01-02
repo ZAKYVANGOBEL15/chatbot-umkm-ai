@@ -96,7 +96,7 @@ export default function Login() {
                         </div>
 
                         {error && (
-                            <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100 text-center">
+                            <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100 text-center" aria-live="polite">
                                 {error}
                             </div>
                         )}
@@ -137,26 +137,26 @@ export default function Login() {
 
                             <form onSubmit={handleLogin} className="space-y-6">
                                 <div className="space-y-2">
-                                    <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-widest text-neutral-400 ml-1">Email Klien</label>
+                                    <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-widest text-neutral-600 ml-1">Email Klien</label>
                                     <input
                                         id="login-email"
                                         type="email"
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-6 py-4 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-[#2D3C59] focus:bg-white outline-none transition-all font-medium placeholder:text-neutral-300"
+                                        className="w-full px-6 py-4 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-[#2D3C59] focus:bg-white outline-none transition-all font-medium placeholder:text-neutral-500"
                                         placeholder="name@company.com"
                                         required
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-widest text-neutral-400 ml-1">Password</label>
+                                    <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-widest text-neutral-600 ml-1">Password</label>
                                     <input
                                         id="login-password"
                                         type="password"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-6 py-4 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-[#2D3C59] focus:bg-white outline-none transition-all font-medium placeholder:text-neutral-300"
+                                        className="w-full px-6 py-4 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-[#2D3C59] focus:bg-white outline-none transition-all font-medium placeholder:text-neutral-500"
                                         placeholder="••••••••"
                                         required
                                     />

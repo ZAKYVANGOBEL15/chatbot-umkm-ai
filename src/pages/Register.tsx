@@ -79,7 +79,7 @@ export default function Register() {
                         </div>
 
                         {error && (
-                            <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100 text-center">
+                            <div className="mb-6 p-4 bg-red-50 text-red-600 text-sm font-medium rounded-xl border border-red-100 text-center" aria-live="polite">
                                 {error}
                             </div>
                         )}
@@ -122,7 +122,7 @@ export default function Register() {
                             </Link>
                         </p>
 
-                        <div className="mt-10 pt-6 border-t border-neutral-50 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                        <div className="mt-10 pt-6 border-t border-neutral-50 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                             <Link to="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat</Link>
                             <Link to="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan</Link>
                             <Link to="/" className="hover:text-[#2D3C59] transition-colors">Bantuan</Link>
