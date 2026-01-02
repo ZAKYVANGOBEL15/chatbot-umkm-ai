@@ -265,12 +265,14 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <Link
-                to="/register?plan=annual"
+              <a
+                href="https://wa.me/62895402945495?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Standard%20Tahunan"
+                target="_blank"
+                rel="noreferrer"
                 className="w-full py-4 rounded-xl border-2 border-neutral-200 text-[#2D3C59] font-bold text-center hover:border-[#2D3C59] transition-colors"
               >
                 Pilih Paket Tahunan
-              </Link>
+              </a>
             </div>
 
             {/* NEW: Standalone AI Chatbot Plan */}
@@ -345,12 +347,14 @@ export default function LandingPage() {
                 ))}
               </ul>
 
-              <Link
-                to="/register?plan=premium"
+              <a
+                href="https://wa.me/62895402945495?text=Halo%20Nusavite,%20saya%20tertarik%20paket%20Premium%20Master%20(Web%20+%20AI)"
+                target="_blank"
+                rel="noreferrer"
                 className="w-full py-4 rounded-xl bg-white text-[#2D3C59] font-bold text-center hover:bg-neutral-200 transition-colors"
               >
                 Mulai Paket Lengkap
-              </Link>
+              </a>
             </div>
           </div>
         </div>
