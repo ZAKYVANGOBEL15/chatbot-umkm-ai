@@ -57,7 +57,7 @@ export default function Register() {
 
                 <div className="relative z-10 flex flex-col items-center gap-8">
                     <div className="text-center">
-                        <h1 className="font-black text-4xl lg:text-6xl tracking-[0.3em] uppercase text-[#2D3C59] mb-4">Nusavite</h1>
+                        <img src="/NV.png" alt="Nusavite" className="h-24 lg:h-32 mx-auto mb-4" />
                         <div className="h-2 w-20 bg-[#2D3C59] mx-auto rounded-full opacity-20 mb-8" />
                         <p className="hidden lg:block text-neutral-500 font-bold tracking-[0.2em] text-sm uppercase">Smart Business AI</p>
                     </div>

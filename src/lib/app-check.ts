@@ -17,20 +17,24 @@ if (import.meta.env.DEV) {
 export const initAppCheck = () => {
     try {
         if (!RECAPTCHA_SITE_KEY) {
-            console.warn('⚠️ reCAPTCHA site key not found. App Check will not be initialized.');
-            console.warn('Please add VITE_RECAPTCHA_SITE_KEY to your .env.local file.');
+            // Only log in development mode
+            if (import.meta.env.DEV) {
+                console.warn('reCAPTCHA site key not found. App Check will not be initialized.');
+            }
             return null;
         }
 
         const appCheck = initializeAppCheck(app, {
             provider: new ReCaptchaV3Provider(RECAPTCHA_SITE_KEY),
-            isTokenAutoRefreshEnabled: true, // Auto-refresh tokens before they expire
+            isTokenAutoRefreshEnabled: true,
         });
 
-        console.log('✅ Firebase App Check initialized successfully');
         return appCheck;
     } catch (error) {
-        console.error('❌ Failed to initialize App Check:', error);
+        // Only log errors in development
+        if (import.meta.env.DEV) {
+            console.error('Failed to initialize App Check:', error);
+        }
         return null;
     }
 };
