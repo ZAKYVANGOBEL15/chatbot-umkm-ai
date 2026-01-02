@@ -20,7 +20,14 @@ export default function KnowledgeBase() {
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // ... (rest of state)
+    // Product Form
+    const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '' });
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingId, setEditingId] = useState<string | null>(null);
+
+    // AI Crawler State
+    const [crawlUrl, setCrawlUrl] = useState('');
+    const [isCrawling, setIsCrawling] = useState(false);
 
     useEffect(() => {
         if (!auth.currentUser) return;
@@ -41,7 +48,18 @@ export default function KnowledgeBase() {
         };
         loadProfile();
 
-        // ...
+        // Listen to Products
+        const q = query(collection(db, 'users', auth.currentUser!.uid, 'products'));
+        const unsubscribe = onSnapshot(q, (snapshot) => {
+            const items: Product[] = [];
+            snapshot.forEach((doc) => {
+                items.push({ id: doc.id, ...doc.data() } as Product);
+            });
+            setProducts(items);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
     }, []);
 
     const handleSaveProfile = async () => {

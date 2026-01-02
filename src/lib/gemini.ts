@@ -16,7 +16,27 @@ export async function generateAIResponse(
     },
     history: { role: string; text: string }[]
 ) {
-    // ... (rest of code)
+    // Get API key safely for both Server (Node) and Client (Browser)
+    let apiKey = '';
+
+    if (typeof process !== 'undefined' && process.env) {
+        apiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY || '';
+    }
+
+    // Fallback for browser environment (Vite)
+    if (!apiKey && typeof window !== 'undefined') {
+        // @ts-ignore
+        const meta = import.meta as any;
+        apiKey = meta.env?.VITE_MISTRAL_API_KEY || '';
+    }
+
+    if (!apiKey) {
+        return "Error: API Key Mistral belum dikonfigurasi. Hubungi Admin.";
+    }
+
+    const productList = (businessContext.products || [])
+        .map(p => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
+        .join('\n');
 
     const systemInstructions = `
 Anda adalah Customer Service untuk "${businessContext.name}".
