@@ -16,12 +16,21 @@ if (import.meta.env.DEV) {
  */
 export const initAppCheck = () => {
     try {
+        // 1. Check if we have a site key
         if (!RECAPTCHA_SITE_KEY) {
-            // Only log in development mode
             if (import.meta.env.DEV) {
-                console.warn('reCAPTCHA site key not found. App Check will not be initialized.');
+                console.warn('[AppCheck] No reCAPTCHA site key found. Skipping initialization.');
             }
             return null;
+        }
+
+        // 2. Handle Localhost / Development Automatically
+        const isLocalhost = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+
+        if (isLocalhost || import.meta.env.DEV) {
+            // @ts-ignore - Force debug mode for local development to avoid ReCAPTCHA errors
+            self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+            console.info('[AppCheck] Running in Development/Localhost mode. Debug token enabled.');
         }
 
         const appCheck = initializeAppCheck(app, {
@@ -29,12 +38,14 @@ export const initAppCheck = () => {
             isTokenAutoRefreshEnabled: true,
         });
 
+        if (import.meta.env.DEV) {
+            console.log('[AppCheck] Successfully initialized.');
+        }
+
         return appCheck;
     } catch (error) {
-        // Only log errors in development
-        if (import.meta.env.DEV) {
-            console.error('Failed to initialize App Check:', error);
-        }
+        // App Check failure should NEVER block the entire app
+        console.warn('[AppCheck] Initialization failed, but proceeding anyway:', error);
         return null;
     }
 };
