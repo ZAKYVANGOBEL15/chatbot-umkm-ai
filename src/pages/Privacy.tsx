@@ -30,7 +30,7 @@ export default function Privacy() {
                             </div>
                             <div className="bg-amber-50 border border-amber-100 p-6 rounded-2xl">
                                 <p className="text-gray-700 leading-relaxed font-medium">
-                                    Nusavite mewajibkan pendaftaran menggunakan **Akun Google** resmi. Hal ini dilakukan untuk menghindari:
+                                    Nusavite mewajibkan pendaftaran menggunakan Akun Google resmi. Hal ini dilakukan untuk menghindari:
                                 </p>
                                 <ul className="mt-4 space-y-3">
                                     <li className="flex items-center gap-2 text-sm text-gray-600">
@@ -55,7 +55,7 @@ export default function Privacy() {
                                 <h2 className="text-xl font-bold text-gray-800">2. Aktivasi Trial Otomatis</h2>
                             </div>
                             <p className="text-gray-600 leading-relaxed">
-                                Setiap akun baru yang berhasil terverifikasi melalui Google Sign-In akan mendapatkan akses **Trial Gratis selama 5 hari**.
+                                Setiap akun baru yang berhasil terverifikasi melalui Google Sign-In akan mendapatkan akses Trial Gratis selama 5 hari.
                                 Seluruh fitur Premium/Pro akan terbuka secara otomatis agar Anda dapat mencoba integrasi chatbot WhatsApp kami secara maksimal sebelum memutuskan untuk berlangganan.
                             </p>
                         </section>

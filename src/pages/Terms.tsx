@@ -39,9 +39,9 @@ export default function Terms() {
                                 <h2 className="text-xl font-bold text-gray-800">2. Kebijakan Pengembalian Dana (Refund)</h2>
                             </div>
                             <p className="text-gray-600 leading-relaxed">
-                                Kami menawarkan masa **Trial Gratis selama 5 hari** bagi semua pengguna baru untuk mencoba seluruh fitur Pro.
+                                Kami menawarkan masa Trial Gratis selama 5 hari bagi semua pengguna baru untuk mencoba seluruh fitur Pro.
                                 Karena adanya masa trial tersebut, seluruh pembayaran langganan yang dilakukan setelah masa trial habis bersifat
-                                **Final dan Non-Refundable (Tidak dapat dikembalikan)**.
+                                Final dan Non-Refundable (Tidak dapat dikembalikan).
                             </p>
                         </section>
 
@@ -52,7 +52,7 @@ export default function Terms() {
                                 <h2 className="text-xl font-bold text-gray-800">3. Aktivasi Layanan (Fulfillment)</h2>
                             </div>
                             <p className="text-gray-600 leading-relaxed">
-                                Nusavite adalah layanan Software-as-a-Service (SaaS). Setelah transaksi pembayaran berhasil dikonfirmasi oleh sistem kami, akses ke fitur Premium/Pro Anda akan **aktif secara otomatis dan instan** tanpa perlu pengiriman fisik.
+                                Nusavite adalah layanan Software-as-a-Service (SaaS). Setelah transaksi pembayaran berhasil dikonfirmasi oleh sistem kami, akses ke fitur Premium/Pro Anda akan aktif secara otomatis dan instan tanpa perlu pengiriman fisik.
                             </p>
                         </section>
 
