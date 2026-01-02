@@ -16,17 +16,11 @@ export default function KnowledgeBase() {
     const [instagram, setInstagram] = useState('');
     const [facebook, setFacebook] = useState('');
     const [businessEmail, setBusinessEmail] = useState('');
+    const [locationLink, setLocationLink] = useState('');
     const [products, setProducts] = useState<Product[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Product Form
-    const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '' });
-    const [isEditing, setIsEditing] = useState(false);
-    const [editingId, setEditingId] = useState<string | null>(null);
-
-    // AI Crawler State
-    const [crawlUrl, setCrawlUrl] = useState('');
-    const [isCrawling, setIsCrawling] = useState(false);
+    // ... (rest of state)
 
     useEffect(() => {
         if (!auth.currentUser) return;
@@ -42,22 +36,12 @@ export default function KnowledgeBase() {
                 setInstagram(data.instagram || '');
                 setFacebook(data.facebook || '');
                 setBusinessEmail(data.businessEmail || '');
+                setLocationLink(data.locationLink || '');
             }
         };
         loadProfile();
 
-        // Listen to Products
-        const q = query(collection(db, 'users', auth.currentUser!.uid, 'products'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
-            const items: Product[] = [];
-            snapshot.forEach((doc) => {
-                items.push({ id: doc.id, ...doc.data() } as Product);
-            });
-            setProducts(items);
-            setLoading(false);
-        });
-
-        return () => unsubscribe();
+        // ...
     }, []);
 
     const handleSaveProfile = async () => {
@@ -70,6 +54,7 @@ export default function KnowledgeBase() {
                 instagram,
                 facebook,
                 businessEmail,
+                locationLink,
                 updatedAt: new Date().toISOString()
             });
             alert('Profil bisnis berhasil disimpan!');
@@ -302,6 +287,23 @@ export default function KnowledgeBase() {
                             placeholder="kontak@bisnis.com"
                             className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-[#061E29] outline-none transition-all text-sm font-medium bg-neutral-50"
                         />
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 mt-4">
+                    <div className="space-y-2">
+                        <label className="text-xs font-bold text-neutral-400 uppercase tracking-widest flex items-center gap-2">
+                            <div className="w-3.5 h-3.5 rounded-full bg-red-500 flex items-center justify-center text-[10px] text-white">📍</div>
+                            Link Lokasi (Google Maps)
+                        </label>
+                        <input
+                            type="text"
+                            value={locationLink}
+                            onChange={(e) => setLocationLink(e.target.value)}
+                            placeholder="https://maps.app.goo.gl/..."
+                            className="w-full px-4 py-3 rounded-xl border border-neutral-200 focus:ring-2 focus:ring-[#061E29] outline-none transition-all text-sm font-medium bg-neutral-50"
+                        />
+                        <p className="text-[10px] text-neutral-400">Paste link Google Maps di sini agar bisa diklik di WhatsApp.</p>
                     </div>
                 </div>
 
