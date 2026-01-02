@@ -207,7 +207,7 @@ export default function ChatSimulator() {
                                                     setCorrectionInput('');
                                                 }
                                             }}
-                                            className="absolute -bottom-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity bg-white border border-gray-200 shadow-sm p-1 rounded-full text-gray-400 hover:text-red-500 hover:border-red-200"
+                                            className="absolute -bottom-6 left-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity bg-white border border-gray-200 shadow-sm p-1 rounded-full text-gray-400 hover:text-red-500 hover:border-red-200"
                                             title="Koreksi Jawaban Ini"
                                         >
                                             <ThumbsDown size={12} />
