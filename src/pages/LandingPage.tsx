@@ -48,8 +48,8 @@ export default function LandingPage() {
               <span className="text-xs font-bold uppercase tracking-widest text-neutral-600">Smart Digital Solutions</span>
             </div>
             <h1 className="text-6xl md:text-8xl font-bold tracking-tighter mb-8 text-[#2D3C59] leading-tight">
-              Website Canggih <br />
-              <span className="italic font-serif font-medium">Terintegrasi AI.</span>
+              Website & Asisten AI <br />
+              <span className="italic font-serif font-medium">untuk Bisnis Anda.</span>
             </h1>
             <p className="text-xl md:text-2xl text-neutral-600 mb-12 leading-relaxed max-w-2xl mx-auto font-light">
               Kami membangun website profesional untuk bisnis Anda yang dilengkapi Chatbot AI. Anda bisa melatih bot ini untuk menjawab pertanyaan spesifik tentang produk dan layanan Anda.
