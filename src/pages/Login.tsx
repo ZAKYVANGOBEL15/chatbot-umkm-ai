@@ -1,14 +1,11 @@
-import React, { useState } from 'react';
-import { signInWithEmailAndPassword, signInWithPopup } from 'firebase/auth';
+import { useState } from 'react';
+import { signInWithPopup } from 'firebase/auth';
 import { auth, db, googleProvider } from '../lib/firebase';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
 export default function Login() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
@@ -47,20 +44,6 @@ export default function Login() {
         }
     };
 
-    const handleLogin = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-        try {
-            await signInWithEmailAndPassword(auth, email, password);
-            navigate('/dashboard');
-        } catch (err: any) {
-            setError(getFriendlyErrorMessage(err.code));
-        } finally {
-            setLoading(false);
-        }
-    };
-
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-white text-neutral-900 font-sans selection:bg-black selection:text-white">
 
@@ -87,7 +70,7 @@ export default function Login() {
                     <div className="bg-white p-8 md:p-10 border border-neutral-100 rounded-[2rem] shadow-xl shadow-neutral-100/50">
                         <div className="text-center mb-10">
                             <h2 className="text-3xl font-bold text-black mb-2">Selamat Datang</h2>
-                            <p className="text-neutral-500 text-sm">Masuk untuk mengelola asisten AI Anda</p>
+                            <p className="text-neutral-500 text-sm italic">"Masuk menggunakan Akun Google untuk keamanan maksimal."</p>
                         </div>
 
                         {error && (
@@ -96,14 +79,14 @@ export default function Login() {
                             </div>
                         )}
 
-                        <div className="space-y-4">
+                        <div className="space-y-6">
                             {/* Google Button */}
                             <button
                                 onClick={handleGoogleSignIn}
                                 disabled={loading}
-                                className="w-full flex items-center justify-center gap-3 bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700 font-bold py-4 rounded-xl transition-all disabled:opacity-50 shadow-sm hover:shadow-md"
+                                className="w-full flex items-center justify-center gap-3 bg-white hover:bg-neutral-50 border border-neutral-200 text-neutral-700 font-bold py-5 rounded-2xl transition-all disabled:opacity-50 shadow-sm hover:shadow-md transform active:scale-[0.98]"
                             >
-                                <svg className="w-5 h-5" viewBox="0 0 24 24">
+                                <svg className="w-6 h-6" viewBox="0 0 24 24">
                                     <path
                                         d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
                                         fill="#4285F4"
@@ -121,63 +104,21 @@ export default function Login() {
                                         fill="#EA4335"
                                     />
                                 </svg>
-                                Masuk dengan Google
+                                {loading ? 'Memproses...' : 'Masuk dengan Google'}
                             </button>
-
-                            <div className="flex items-center gap-4 my-8">
-                                <div className="flex-1 h-px bg-neutral-100" />
-                                <span className="text-[10px] font-black text-neutral-400 uppercase tracking-[0.2em]">Atau</span>
-                                <div className="flex-1 h-px bg-neutral-100" />
-                            </div>
-
-                            <form onSubmit={handleLogin} className="space-y-6">
-                                <div className="space-y-2">
-                                    <label htmlFor="login-email" className="text-xs font-bold uppercase tracking-widest text-neutral-600 ml-1">Email Klien</label>
-                                    <input
-                                        id="login-email"
-                                        type="email"
-                                        value={email}
-                                        onChange={(e) => setEmail(e.target.value)}
-                                        className="w-full px-6 py-4 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-[#2D3C59] focus:bg-white outline-none transition-all font-medium placeholder:text-neutral-500"
-                                        placeholder="name@company.com"
-                                        required
-                                    />
-                                </div>
-
-                                <div className="space-y-2">
-                                    <label htmlFor="login-password" className="text-xs font-bold uppercase tracking-widest text-neutral-600 ml-1">Password</label>
-                                    <input
-                                        id="login-password"
-                                        type="password"
-                                        value={password}
-                                        onChange={(e) => setPassword(e.target.value)}
-                                        className="w-full px-6 py-4 bg-neutral-50 border border-neutral-100 rounded-xl focus:ring-2 focus:ring-[#2D3C59] focus:bg-white outline-none transition-all font-medium placeholder:text-neutral-500"
-                                        placeholder="••••••••"
-                                        required
-                                    />
-                                </div>
-
-                                <button
-                                    type="submit"
-                                    disabled={loading}
-                                    className="w-full bg-[#2D3C59] hover:bg-[#1e2a41] text-white font-bold py-4 rounded-xl transition-all flex items-center justify-center gap-2 group disabled:opacity-50 disabled:cursor-not-allowed mt-4 shadow-xl shadow-[#2D3C59]/10"
-                                >
-                                    {loading ? 'Memproses...' : 'Masuk Dashboard'}
-                                    {!loading && <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />}
-                                </button>
-                            </form>
                         </div>
-                    </div>
 
-                    <div className="mt-12 text-center space-y-4">
-                        <p className="text-neutral-400 text-[10px] font-bold uppercase tracking-widest">
-                            &copy; {new Date().getFullYear()} Nusavite Digital. All Access Reserved.
+                        <p className="mt-10 text-center text-sm text-neutral-500">
+                            Belum punya akun?{' '}
+                            <Link to="/register" className="text-[#2D3C59] font-bold hover:underline">
+                                Daftar disini
+                            </Link>
                         </p>
-                        <div className="flex justify-center gap-6 text-[11px] text-neutral-500 font-bold uppercase tracking-widest">
-                            <Link to="/" className="hover:text-black transition-colors">Utama</Link>
-                            <Link to="/privacy" className="hover:text-black transition-colors">Kebijakan</Link>
-                            <a href="https://wa.me/62895402945495" target="_blank" rel="noreferrer" className="hover:text-black transition-colors">Bantuan</a>
-                            <Link to="/register" className="text-[#2D3C59] hover:opacity-80 transition-opacity">Daftar</Link>
+
+                        <div className="mt-10 pt-6 border-t border-neutral-50 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-neutral-500">
+                            <Link to="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat</Link>
+                            <Link to="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan</Link>
+                            <Link to="/" className="hover:text-[#2D3C59] transition-colors">Bantuan</Link>
                         </div>
                     </div>
                 </div>
