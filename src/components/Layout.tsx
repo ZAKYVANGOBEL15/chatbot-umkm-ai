@@ -39,11 +39,9 @@ export default function Layout() {
                     }`}
             >
                 <div className="p-4 flex items-center justify-between h-16 border-b border-neutral-900">
-                    {(isSidebarOpen || isMobileMenuOpen) ? (
-                        <span className="font-bold text-xl text-white tracking-tight">Nusavite</span>
-                    ) : (
-                        <span className="font-bold text-xl text-white mx-auto">N</span>
-                    )}
+                    <Link to="/dashboard" className="flex items-center">
+                        <img src="/logo.png" alt="Logo" className={`transition-all duration-300 ${isSidebarOpen || isMobileMenuOpen ? 'h-8' : 'h-6 mx-auto'}`} />
+                    </Link>
                     <button
                         onClick={() => {
                             if (window.innerWidth < 1024) {
