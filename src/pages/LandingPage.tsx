@@ -364,7 +364,7 @@ export default function LandingPage() {
           <p className="text-neutral-500 mb-10 text-xl font-light">
             Solusi lengkap: Website Profesional + Asisten AI yang bisa Anda atur sendiri.
           </p>
-          <div className="flex flex-col sm:flex-row justify-center gap-6">
+          <div className="flex justify-center">
             <a
               href="https://wa.me/62895402945495"
               target="_blank"
@@ -373,15 +373,14 @@ export default function LandingPage() {
             >
               Konsultasi Pembuatan Website
             </a>
-            <a
-              href="mailto:info@nusavite.com"
-              className="px-12 py-4 bg-transparent border-2 border-neutral-200 text-[#2D3C59] hover:border-[#2D3C59] rounded-full font-bold text-lg transition-all"
-            >
-              Email Kami
-            </a>
           </div>
-          <div className="mt-20 text-neutral-400 text-sm font-medium tracking-widest uppercase">
-            &copy; {new Date().getFullYear()} Nusavite.com. All rights reserved.
+          <div className="mt-20">
+            <p className="text-neutral-500 text-sm mb-4">
+              Molinow, Sulawesi Utara, Indonesia
+            </p>
+            <div className="text-neutral-400 text-[10px] font-black tracking-widest uppercase">
+              &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved
+            </div>
           </div>
         </div>
       </section>

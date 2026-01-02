@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Shield, FileText, RefreshCcw, Mail } from 'lucide-react';
+import { ArrowLeft, Shield, FileText, RefreshCcw, Mail, CheckCircle } from 'lucide-react';
 
 export default function Terms() {
     return (
@@ -45,11 +45,22 @@ export default function Terms() {
                             </p>
                         </section>
 
-                        {/* 3. Kebijakan Privasi */}
+                        {/* 3. Aktivasi Layanan */}
+                        <section>
+                            <div className="flex items-center gap-2 mb-4">
+                                <CheckCircle className="w-6 h-6 text-emerald-600" />
+                                <h2 className="text-xl font-bold text-gray-800">3. Aktivasi Layanan (Fulfillment)</h2>
+                            </div>
+                            <p className="text-gray-600 leading-relaxed">
+                                Nusavite adalah layanan Software-as-a-Service (SaaS). Setelah transaksi pembayaran berhasil dikonfirmasi oleh sistem kami, akses ke fitur Premium/Pro Anda akan **aktif secara otomatis dan instan** tanpa perlu pengiriman fisik.
+                            </p>
+                        </section>
+
+                        {/* 4. Kebijakan Privasi */}
                         <section>
                             <div className="flex items-center gap-2 mb-4">
                                 <Shield className="w-6 h-6 text-blue-600" />
-                                <h2 className="text-xl font-bold text-gray-800">3. Kebijakan Privasi</h2>
+                                <h2 className="text-xl font-bold text-gray-800">4. Kebijakan Privasi</h2>
                             </div>
                             <p className="text-gray-600 leading-relaxed font-semibold mb-2">Data yang Kami Kelola:</p>
                             <ul className="list-disc list-inside text-gray-600 space-y-1 mb-4">
@@ -66,13 +77,14 @@ export default function Terms() {
                         <section className="border-t pt-8">
                             <div className="flex items-center gap-2 mb-4">
                                 <Mail className="w-6 h-6 text-blue-600" />
-                                <h2 className="text-xl font-bold text-gray-800">4. Hubungi Kami</h2>
+                                <h2 className="text-xl font-bold text-gray-800">5. Hubungi Kami</h2>
                             </div>
                             <p className="text-gray-600 mb-4">
                                 Jika Anda memiliki pertanyaan terkait layanan atau pembayaran, silakan hubungi tim kami:
                             </p>
                             <div className="bg-gray-100 p-4 rounded-lg inline-block">
                                 <p className="text-gray-800 font-mono">WhatsApp: +62 895-4029-45495</p>
+                                <p className="text-gray-800 font-mono mt-2">Lokasi: Molinow, Sulawesi Utara, Indonesia</p>
                             </div>
                         </section>
                     </div>
