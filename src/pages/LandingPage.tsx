@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Bot, Code, CheckCircle, Monitor, Smartphone, Zap } from 'lucide-react';
 
 export default function LandingPage() {
