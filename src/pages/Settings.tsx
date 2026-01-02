@@ -3,7 +3,7 @@ import type { User } from 'firebase/auth';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { AlertCircle, Clock, Zap, MessageSquare, ShieldCheck, Info, Save, Code, Copy, Check } from 'lucide-react';
+import { AlertCircle, Clock, Zap, MessageSquare, ShieldCheck, Info, Save, Code, Copy, Check, Mail } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface UserProfile {
@@ -304,21 +304,29 @@ export default function Settings() {
                 <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full"></div>
             </div>
 
-            {/* Contact Support Section */}
             <div className="bg-[#061E29] text-white rounded-2xl p-8 text-center shadow-xl shadow-neutral-200">
                 <h3 className="text-xl font-bold mb-2">Butuh Bantuan Teknis?</h3>
-                <p className="text-neutral-400 mb-8 max-w-md mx-auto">
+                <p className="text-neutral-400 mb-6 max-w-md mx-auto">
                     Jika Anda kesulitan melakukan integrasi Meta API, tim ahli kami siap membantu melakukan setup dari awal sampai aktif.
                 </p>
+                <p className="text-emerald-400 font-mono text-sm mb-8">nusavite06@gmail.com</p>
 
-                <a
-                    href="https://wa.me/62895402945495"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#061E29] font-bold rounded-xl hover:bg-neutral-100 transition-colors"
-                >
-                    <Zap className="w-5 h-5" /> Hubungi Admin via WhatsApp
-                </a>
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <a
+                        href="https://wa.me/62895402945495"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-white text-[#061E29] font-bold rounded-xl hover:bg-neutral-100 transition-colors w-full sm:w-auto"
+                    >
+                        <Zap className="w-5 h-5" /> Hubungi Admin via WhatsApp
+                    </a>
+                    <a
+                        href="mailto:nusavite06@gmail.com"
+                        className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors w-full sm:w-auto border border-white/10"
+                    >
+                        <Mail className="w-5 h-5" /> Hubungi via Email
+                    </a>
+                </div>
             </div>
         </div>
     );
