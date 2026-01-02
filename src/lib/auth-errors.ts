@@ -23,6 +23,8 @@ export const getFriendlyErrorMessage = (errorCode: string): string => {
             return 'Terlalu banyak percobaan login. Mohon tunggu beberapa saat.';
 
         // App Check Errors (Bot Protection)
+        case 'appCheck/recaptcha-error':
+            return 'Gagal verifikasi keamanan (ReCAPTCHA). Pastikan domain Anda terdaftar di Google Cloud atau hubungi admin.';
         case 'appCheck/fetch-status-error':
             return 'Verifikasi keamanan gagal. Silakan refresh halaman dan coba lagi.';
         case 'appCheck/throttled':

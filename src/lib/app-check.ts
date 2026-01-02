@@ -16,6 +16,12 @@ if (import.meta.env.DEV) {
  */
 export const initAppCheck = () => {
     try {
+        // 0. Manual Bypass for troubleshooting
+        if (import.meta.env.VITE_SKIP_APP_CHECK === 'true') {
+            console.warn('[AppCheck] Manual bypass enabled via VITE_SKIP_APP_CHECK.');
+            return null;
+        }
+
         // 1. Check if we have a site key
         if (!RECAPTCHA_SITE_KEY) {
             if (import.meta.env.DEV) {
