@@ -1,25 +1,15 @@
 import { getDb } from './lib/db.js';
 
 export default async function handler(req: any, res: any) {
-    // 1. Handle CORS & Security
+    // 1. Handle CORS & Security (Dynamic for Widget Embedding)
     const origin = req.headers.origin;
-    const ALLOWED_ORIGINS = [
-        'https://nusavite.com',
-        'https://chatbot.nusavite.com',
-        'https://chatbot-umkm-ai.vercel.app', // Vercel preview/prod
-        'http://localhost:5173',
-        'http://localhost:3000'
-    ];
 
-    if (origin && ALLOWED_ORIGINS.includes(origin)) {
+    // Reflected CORS: Allow any origin to support widget embedding on customer sites.
+    // Security is enforced via userId validation, subscription checks, and App Check.
+    if (origin) {
         res.setHeader('Access-Control-Allow-Origin', origin);
-    } else if (!origin && process.env.NODE_ENV === 'development') {
-        // Allow server-to-server or tools like Postman only in dev
-        res.setHeader('Access-Control-Allow-Origin', '*');
     } else {
-        // If not in whitelist, we don't set the header, which triggers CORS error in browsers
-        // or we can explicitly block it
-        console.warn(`[CORS] Blocked request from origin: ${origin}`);
+        res.setHeader('Access-Control-Allow-Origin', '*');
     }
 
     res.setHeader('Access-Control-Allow-Credentials', 'true');
