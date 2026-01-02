@@ -1,24 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, Trash2, Smartphone, Lock } from 'lucide-react';
+import { Send, Bot, Trash2, Smartphone, Lock, ThumbsDown } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
-import { onAuthStateChanged } from 'firebase/auth'; // Import auth listener
-import { doc, getDoc, collection, getDocs } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
 interface Message {
     role: 'user' | 'model';
     text: string;
+    id?: string;
 }
 
 export default function ChatSimulator() {
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait produk kami?' }
+        { role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait produk kami?', id: 'init' }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [businessContext, setBusinessContext] = useState<any>(null);
     const [isExpired, setIsExpired] = useState(false);
+
+    // Correction State
+    const [correctingMsgId, setCorrectingMsgId] = useState<string | null>(null);
+    const [correctionInput, setCorrectionInput] = useState('');
+    const [isSavingCorrection, setIsSavingCorrection] = useState(false);
+
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -39,7 +46,7 @@ export default function ChatSimulator() {
                     });
 
                     // Check Expiration
-                    const status = userData.subscriptionStatus || 'trial';
+                    const status = userData.subscriptionStatus || 'active';
                     const now = new Date();
                     let expired = false;
 
@@ -61,7 +68,7 @@ export default function ChatSimulator() {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
     };
 
-    useEffect(scrollToBottom, [messages]);
+    useEffect(scrollToBottom, [messages, correctingMsgId]);
 
     const handleSend = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -69,17 +76,15 @@ export default function ChatSimulator() {
 
         const userMsg = input;
         setInput('');
-        setMessages(prev => [...prev, { role: 'user', text: userMsg }]);
+        setMessages(prev => [...prev, { role: 'user', text: userMsg, id: Date.now().toString() }]);
         setLoading(true);
 
         try {
-            // Create history for AI context
             const history = messages.map(m => ({
                 role: m.role === 'model' ? 'model' : 'user',
                 text: m.text
             }));
 
-            // SECURE: Call our own backend proxy instead of direct Mistral call
             const response = await fetch('/api/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -94,31 +99,70 @@ export default function ChatSimulator() {
             const data = await response.json();
 
             if (!response.ok || data.error) {
-                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error || 'Terjadi kesalahan sistem'}` }]);
+                setMessages(prev => [...prev, { role: 'model', text: `Error: ${data.error || 'Terjadi kesalahan sistem'}`, id: Date.now().toString() }]);
             } else {
-                setMessages(prev => [...prev, { role: 'model', text: data.reply }]);
-
-                // Show visual feedback if lead captured
+                setMessages(prev => [...prev, { role: 'model', text: data.reply, id: Date.now().toString() }]);
                 if (data.leadCaptured) {
                     console.log("Lead captured:", data.leadInfo);
                 }
             }
         } catch (error: any) {
             console.error("Simulator Error:", error);
-            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan koneksi server. (${error.message})` }]);
+            setMessages(prev => [...prev, { role: 'model', text: `Maaf, terjadi kesalahan koneksi server. (${error.message})`, id: Date.now().toString() }]);
         } finally {
             setLoading(false);
         }
     };
 
     const handleReset = () => {
-        setMessages([{ role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait produk kami?' }]);
+        setMessages([{ role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait produk kami?', id: 'init' }]);
+    };
+
+    const handleCorrection = async () => {
+        if (!auth.currentUser || !correctionInput.trim()) return;
+        setIsSavingCorrection(true);
+
+        try {
+            const userRef = doc(db, 'users', auth.currentUser.uid);
+
+            // 1. Get current desc
+            const snap = await getDoc(userRef);
+            if (!snap.exists()) return;
+
+            const currentDesc = snap.data().businessDescription || '';
+
+            // 2. Append correction
+            const newCorrection = `\n\n[INFO TAMBAHAN]: ${correctionInput}`;
+            const updatedDesc = currentDesc + newCorrection;
+
+            // 3. Save
+            await updateDoc(userRef, {
+                businessDescription: updatedDesc,
+                updatedAt: new Date().toISOString()
+            });
+
+            // 4. Update local context so simulator is instantly smarter
+            setBusinessContext((prev: any) => ({
+                ...prev,
+                description: updatedDesc
+            }));
+
+            alert("Koreksi berhasil disimpan! Bot sekarang sudah mempelajari info baru ini.");
+            setCorrectingMsgId(null);
+            setCorrectionInput('');
+
+        } catch (error: any) {
+            console.error("Correction Error:", error);
+            alert("Gagal menyimpan koreksi: " + error.message);
+        } finally {
+            setIsSavingCorrection(false);
+        }
     };
 
     return (
         <div className="h-full flex flex-col lg:flex-row gap-6 overflow-hidden">
             <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden relative min-h-0">
-                {/* Mock Phone Header */}
+                {/* Header */}
                 <div className="bg-emerald-600 p-3 lg:p-4 flex items-center justify-between text-white shrink-0 shadow-md z-10">
                     <div className="flex items-center gap-3">
                         <div className="w-9 h-9 lg:w-10 lg:h-10 bg-white/20 rounded-full flex items-center justify-center">
@@ -127,7 +171,7 @@ export default function ChatSimulator() {
                         </div>
                         <div className="min-w-0">
                             <h3 className="font-bold text-sm lg:text-base truncate">{businessContext?.name || 'Loading...'}</h3>
-                            <p className="text-[10px] lg:text-xs text-emerald-100 opacity-90">Online</p>
+                            <p className="text-[10px] lg:text-xs text-emerald-100 opacity-90">Online • Simulator</p>
                         </div>
                     </div>
                     <button onClick={handleReset} className="p-2 hover:bg-white/10 rounded-lg text-emerald-100 transition-colors" title="Reset Chat">
@@ -135,40 +179,74 @@ export default function ChatSimulator() {
                     </button>
                 </div>
 
-                {/* Messages Area */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-[#efeae2] scroll-smooth">
+                {/* Messages */}
+                <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-[#efeae2] scroll-smooth">
                     {messages.map((msg, idx) => (
-                        <div
-                            key={idx}
-                            className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}
-                        >
-                            <div
-                                className={`max-w-[85%] lg:max-w-[75%] p-3 rounded-xl text-[13px] lg:text-sm shadow-sm ${msg.role === 'user'
-                                    ? 'bg-[#d9fdd3] text-gray-800 rounded-tr-none'
-                                    : 'bg-white text-gray-800 rounded-tl-none'
-                                    }`}
-                            >
-                                <div className="text-[13px] lg:text-sm leading-relaxed overflow-hidden">
-                                    <ReactMarkdown
-                                        remarkPlugins={[remarkGfm]}
-                                        components={{
-                                            p: ({ node, ...props }) => <p className="mb-2 last:mb-0" {...props} />,
-                                            ul: ({ node, ...props }) => <ul className="list-disc list-outside ml-5 mb-2 space-y-1" {...props} />,
-                                            ol: ({ node, ...props }) => <ol className="list-decimal list-outside ml-5 mb-2 space-y-1" {...props} />,
-                                            li: ({ node, ...props }) => <li className="" {...props} />,
-                                            h1: ({ node, ...props }) => <h1 className="text-base font-bold mb-2 mt-4" {...props} />,
-                                            h2: ({ node, ...props }) => <h2 className="text-sm font-bold mb-2 mt-3" {...props} />,
-                                            h3: ({ node, ...props }) => <h3 className="text-xs lg:text-sm font-bold mb-1 mt-2" {...props} />,
-                                            strong: ({ node, ...props }) => <span className="font-bold" {...props} />,
-                                            a: ({ node, ...props }) => <a className="text-emerald-600 hover:underline" target="_blank" rel="noopener noreferrer" {...props} />,
-                                            blockquote: ({ node, ...props }) => <blockquote className="border-l-2 border-emerald-300 pl-3 italic my-2 bg-emerald-50/50 py-1 pr-1 rounded-r opacity-80" {...props} />,
-                                            code: ({ node, ...props }) => <code className="bg-black/10 px-1 py-0.5 rounded font-mono text-xs" {...props} />,
-                                        }}
-                                    >
-                                        {msg.text}
-                                    </ReactMarkdown>
+                        <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
+                            <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
+                                <div
+                                    className={`max-w-[85%] lg:max-w-[75%] p-3 rounded-xl text-[13px] lg:text-sm shadow-sm relative group ${msg.role === 'user'
+                                        ? 'bg-[#d9fdd3] text-gray-800 rounded-tr-none'
+                                        : 'bg-white text-gray-800 rounded-tl-none'
+                                        }`}
+                                >
+                                    <div className="text-[13px] lg:text-sm leading-relaxed overflow-hidden markdown-body">
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {msg.text}
+                                        </ReactMarkdown>
+                                    </div>
+
+                                    {/* Correction Button for Bot Messages */}
+                                    {msg.role === 'model' && msg.id !== 'init' && (
+                                        <button
+                                            onClick={() => {
+                                                if (correctingMsgId === msg.id) {
+                                                    setCorrectingMsgId(null);
+                                                } else {
+                                                    setCorrectingMsgId(msg.id!);
+                                                    setCorrectionInput('');
+                                                }
+                                            }}
+                                            className="absolute -bottom-6 left-0 opacity-0 group-hover:opacity-100 transition-opacity bg-white border border-gray-200 shadow-sm p-1 rounded-full text-gray-400 hover:text-red-500 hover:border-red-200"
+                                            title="Koreksi Jawaban Ini"
+                                        >
+                                            <ThumbsDown size={12} />
+                                        </button>
+                                    )}
                                 </div>
                             </div>
+
+                            {/* Correction Form */}
+                            {correctingMsgId === msg.id && (
+                                <div className="mt-2 w-full max-w-[85%] lg:max-w-[75%] bg-yellow-50 border border-yellow-200 rounded-xl p-3 animate-in fade-in zoom-in-95 duration-200">
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <ThumbsDown size={14} className="text-yellow-600" />
+                                        <span className="text-xs font-bold text-yellow-700">Koreksi Jawaban AI</span>
+                                    </div>
+                                    <textarea
+                                        value={correctionInput}
+                                        onChange={(e) => setCorrectionInput(e.target.value)}
+                                        placeholder="Beritahu info yang benar (misal: Harga yang benar adalah 50rb)"
+                                        className="w-full text-xs p-2 rounded-lg border border-yellow-200 focus:outline-none focus:ring-1 focus:ring-yellow-500 bg-white"
+                                        rows={3}
+                                    />
+                                    <div className="flex justify-end gap-2 mt-2">
+                                        <button
+                                            onClick={() => setCorrectingMsgId(null)}
+                                            className="px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                        >
+                                            Batal
+                                        </button>
+                                        <button
+                                            onClick={handleCorrection}
+                                            disabled={!correctionInput.trim() || isSavingCorrection}
+                                            className="px-3 py-1 text-xs bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors flex items-center gap-1 disabled:opacity-50"
+                                        >
+                                            {isSavingCorrection ? 'Menyimpan...' : 'Simpan Koreksi'}
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     ))}
                     {loading && (
@@ -232,7 +310,7 @@ export default function ChatSimulator() {
                 </div>
                 <p className="text-sm text-blue-700 mb-6 leading-relaxed">
                     Ini adalah pratinjau bagaimana chatbot akan merespons pelanggan di WhatsApp.
-                    Pastikan data di <strong>Knowledge Base</strong> sudah lengkap agar jawaban lebih akurat.
+                    Jika jawaban salah, klik tombol <ThumbsDown size={14} className="inline text-blue-600" /> untuk mengoreksi.
                 </p>
 
                 <div className="bg-white p-4 rounded-lg border border-blue-50 shadow-sm">
