@@ -1,7 +1,6 @@
 // import React from 'react';
 
 import { Bot, Code, CheckCircle, Monitor, Smartphone, Zap } from 'lucide-react';
-import logo from '../assets/image/NV.png';
 
 export default function LandingPage() {
 
@@ -13,7 +12,7 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-20">
             <div className="flex items-center gap-2">
-              <img src={logo} alt="Nusavite Logo" className="w-10 h-10 object-contain" />
+              <img src="/logo.png" alt="Nusavite Logo" className="w-10 h-10 object-contain" />
               <span className="font-bold text-2xl tracking-tight text-black">Nusavite</span>
             </div>
             <div className="hidden md:block">
