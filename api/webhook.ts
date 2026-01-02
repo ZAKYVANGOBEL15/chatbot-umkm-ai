@@ -126,8 +126,7 @@ export default async function handler(req: any, res: any) {
                         products: products,
                         instagram: userData.instagram,
                         facebook: userData.facebook,
-                        businessEmail: userData.businessEmail,
-                        locationLink: userData.locationLink
+                        businessEmail: userData.businessEmail
                     };
 
                     // C. Identify Customer & Fetch History

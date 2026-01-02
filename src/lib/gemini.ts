@@ -12,7 +12,6 @@ export async function generateAIResponse(
         instagram?: string;
         facebook?: string;
         businessEmail?: string;
-        locationLink?: string;
     },
     history: { role: string; text: string }[]
 ) {
@@ -47,7 +46,6 @@ Kontak & Sosmed:
 - Instagram: ${businessContext.instagram || "-"}
 - Facebook: ${businessContext.facebook || "-"}
 - Email: ${businessContext.businessEmail || "-"}
-- Peta/Lokasi: ${businessContext.locationLink || "-"} (Berikan link ini jika ditanya lokasi/alamat)
 
 Daftar Produk:
 ${productList || "Hubungi kami untuk informasi produk lengkap."}

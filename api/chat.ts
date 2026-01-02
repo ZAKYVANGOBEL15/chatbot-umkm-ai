@@ -40,7 +40,6 @@ export default async function handler(req: any, res: any) {
                         instagram: userData?.instagram || finalContext?.instagram || '',
                         facebook: userData?.facebook || finalContext?.facebook || '',
                         businessEmail: userData?.businessEmail || finalContext?.businessEmail || '',
-                        locationLink: userData?.locationLink || finalContext?.locationLink || '',
                         products: products.length > 0 ? products : (finalContext?.products || [])
                     };
                 }
