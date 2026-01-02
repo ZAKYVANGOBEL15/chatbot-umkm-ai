@@ -376,7 +376,7 @@ export default function LandingPage() {
           </div>
           <div className="mt-20">
             <p className="text-neutral-500 text-sm mb-4">
-              Molinow, Sulawesi Utara, Indonesia
+              Kotamobagu, Sulawesi Utara, Indonesia
             </p>
             <div className="text-neutral-400 text-[10px] font-black tracking-widest uppercase">
               &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved

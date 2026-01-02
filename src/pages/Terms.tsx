@@ -84,7 +84,7 @@ export default function Terms() {
                             </p>
                             <div className="bg-gray-100 p-4 rounded-lg inline-block">
                                 <p className="text-gray-800 font-mono">WhatsApp: +62 895-4029-45495</p>
-                                <p className="text-gray-800 font-mono mt-2">Lokasi: Molinow, Sulawesi Utara, Indonesia</p>
+                                <p className="text-gray-800 font-mono mt-2">Lokasi: Kotamobagu, Sulawesi Utara, Indonesia</p>
                             </div>
                         </section>
                     </div>
