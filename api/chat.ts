@@ -25,60 +25,71 @@ export default async function handler(req: any, res: any) {
     }
 
     try {
-        const { message, history, businessContext, userId } = req.body || {};
+        const { message, history, userId } = req.body || {};
+
+        if (!userId) {
+            return res.status(400).json({
+                error: 'Missing userId',
+                message: 'Akses ditolak: User ID diperlukan untuk otentikasi.'
+            });
+        }
 
         if (!message) {
             return res.status(400).json({ error: 'Missing message' });
         }
 
-        let finalContext = businessContext;
+        let finalContext = null;
 
-        // Fetch context from DB if userId is present (Source of Truth)
-        if (userId) {
-            try {
-                const db = getDb();
-                const userDoc = await db.collection('users').doc(userId).get();
-                if (userDoc.exists) {
-                    const userData = userDoc.data();
+        // Fetch context ALWAYS from DB (Source of Truth)
+        try {
+            const db = getDb();
+            const userDoc = await db.collection('users').doc(userId).get();
 
-                    // --- SUBSCRIPTION CHECK ---
-                    const status = userData?.subscriptionStatus || 'trial';
-                    let isExpired = false;
-
-                    if (status === 'active' && userData?.subscriptionExpiresAt) {
-                        isExpired = new Date(userData.subscriptionExpiresAt).getTime() < Date.now();
-                    } else if (status === 'trial' && userData?.trialExpiresAt) {
-                        isExpired = new Date(userData.trialExpiresAt).getTime() < Date.now();
-                    }
-
-                    if (isExpired) {
-                        return res.status(403).json({
-                            error: 'Subscription Expired',
-                            message: `Masa ${status} Anda telah habis. Silakan hubungi admin untuk melanjutkan layanan.`
-                        });
-                    }
-                    // --------------------------
-
-                    const productsSnap = await db.collection('users').doc(userId).collection('products').get();
-                    const products = productsSnap.docs.map(d => d.data());
-
-                    finalContext = {
-                        name: userData?.businessName || finalContext?.name || 'Bisnis Kami',
-                        description: userData?.businessDescription || finalContext?.description || 'UMKM Indonesia.',
-                        instagram: userData?.instagram || finalContext?.instagram || '',
-                        facebook: userData?.facebook || finalContext?.facebook || '',
-                        businessEmail: userData?.businessEmail || finalContext?.businessEmail || '',
-                        products: products.length > 0 ? products : (finalContext?.products || [])
-                    };
-                }
-            } catch (dbErr) {
-                console.error('Error fetching context from DB:', dbErr);
-                // Fallback to what was passed in body
+            if (!userDoc.exists) {
+                return res.status(404).json({
+                    error: 'User Not Found',
+                    message: 'User ID tidak terdaftar di sistem kami.'
+                });
             }
+
+            const userData = userDoc.data();
+
+            // --- SUBSCRIPTION CHECK ---
+            const status = userData?.subscriptionStatus || 'trial';
+            let isExpired = false;
+
+            if (status === 'active' && userData?.subscriptionExpiresAt) {
+                isExpired = new Date(userData.subscriptionExpiresAt).getTime() < Date.now();
+            } else if (status === 'trial' && userData?.trialExpiresAt) {
+                isExpired = new Date(userData.trialExpiresAt).getTime() < Date.now();
+            }
+
+            if (isExpired) {
+                return res.status(403).json({
+                    error: 'Subscription Expired',
+                    message: `Masa ${status} Anda telah habis. Silakan hubungi admin untuk melanjutkan layanan.`
+                });
+            }
+            // --------------------------
+
+            const productsSnap = await db.collection('users').doc(userId).collection('products').get();
+            const products = productsSnap.docs.map(d => d.data());
+
+            finalContext = {
+                name: userData?.businessName || 'Bisnis Kami',
+                description: userData?.businessDescription || 'UMKM Indonesia.',
+                instagram: userData?.instagram || '',
+                facebook: userData?.facebook || '',
+                businessEmail: userData?.businessEmail || '',
+                products: products.length > 0 ? products : []
+            };
+        } catch (dbErr) {
+            console.error('Error fetching context from DB:', dbErr);
+            return res.status(500).json({ error: 'Database Error', message: 'Gagal memvalidasi data user.' });
         }
 
         if (!finalContext) {
-            return res.status(400).json({ error: 'Missing businessContext or userId' });
+            return res.status(500).json({ error: 'Internal Error', message: 'Gagal menyusun konteks bisnis.' });
         }
 
         // 3. Call Shared AI Logic
