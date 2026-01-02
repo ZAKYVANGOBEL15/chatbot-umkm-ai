@@ -118,7 +118,7 @@ export default function Login() {
                         <div className="mt-10 pt-6 border-t border-neutral-50 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-neutral-500">
                             <Link to="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat</Link>
                             <Link to="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan</Link>
-                            <Link to="/" className="hover:text-[#2D3C59] transition-colors">Bantuan</Link>
+                            <a href="https://wa.me/62895402945495" target="_blank" rel="noreferrer" className="hover:text-[#2D3C59] transition-colors">Bantuan</a>
                         </div>
                     </div>
                 </div>
