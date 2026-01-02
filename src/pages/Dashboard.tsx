@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2, Zap, Monitor } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2, Zap } from 'lucide-react';
 import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -11,7 +11,6 @@ export default function Dashboard() {
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState('');
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
-    const [subscriptionPlan, setSubscriptionPlan] = useState('basic');
     const [daysLeft, setDaysLeft] = useState(0);
     const [expiryDateString, setExpiryDateString] = useState('');
     const [isWhatsAppConfigured, setIsWhatsAppConfigured] = useState(false);
@@ -66,7 +65,6 @@ export default function Dashboard() {
                 setUserName(data.name || '');
                 const status = data.subscriptionStatus || 'trial';
                 setSubscriptionStatus(status);
-                setSubscriptionPlan(data.subscriptionPlan || 'basic');
 
                 if (status === 'active' && data.subscriptionExpiresAt) {
                     const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
