@@ -2,13 +2,12 @@ import { useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
 export default function Register() {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
-    const [searchParams] = useSearchParams();
     const navigate = useNavigate();
 
     const handleGoogleSignIn = async () => {
@@ -23,9 +22,6 @@ export default function Register() {
             const docSnap = await getDoc(docRef);
 
             if (!docSnap.exists()) {
-                // Get plan from URL
-                const selectedPlan = searchParams.get('plan') || 'basic';
-
                 // Initialize new user profile
                 const now = new Date();
                 const trialExpiresAt = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000);
@@ -37,7 +33,7 @@ export default function Register() {
                     createdAt: now.toISOString(),
                     trialExpiresAt: trialExpiresAt.toISOString(),
                     subscriptionStatus: 'trial',
-                    subscriptionPlan: selectedPlan
+                    subscriptionPlan: 'basic'
                 });
             }
             navigate('/dashboard');
