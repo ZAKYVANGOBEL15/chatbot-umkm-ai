@@ -69,14 +69,14 @@ export default function Login() {
             {/* Left Side: Brand Identity - Visible as Top on Mobile, Left on Desktop */}
             <div className="lg:w-[45%] flex flex-col items-center justify-center p-12 bg-neutral-50 border-b lg:border-b-0 lg:border-r border-neutral-100 relative overflow-hidden">
                 {/* Decorative background elements for desktop */}
-                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none hidden lg:block">
-                    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#2D3C59]" title="decoration" />
-                    <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#2D3C59]" title="decoration" />
+                <div className="absolute top-0 left-0 w-full h-full opacity-[0.03] pointer-events-none hidden lg:block" aria-hidden="true">
+                    <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-[#2D3C59]" />
+                    <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] rounded-full bg-[#2D3C59]" />
                 </div>
 
                 <div className="relative z-10 flex flex-col items-center gap-6">
                     <div className="w-24 h-24 lg:w-32 lg:h-32 bg-white rounded-[2.5rem] shadow-2xl shadow-neutral-200 border border-neutral-100 flex items-center justify-center p-6 transform hover:rotate-3 transition-transform duration-500">
-                        <img src={logo} alt="Nusavite Logo" className="w-full h-full object-contain" />
+                        <img src={logo} alt="Nusavite Logo" className="w-full h-full object-contain" fetchPriority="high" loading="eager" />
                     </div>
                     <div className="text-center">
                         <h1 className="font-black text-3xl lg:text-5xl tracking-[0.3em] uppercase text-[#2D3C59] mb-3">Nusavite</h1>
