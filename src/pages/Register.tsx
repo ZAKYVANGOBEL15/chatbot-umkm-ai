@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
@@ -112,21 +112,6 @@ export default function Register() {
                                     </svg>
                                     Daftar dengan Google
                                 </button>
-
-                                <div className="bg-[#2D3C59]/5 p-6 rounded-2xl border border-[#2D3C59]/10">
-                                    <div className="flex items-start gap-3">
-                                        <div className="mt-1 w-2 h-2 rounded-full bg-[#2D3C59] shrink-0" />
-                                        <p className="text-[11px] text-[#2D3C59]/80 leading-relaxed">
-                                            Nusavite mewajibkan akun Google untuk menghindari penyalahgunaan sistem oleh akun spam/palsu.
-                                        </p>
-                                    </div>
-                                    <div className="flex items-start gap-3 mt-3">
-                                        <div className="mt-1 w-2 h-2 rounded-full bg-[#2D3C59] shrink-0" />
-                                        <p className="text-[11px] text-[#2D3C59]/80 leading-relaxed">
-                                            Aktivasi **Trial 5 Hari** akan otomatis diproses setelah berhasil masuk.
-                                        </p>
-                                    </div>
-                                </div>
                             </div>
                         </div>
 
@@ -139,7 +124,7 @@ export default function Register() {
 
                         <div className="mt-10 pt-6 border-t border-neutral-50 flex flex-wrap justify-center gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
                             <Link to="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat</Link>
-                            <Link to="/" className="hover:text-[#2D3C59] transition-colors">Kebijakan</Link>
+                            <Link to="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan</Link>
                             <Link to="/" className="hover:text-[#2D3C59] transition-colors">Bantuan</Link>
                         </div>
                     </div>

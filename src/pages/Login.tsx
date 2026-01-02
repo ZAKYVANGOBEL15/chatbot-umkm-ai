@@ -178,6 +178,7 @@ export default function Login() {
                         </p>
                         <div className="flex justify-center gap-6 text-[11px] text-neutral-500 font-bold uppercase tracking-widest">
                             <Link to="/" className="hover:text-black transition-colors">Utama</Link>
+                            <Link to="/privacy" className="hover:text-black transition-colors">Kebijakan</Link>
                             <a href="https://wa.me/62895402945495" target="_blank" rel="noreferrer" className="hover:text-black transition-colors">Bantuan</a>
                             <Link to="/register" className="text-[#2D3C59] hover:opacity-80 transition-opacity">Daftar</Link>
                         </div>

@@ -9,6 +9,7 @@ import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
 import Settings from './pages/Settings';
 import Terms from './pages/Terms';
+import Privacy from './pages/Privacy';
 import LandingPage from './pages/LandingPage';
 
 function App() {
@@ -22,6 +23,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/terms" element={<Terms />} />
+        <Route path="/privacy" element={<Privacy />} />
 
         {/* Protected Dashboard Routes */}
         <Route element={<ProtectedRoute />}>
