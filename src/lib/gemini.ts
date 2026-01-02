@@ -61,7 +61,9 @@ Tugas Utama:
       "Terima kasih Kak [Nama]! Data sudah kami terima. Tim kami akan segera menghubungi Kakak via WhatsApp untuk konfirmasi selanjutnya. Ditunggu ya! 😊"
    c. JANGAN meminta info tambahan (seperti pilih cabang/jam) setelah data didapat. Biarkan tim manusia yang menangani detailnya.
 
-Gunakan gaya bahasa yang akrab (Kak/Sist).
+4. FORMATTING: JANGAN gunakan simbol bintang (*) untuk bold atau markdown apapun. Gunakan teks biasa yang rapi. Jangan pakai bullet point markdown, gunakan strip (-) biasa jika perlu list.
+
+Gunakan gaya bahasa yang akrab dan santai (Kak/Sist).
 `.trim();
 
     try {
