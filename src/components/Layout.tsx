@@ -40,7 +40,7 @@ export default function Layout() {
             >
                 <div className="p-4 flex items-center justify-between h-16 border-b border-neutral-900">
                     <Link to="/dashboard" className="flex items-center">
-                        <img src="/logo.png" alt="Logo" className={`transition-all duration-300 ${isSidebarOpen || isMobileMenuOpen ? 'h-8' : 'h-6 mx-auto'}`} />
+                        <img src="/logo_sidebar.png" alt="Logo" className={`transition-all duration-300 ${isSidebarOpen || isMobileMenuOpen ? 'h-8' : 'h-6 mx-auto'}`} />
                     </Link>
                     <button
                         onClick={() => {
