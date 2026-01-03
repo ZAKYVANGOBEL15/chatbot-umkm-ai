@@ -33,9 +33,9 @@ export default function Layout() {
 
             {/* Sidebar */}
             <aside
-                className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 bg-[#061E29] border-r border-neutral-800 flex flex-col ${isMobileMenuOpen
-                    ? 'translate-x-0 w-64'
-                    : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-64' : 'lg:w-20')
+                className={`fixed inset-y-0 left-0 z-50 lg:relative lg:block transition-all duration-300 ease-in-out bg-[#061E29] border-r border-neutral-800/50 flex flex-col ${isMobileMenuOpen
+                    ? 'translate-x-0 w-64 shadow-2xl'
+                    : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-72' : 'lg:w-20')
                     }`}
             >
                 <div className={`p-4 flex items-center border-b border-neutral-900 h-16 ${isSidebarOpen || isMobileMenuOpen ? 'justify-between' : 'justify-center'}`}>
@@ -88,8 +88,8 @@ export default function Layout() {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-neutral-50">
-                <header className="h-16 bg-white border-b border-neutral-200 flex items-center justify-between px-4 lg:px-8 shrink-0">
+            <main className="flex-1 flex flex-col min-w-0 overflow-hidden bg-neutral-50/50 relative">
+                <header className="h-16 bg-white/80 backdrop-blur-md border-b border-neutral-200/60 flex items-center justify-between px-4 lg:px-8 shrink-0 sticky top-0 z-30 transition-all">
                     <div className="flex items-center gap-4">
                         <button
                             className="lg:hidden p-2 hover:bg-neutral-100 rounded-lg text-neutral-600"

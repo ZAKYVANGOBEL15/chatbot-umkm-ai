@@ -160,43 +160,62 @@ export default function ChatSimulator() {
     };
 
     return (
-        <div className="h-full flex flex-col lg:flex-row gap-6 overflow-hidden">
-            <div className="flex-1 bg-white rounded-xl shadow-sm border border-gray-100 flex flex-col overflow-hidden relative min-h-0">
-                {/* Header */}
-                <div className="bg-emerald-600 p-3 lg:p-4 flex items-center justify-between text-white shrink-0 shadow-md z-10">
-                    <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 lg:w-10 lg:h-10 bg-white/20 rounded-full flex items-center justify-center">
-                            <Bot size={20} className="lg:hidden" />
-                            <Bot size={24} className="hidden lg:block" />
+        <div className="h-full flex flex-col lg:flex-row gap-6">
+            {/* Main Chat Area */}
+            <div className="flex-1 bg-white rounded-2xl shadow-sm border border-neutral-200/60 flex flex-col overflow-hidden relative min-h-0">
+                
+                {/* Modern Header */}
+                <div className="bg-white/80 backdrop-blur-md p-4 flex items-center justify-between border-b border-neutral-100 z-10 sticky top-0">
+                    <div className="flex items-center gap-4">
+                        <div className="relative">
+                            <div className="w-12 h-12 bg-gradient-to-tr from-[#061E29] to-[#0A2E3D] rounded-full flex items-center justify-center shadow-lg text-white">
+                                <Bot size={24} />
+                            </div>
+                            <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full"></span>
                         </div>
-                        <div className="min-w-0">
-                            <h3 className="font-bold text-sm lg:text-base truncate">{businessContext?.name || 'Loading...'}</h3>
-                            <p className="text-[10px] lg:text-xs text-emerald-100 opacity-90">Online • Simulator</p>
+                        <div>
+                            <h3 className="font-bold text-neutral-800 text-lg leading-tight">{businessContext?.name || 'AI Assistant'}</h3>
+                            <div className="flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                                <p className="text-xs text-neutral-500 font-medium">Online • Simulator Mode</p>
+                            </div>
                         </div>
                     </div>
-                    <button onClick={handleReset} className="p-2 hover:bg-white/10 rounded-lg text-emerald-100 transition-colors" title="Reset Chat">
-                        <Trash2 size={18} />
+                    <button 
+                        onClick={handleReset} 
+                        className="group p-2.5 hover:bg-red-50 rounded-xl text-neutral-400 hover:text-red-500 transition-all duration-300 border border-transparent hover:border-red-100" 
+                        title="Reset Percakapan"
+                    >
+                        <Trash2 size={20} className="group-hover:scale-110 transition-transform" />
                     </button>
                 </div>
 
-                {/* Messages */}
-                <div className="flex-1 overflow-y-auto p-4 space-y-6 bg-[#efeae2] scroll-smooth">
+                {/* Messages Area - Modern Clean Look */}
+                <div className="flex-1 overflow-y-auto p-4 lg:p-6 space-y-6 bg-neutral-50/50 scroll-smooth">
                     {messages.map((msg, idx) => (
-                        <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} animate-in fade-in slide-in-from-bottom-2 duration-300`}>
-                            <div className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} w-full`}>
-                                <div
-                                    className={`max-w-[85%] lg:max-w-[75%] p-3 rounded-xl text-[13px] lg:text-sm shadow-sm relative group ${msg.role === 'user'
-                                        ? 'bg-[#d9fdd3] text-gray-800 rounded-tr-none'
-                                        : 'bg-white text-gray-800 rounded-tl-none'
-                                        }`}
+                        <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out`}>
+                            <div className={`flex ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-end gap-2 max-w-[85%] lg:max-w-[75%]`}>
+                                
+                                {/* Avatar for Bot messages only */}
+                                {msg.role === 'model' && (
+                                    <div className="w-8 h-8 rounded-full bg-white border border-neutral-100 flex items-center justify-center shrink-0 mb-1 shadow-sm text-[#061E29]">
+                                        <Bot size={16} />
+                                    </div>
+                                )}
+
+                                <div className={`group relative p-4 lg:p-5 rounded-2xl shadow-sm text-sm lg:text-[15px] leading-relaxed transition-all duration-300
+                                    ${msg.role === 'user'
+                                        ? 'bg-[#061E29] text-white rounded-tr-sm shadow-md'
+                                        : 'bg-white text-neutral-700 border border-neutral-100 rounded-tl-sm hover:shadow-md'
+                                    }`}
                                 >
-                                    <div className="text-[13px] lg:text-sm leading-relaxed overflow-hidden markdown-body">
+                                    <div className="markdown-body">
                                         <ReactMarkdown remarkPlugins={[remarkGfm]}>
                                             {msg.text}
                                         </ReactMarkdown>
                                     </div>
 
-                                    {/* Correction Button for Bot Messages */}
+                                    {/* Correction Button */}
                                     {msg.role === 'model' && msg.id !== 'init' && (
                                         <button
                                             onClick={() => {
@@ -207,10 +226,10 @@ export default function ChatSimulator() {
                                                     setCorrectionInput('');
                                                 }
                                             }}
-                                            className="absolute -bottom-6 left-0 opacity-100 lg:opacity-0 lg:group-hover:opacity-100 transition-opacity bg-white border border-gray-200 shadow-sm p-1 rounded-full text-gray-400 hover:text-red-500 hover:border-red-200"
+                                            className="absolute -right-10 top-2 opacity-0 group-hover:opacity-100 transition-all duration-200 p-2 bg-white rounded-full shadow-md text-neutral-400 hover:text-red-500 hover:scale-110"
                                             title="Koreksi Jawaban Ini"
                                         >
-                                            <ThumbsDown size={12} />
+                                            <ThumbsDown size={14} />
                                         </button>
                                     )}
                                 </div>
@@ -218,111 +237,154 @@ export default function ChatSimulator() {
 
                             {/* Correction Form */}
                             {correctingMsgId === msg.id && (
-                                <div className="mt-2 w-full max-w-[85%] lg:max-w-[75%] bg-yellow-50 border border-yellow-200 rounded-xl p-3 animate-in fade-in zoom-in-95 duration-200">
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <ThumbsDown size={14} className="text-yellow-600" />
-                                        <span className="text-xs font-bold text-yellow-700">Koreksi Jawaban AI</span>
+                                <div className="mt-4 w-full max-w-xl ml-10 bg-white border border-orange-100 rounded-2xl p-4 shadow-lg animate-in zoom-in-95 duration-300">
+                                    <div className="flex items-center gap-2 mb-3 pb-2 border-b border-orange-50">
+                                        <div className="w-6 h-6 bg-orange-100 rounded-full flex items-center justify-center text-orange-600">
+                                            <ThumbsDown size={12} />
+                                        </div>
+                                        <span className="text-sm font-bold text-neutral-700">Koreksi Jawaban AI</span>
                                     </div>
                                     <textarea
                                         value={correctionInput}
                                         onChange={(e) => setCorrectionInput(e.target.value)}
-                                        placeholder="Beritahu info yang benar (misal: Harga yang benar adalah 50rb)"
-                                        className="w-full text-xs p-2 rounded-lg border border-yellow-200 focus:outline-none focus:ring-1 focus:ring-yellow-500 bg-white"
+                                        placeholder="Beritahu AI jawaban yang benar agar dia belajar..."
+                                        className="w-full text-sm p-3 rounded-xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#061E29]/20 focus:border-[#061E29] bg-neutral-50 transition-all resize-none"
                                         rows={3}
                                     />
-                                    <div className="flex justify-end gap-2 mt-2">
+                                    <div className="flex justify-end gap-3 mt-3">
                                         <button
                                             onClick={() => setCorrectingMsgId(null)}
-                                            className="px-3 py-1 text-xs text-gray-500 hover:bg-gray-100 rounded-lg transition-colors"
+                                            className="px-4 py-2 text-sm font-medium text-neutral-500 hover:text-neutral-700 hover:bg-neutral-100 rounded-lg transition-colors"
                                         >
                                             Batal
                                         </button>
                                         <button
                                             onClick={handleCorrection}
                                             disabled={!correctionInput.trim() || isSavingCorrection}
-                                            className="px-3 py-1 text-xs bg-yellow-500 text-white font-bold rounded-lg hover:bg-yellow-600 transition-colors flex items-center gap-1 disabled:opacity-50"
+                                            className="px-4 py-2 text-sm bg-[#061E29] text-white font-medium rounded-lg hover:bg-neutral-800 transition-all shadow-md hover:shadow-lg disabled:opacity-70 disabled:shadow-none flex items-center gap-2"
                                         >
-                                            {isSavingCorrection ? 'Menyimpan...' : 'Simpan Koreksi'}
+                                            {isSavingCorrection ? (
+                                                <>
+                                                    <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"/>
+                                                    Menyimpan...
+                                                </>
+                                            ) : 'Simpan Perbaikan'}
                                         </button>
                                     </div>
                                 </div>
                             )}
                         </div>
                     ))}
+                    
                     {loading && (
-                        <div className="flex justify-start">
-                            <div className="bg-white p-3 rounded-xl rounded-tl-none shadow-sm">
-                                <div className="flex gap-1">
-                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce"></span>
-                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-100"></span>
-                                    <span className="w-1.5 h-1.5 bg-gray-400 rounded-full animate-bounce delay-200"></span>
-                                </div>
+                        <div className="flex items-center gap-2 ml-1">
+                            <div className="w-8 h-8 rounded-full bg-white border border-neutral-100 flex items-center justify-center shrink-0 shadow-sm">
+                                <Bot size={16} className="text-[#061E29]" />
+                            </div>
+                            <div className="bg-white px-4 py-3 rounded-2xl rounded-tl-sm shadow-sm border border-neutral-100 flex gap-1.5 items-center">
+                                <span className="w-2 h-2 bg-[#061E29]/40 rounded-full animate-bounce"></span>
+                                <span className="w-2 h-2 bg-[#061E29]/40 rounded-full animate-bounce delay-150"></span>
+                                <span className="w-2 h-2 bg-[#061E29]/40 rounded-full animate-bounce delay-300"></span>
                             </div>
                         </div>
                     )}
-                    <div ref={messagesEndRef} className="h-2" />
+                    <div ref={messagesEndRef} className="h-4" />
                 </div>
 
-                {/* Input Area */}
-                <div className="p-3 lg:p-4 bg-gray-100 border-t border-gray-200 shrink-0 relative">
+                {/* Modern Floating Input Area */}
+                <div className="p-4 lg:p-6 bg-white border-t border-neutral-100 relative">
                     {isExpired && (
-                        <div className="absolute inset-0 bg-gray-100/90 backdrop-blur-sm z-20 flex flex-col items-center justify-center text-center p-4">
-                            <Lock size={32} className="text-red-500 mb-2" />
-                            <h3 className="text-gray-900 font-bold text-sm">Masa Berlaku Habis</h3>
-                            <p className="text-xs text-gray-500 mb-3 max-w-xs">
-                                Paket Trial/Premium Anda telah berakhir. Silakan upgrade untuk melanjutkan.
+                        <div className="absolute inset-0 bg-white/80 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center text-center p-6">
+                            <div className="w-16 h-16 bg-red-50 rounded-full flex items-center justify-center mb-4">
+                                <Lock size={28} className="text-red-500" />
+                            </div>
+                            <h3 className="text-neutral-900 font-bold text-lg mb-2">Masa Berlaku Habis</h3>
+                            <p className="text-neutral-500 mb-6 max-w-sm leading-relaxed">
+                                Paket Trial/Premium Anda telah berakhir. Upgrade sekarang untuk melanjutkan layanan otomatis.
                             </p>
                             <a
                                 href="https://wa.me/62895402945495?text=Halo%20Admin,%20saya%20ingin%20perpanjang%20paket%20chatbot"
                                 target="_blank"
                                 rel="noreferrer"
-                                className="px-4 py-2 bg-emerald-600 text-white text-xs font-bold rounded-full hover:bg-emerald-700 transition-colors"
+                                className="px-6 py-2.5 bg-[#061E29] text-white text-sm font-medium rounded-full hover:bg-neutral-800 transition-all shadow-lg hover:shadow-xl hover:-translate-y-0.5"
                             >
                                 Hubungi Admin
                             </a>
                         </div>
                     )}
-                    <form onSubmit={handleSend} className="flex gap-2 max-w-4xl mx-auto">
+                    
+                    <form onSubmit={handleSend} className="max-w-4xl mx-auto relative group">
+                        <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                            <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">
+                                <MessageSquare size={16} />
+                            </div>
+                        </div>
                         <input
                             type="text"
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
-                            placeholder={isExpired ? "Layanan Nonaktif" : "Ketik pesan..."}
-                            className="flex-1 px-4 py-2 lg:py-3 rounded-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-emerald-500/50 bg-white text-sm lg:text-base disabled:bg-gray-200 disabled:text-gray-500"
+                            placeholder={isExpired ? "Layanan Nonaktif" : "Ketik pesan simulasi..."}
+                            className="w-full pl-14 pr-14 py-4 rounded-2xl border border-neutral-200 focus:outline-none focus:ring-2 focus:ring-[#061E29]/10 focus:border-[#061E29] bg-neutral-50 focus:bg-white text-neutral-800 placeholder:text-neutral-400 transition-all shadow-sm"
                             disabled={loading || !businessContext || isExpired}
                         />
-                        <button
-                            type="submit"
-                            disabled={loading || !input.trim() || isExpired}
-                            className="p-3 bg-emerald-600 text-white rounded-full hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-md active:scale-95 shrink-0"
-                        >
-                            <Send size={18} />
-                        </button>
+                        <div className="absolute right-2 top-2 bottom-2">
+                            <button
+                                type="submit"
+                                disabled={loading || !input.trim() || isExpired}
+                                className="h-full aspect-square flex items-center justify-center bg-[#061E29] text-white rounded-xl hover:bg-neutral-800 disabled:bg-neutral-200 disabled:text-neutral-400 disabled:cursor-not-allowed transition-all shadow-md hover:shadow-lg active:scale-95"
+                            >
+                                <Send size={18} className={loading ? 'hidden' : 'block'} />
+                                {loading && <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />}
+                            </button>
+                        </div>
                     </form>
+                    <p className="text-center text-[10px] text-neutral-400 mt-3">
+                        AI dapat melakukan kesalahan. Selalu periksa informasi penting.
+                    </p>
                 </div>
             </div>
 
-            {/* Simulator Info Sidebar */}
-            <div className="hidden lg:block w-72 lg:w-80 bg-blue-50 p-6 rounded-xl h-fit border border-blue-100 sticky top-0">
-                <div className="flex items-center gap-3 mb-4 text-blue-800">
-                    <Smartphone size={22} />
-                    <h3 className="font-bold">Mode Simulator</h3>
-                </div>
-                <p className="text-sm text-blue-700 mb-6 leading-relaxed">
-                    Ini adalah pratinjau bagaimana chatbot akan merespons pelanggan di WhatsApp.
-                    Jika jawaban salah, klik tombol <ThumbsDown size={14} className="inline text-blue-600" /> untuk mengoreksi.
-                </p>
-
-                <div className="bg-white p-4 rounded-lg border border-blue-50 shadow-sm">
-                    <h4 className="font-extrabold text-[10px] uppercase text-gray-400 tracking-wider mb-2">Debug Info:</h4>
-                    <div className="text-xs text-gray-600 space-y-1.5">
-                        <div className="flex justify-between border-b border-gray-50 pb-1">
-                            <span>Bot Name:</span>
-                            <span className="font-medium text-blue-600">{businessContext?.name}</span>
+            {/* Aesthetic Sidebar */}
+            <div className="hidden lg:flex w-80 flex-col gap-4">
+                <div className="bg-white p-6 rounded-2xl shadow-sm border border-neutral-200/60 sticky top-0">
+                    <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 bg-blue-50 rounded-lg text-blue-600">
+                            <Smartphone size={20} />
                         </div>
-                        <div className="flex justify-between">
-                            <span>Products:</span>
-                            <span className="font-medium text-blue-600">{businessContext?.products?.length || 0}</span>
+                        <h3 className="font-bold text-neutral-800">Simulator Mode</h3>
+                    </div>
+                    
+                    <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
+                        Pratinjau respons chatbot di WhatsApp. Klik tombol <ThumbsDown size={14} className="inline text-red-400 mx-1" /> jika jawaban salah untuk melatih AI secara instan.
+                    </p>
+
+                    <div className="space-y-4">
+                        <div className="p-4 bg-neutral-50 rounded-xl border border-neutral-100">
+                            <h4 className="text-[11px] font-bold uppercase text-neutral-400 tracking-wider mb-3">Debug Information</h4>
+                            <div className="space-y-3">
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-neutral-500">Bot Name</span>
+                                    <span className="font-semibold text-[#061E29] px-2 py-1 bg-white rounded border border-neutral-100 shadow-sm">
+                                        {businessContext?.name || '-'}
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-neutral-500">Products Loaded</span>
+                                    <span className="font-semibold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100">
+                                        {businessContext?.products?.length || 0} items
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div className="p-4 rounded-xl bg-gradient-to-br from-[#061E29] to-neutral-800 text-white shadow-lg relative overflow-hidden group cursor-default">
+                            <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
+                                <Bot size={64} />
+                            </div>
+                            <h4 className="font-bold text-sm mb-1 relative z-10">Tips Pro</h4>
+                            <p className="text-xs text-neutral-300 relative z-10 leading-relaxed">
+                                Gunakan koreksi sesering mungkin di awal penggunaan agar bot semakin pintar mengenali bisnis Anda.
+                            </p>
                         </div>
                     </div>
                 </div>

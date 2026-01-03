@@ -92,9 +92,9 @@ export default function LandingPage() {
             </a>
             <div className="hidden md:block">
               <div className="flex items-center gap-8 bg-neutral-50/80 px-8 py-3 rounded-full border border-neutral-100 backdrop-blur-sm">
-                  <a href="#how-it-works" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">CARA KERJA</a>
-                  <a href="#features" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">FITUR</a>
-                  <a href="#pricing" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">HARGA</a>
+                <a href="#how-it-works" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">CARA KERJA</a>
+                <a href="#features" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">FITUR</a>
+                <a href="#pricing" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">HARGA</a>
               </div>
             </div>
             <div className="flex items-center gap-4">
@@ -118,7 +118,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section className="relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden bg-gradient-to-b from-neutral-50/50 to-white">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent"></div>
-        
+
         {/* Decorative elements */}
         <div className="absolute top-20 left-10 w-72 h-72 bg-[#2D3C59]/5 rounded-full blur-3xl -z-10 animate-pulse"></div>
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#2D3C59]/5 rounded-full blur-3xl -z-10 animate-pulse delay-1000"></div>
@@ -132,16 +132,16 @@ export default function LandingPage() {
               </span>
               <span className="text-xs font-bold uppercase tracking-widest text-neutral-600">Smart Digital Solutions</span>
             </div>
-            
+
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-8 text-[#2D3C59] leading-[0.9]">
-              Asisten AI <br className="hidden md:block"/>
+              Asisten AI <br className="hidden md:block" />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2D3C59] to-[#4a5f85]">Pintar</span>
             </h1>
-            
+
             <p className="text-xl md:text-3xl text-neutral-500 mb-14 leading-relaxed max-w-3xl mx-auto font-light tracking-tight">
               Otomatisasi <span className="text-[#2D3C59] font-medium">admin</span> dan <span className="text-[#2D3C59] font-medium">layanan pelanggan</span> Anda dengan Chatbot AI yang siap melayani 24/7 di WhatsApp.
             </p>
-            
+
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
               <a
                 href="https://chatbot.nusavite.com/register"
@@ -157,10 +157,10 @@ export default function LandingPage() {
                 Pelajari Cara Kerjanya
               </button>
             </div>
-            
+
             <div className="mt-16 flex items-center justify-center gap-8 text-neutral-400 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
-               {/* Placeholders for logos if needed, currently empty for cleaner look or could add icons */}
-               <p className="text-sm font-medium tracking-widest uppercase">Trusted by Modern Businesses</p>
+              {/* Placeholders for logos if needed, currently empty for cleaner look or could add icons */}
+              <p className="text-sm font-medium tracking-widest uppercase">Trusted by Modern Businesses</p>
             </div>
           </div>
         </div>
@@ -171,8 +171,8 @@ export default function LandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
             <div>
-               <span className="text-sm font-bold tracking-widest uppercase text-[#2D3C59]/60 mb-3 block">Simple Setup</span>
-               <h2 className="text-4xl md:text-6xl font-bold text-[#2D3C59] tracking-tight">3 Langkah Mudah <br/>Mulai Otomatisasi</h2>
+              <span className="text-sm font-bold tracking-widest uppercase text-[#2D3C59]/60 mb-3 block">Simple Setup</span>
+              <h2 className="text-4xl md:text-6xl font-bold text-[#2D3C59] tracking-tight">3 Langkah Mudah <br />Mulai Otomatisasi</h2>
             </div>
             <p className="max-w-md text-neutral-500 text-lg leading-relaxed text-right md:text-left">
               Tidak perlu coding. Tidak perlu instalasi rumit. Fokus pada bisnis, biarkan AI bekerja.
@@ -181,7 +181,7 @@ export default function LandingPage() {
 
           <div className="grid md:grid-cols-3 gap-12 relative group">
             <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent hidden md:block -z-10"></div>
-            
+
             {/* Step 1 */}
             <div className="relative bg-white p-8 rounded-[2rem] border border-neutral-100 shadow-xl shadow-neutral-100/50 hover:shadow-2xl hover:shadow-[#2D3C59]/10 transition-all duration-300 hover:-translate-y-2">
               <div className="w-20 h-20 bg-[#2D3C59] text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-[#2D3C59]/30">
@@ -221,7 +221,7 @@ export default function LandingPage() {
       {/* Services Grid (Blue Section) */}
       <section id="services" className="py-32 bg-[#2D3C59] text-white relative rounded-[3rem] mx-4 lg:mx-8 mb-8 overflow-hidden">
         <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-white/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/2"></div>
-        
+
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="flex flex-col md:flex-row justify-between items-start mb-24 gap-12">
             <div className="max-w-3xl">
@@ -234,8 +234,8 @@ export default function LandingPage() {
               </p>
             </div>
             <div className="hidden md:flex flex-col gap-4">
-               <div className="w-20 h-1 bg-white/20 rounded-full"></div>
-               <div className="w-12 h-1 bg-white/20 rounded-full ml-auto"></div>
+              <div className="w-20 h-1 bg-white/20 rounded-full"></div>
+              <div className="w-12 h-1 bg-white/20 rounded-full ml-auto"></div>
             </div>
           </div>
 
@@ -439,16 +439,16 @@ export default function LandingPage() {
           <div className="max-w-5xl mx-auto">
             {/* Split Exclusive Plan */}
             <div className="bg-white rounded-[3rem] border border-neutral-200 flex flex-col-reverse md:flex-row shadow-2xl shadow-neutral-200/50 relative overflow-hidden group hover:border-[#2D3C59]/30 transition-colors duration-500">
-              
+
               {/* Left Side: Features */}
               <div className="flex-1 p-10 md:p-14 md:border-r border-neutral-100">
                 <div className="flex items-center gap-4 mb-8">
-                   <div className="w-12 h-12 bg-[#2D3C59] rounded-xl flex items-center justify-center">
-                      <Zap className="w-6 h-6 text-white" />
-                   </div>
-                   <h3 className="text-2xl md:text-3xl font-bold text-[#2D3C59]">WhatsApp AI Master</h3>
+                  <div className="w-12 h-12 bg-[#2D3C59] rounded-xl flex items-center justify-center">
+                    <Zap className="w-6 h-6 text-white" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold text-[#2D3C59]">WhatsApp AI Master</h3>
                 </div>
-                
+
                 <p className="text-neutral-500 mb-10 text-lg leading-relaxed font-light">
                   Solusi lengkap untuk otomatisasi admin WhatsApp. AI pintar yang siap melayani pelanggan Anda 24/7 tanpa henti.
                 </p>
@@ -475,7 +475,7 @@ export default function LandingPage() {
               {/* Right Side: Price & CTA */}
               <div className="w-full md:w-[400px] p-10 md:p-14 bg-neutral-50/50 flex flex-col justify-center items-center text-center border-b md:border-b-0 border-neutral-100 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#2D3C59]/5 rounded-bl-full -mr-16 -mt-16"></div>
-                
+
                 <div className="mb-10 relative z-10">
                   <span className="text-neutral-400 text-xs uppercase font-bold tracking-widest block mb-3">Biaya Langganan</span>
                   <div className="flex items-baseline justify-center whitespace-nowrap">
@@ -486,7 +486,7 @@ export default function LandingPage() {
 
                 <div className="mb-10 p-5 bg-emerald-50 rounded-2xl w-full border border-emerald-100">
                   <p className="text-emerald-800 font-bold uppercase tracking-tight text-xs mb-1">
-                    🎉 Promo Spesial
+                    Promo Spesial
                   </p>
                   <p className="text-emerald-700 text-sm font-medium">Gratis Biaya Setup (Hemat 500rb)</p>
                 </div>
@@ -499,7 +499,7 @@ export default function LandingPage() {
                 </a>
 
                 <p className="mt-8 text-neutral-400 text-xs font-medium">
-                  Garansi uang kembali 7 hari.<br/>Batalkan kapan saja.
+                  Garansi uang kembali 7 hari.<br />Batalkan kapan saja.
                 </p>
               </div>
             </div>
@@ -516,7 +516,7 @@ export default function LandingPage() {
             Mulai trial gratis 5 hari dan rasakan bagaimana AI membantu menangani pelanggan Anda.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
-             <a
+            <a
               href="https://chatbot.nusavite.com/register"
               className="px-10 py-4 bg-[#2D3C59] text-white rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
             >
