@@ -65,21 +65,21 @@ Tugas Utama & Etika Percakapan:
 `.trim();
 
     // 1. Try Gemini First (Priority)
-    if (geminiKey) {
+    if (geminiKey.trim()) {
         try {
-            // Using v1 and Priming Strategy (most compatible way)
-            const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+            // Using v1beta and Priming Strategy (most compatible way for newer models)
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey.trim()}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
                     contents: [
                         {
                             role: "user",
-                            parts: [{ text: `INTRUKSI SISTEM (Harap dipatuhi sepenuhnya):\n${systemInstructions}` }]
+                            parts: [{ text: `INSTRUKSI SISTEM:\n${systemInstructions}` }]
                         },
                         {
                             role: "model",
-                            parts: [{ text: `Baik, saya mengerti. Saya adalah Customer Service AI untuk ${businessContext.name} dan akan melayani pelanggan sesuai instruksi tersebut.` }]
+                            parts: [{ text: `Siap, saya mengerti. Saya akan bertindak sesuai instruksi tersebut.` }]
                         },
                         ...history.map(h => ({
                             role: h.role === "user" ? "user" : "model",
