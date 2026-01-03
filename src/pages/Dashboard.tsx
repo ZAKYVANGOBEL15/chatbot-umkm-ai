@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, Calendar, User, ExternalLink, Trash2, Zap } from 'lucide-react';
+import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, User, ExternalLink, Trash2, Zap } from 'lucide-react';
 import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
