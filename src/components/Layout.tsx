@@ -38,10 +38,12 @@ export default function Layout() {
                     : '-translate-x-full lg:translate-x-0 ' + (isSidebarOpen ? 'lg:w-64' : 'lg:w-20')
                     }`}
             >
-                <div className="p-4 flex items-center justify-between h-16 border-b border-neutral-900">
-                    <Link to="/dashboard" className="flex items-center">
-                        <img src="/logo_sidebar.png" alt="Logo" className={`transition-all duration-300 ${isSidebarOpen || isMobileMenuOpen ? 'h-8' : 'h-6 mx-auto'}`} />
-                    </Link>
+                <div className={`p-4 flex items-center border-b border-neutral-900 h-16 ${isSidebarOpen || isMobileMenuOpen ? 'justify-between' : 'justify-center'}`}>
+                    {(isSidebarOpen || isMobileMenuOpen) && (
+                        <Link to="/dashboard" className="flex items-center">
+                            <img src="/logo_sidebar.png" alt="Logo" className="h-8 transition-all duration-300" />
+                        </Link>
+                    )}
                     <button
                         onClick={() => {
                             if (window.innerWidth < 1024) {
