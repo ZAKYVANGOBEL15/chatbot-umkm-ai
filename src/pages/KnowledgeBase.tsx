@@ -188,48 +188,64 @@ export default function KnowledgeBase() {
     return (
         <div className="space-y-6 lg:space-y-8 max-w-full overflow-hidden pb-10 font-sans text-neutral-900">
             {/* AI Scraper Section */}
-            <section className="bg-[#061E29] text-white p-6 lg:p-10 rounded-3xl shadow-2xl relative overflow-hidden group">
-                <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-4">
-                        <div className="p-2 bg-emerald-500 rounded-lg">
-                            <Sparkles size={20} className="text-white" />
+            <section className="bg-gradient-to-br from-[#061E29] to-[#0A2E3D] text-white p-1 rounded-3xl shadow-2xl relative overflow-hidden group border border-[#1a3b4b]/50">
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+                <div className="bg-[#061E29]/50 backdrop-blur-sm p-6 lg:p-10 rounded-[22px] relative z-10 h-full">
+                    <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 mb-8">
+                        <div>
+                            <div className="flex items-center gap-3 mb-3">
+                                <div className="p-2 bg-gradient-to-br from-emerald-400 to-emerald-600 rounded-xl shadow-lg shadow-emerald-500/20">
+                                    <Sparkles size={20} className="text-white" />
+                                </div>
+                                <h2 className="text-xl lg:text-2xl font-bold tracking-tight text-white">Setup Kilat dengan AI</h2>
+                            </div>
+                            <p className="text-neutral-300 max-w-xl text-sm lg:text-[15px] leading-relaxed font-light">
+                                Punya website bisnis? Cukup tempel URL-nya. AI kami akan otomatis mempelajari produk & profil bisnis Anda dalam hitungan detik.
+                            </p>
                         </div>
-                        <h2 className="text-xl lg:text-2xl font-bold tracking-tight">Setup Kilat dengan AI</h2>
+                        <div className="hidden lg:block">
+                            <div className="px-4 py-2 bg-white/5 border border-white/10 rounded-full text-xs font-medium text-emerald-300 flex items-center gap-2">
+                                <span className="w-2 h-2 bg-emerald-400 rounded-full animate-pulse"></span>
+                                AI Crawler Ready
+                            </div>
+                        </div>
                     </div>
-                    <p className="text-neutral-400 mb-8 max-w-xl text-sm lg:text-base leading-relaxed">
-                        Punya website? Tempel URL-nya di bawah, biar AI saya yang pelajari bisnis kamu secara otomatis dalam hitungan detik.
-                    </p>
 
-                    <div className="flex flex-col sm:flex-row gap-3">
-                        <div className="relative flex-1">
-                            <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-500" />
+                    <div className="bg-white/5 border border-white/10 p-2 rounded-2xl flex flex-col sm:flex-row gap-2 shadow-inner">
+                        <div className="relative flex-1 group/input">
+                            <Globe size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-neutral-400 group-focus-within/input:text-emerald-400 transition-colors" />
                             <input
                                 type="url"
                                 value={crawlUrl}
                                 onChange={(e) => setCrawlUrl(e.target.value)}
-                                placeholder="https://website-kamu.com"
-                                className="w-full pl-12 pr-4 py-4 bg-neutral-900 border border-neutral-800 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all text-sm font-medium"
+                                placeholder="https://website-bisnis-anda.com"
+                                className="w-full pl-12 pr-4 py-4 bg-transparent border-none focus:ring-0 text-white placeholder:text-neutral-500 text-sm font-medium transition-all"
                                 disabled={isCrawling}
                             />
                         </div>
                         <button
                             onClick={handleCrawl}
                             disabled={isCrawling || !crawlUrl}
-                            className="bg-emerald-500 hover:bg-emerald-600 disabled:bg-neutral-800 text-white font-bold py-4 px-8 rounded-2xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-500/20 active:scale-95"
+                            className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-400 hover:to-emerald-500 disabled:from-neutral-700 disabled:to-neutral-800 disabled:text-neutral-500 text-white font-bold py-3.5 px-8 rounded-xl transition-all flex items-center justify-center gap-2 shadow-lg shadow-emerald-900/20 active:scale-95 whitespace-nowrap"
                         >
                             {isCrawling ? (
                                 <>
                                     <Loader2 size={18} className="animate-spin" />
-                                    Mempelajari...
+                                    <span>Sedang Memproses...</span>
                                 </>
                             ) : (
-                                'Mulai Pelajari Website'
+                                <>
+                                    <span>Mulai Analisa</span>
+                                    <Sparkles size={16} />
+                                </>
                             )}
                         </button>
                     </div>
                 </div>
-                {/* Decoration */}
-                <div className="absolute top-0 right-0 w-64 h-64 bg-emerald-500/5 blur-[80px] rounded-full -mr-20 -mt-20 group-hover:bg-emerald-500/10 transition-all duration-700"></div>
+                
+                {/* Modern Decoration */}
+                <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 blur-[120px] rounded-full -mr-32 -mt-32 pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity duration-1000"></div>
+                <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full -ml-20 -mb-20 pointer-events-none"></div>
             </section>
 
             {/* Business Profile Section */}
