@@ -24,6 +24,12 @@ export default function KnowledgeBase() {
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
 
+    const formatNumber = (val: string) => {
+        if (!val) return '';
+        const number = val.replace(/\D/g, '');
+        return number.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    };
+
     // AI Crawler State
     const [crawlUrl, setCrawlUrl] = useState('');
     const [isCrawling, setIsCrawling] = useState(false);
@@ -86,7 +92,7 @@ export default function KnowledgeBase() {
                 // Update Existing
                 await updateDoc(doc(db, 'users', auth.currentUser.uid, 'products', editingId), {
                     name: newProduct.name,
-                    price: Number(newProduct.price),
+                    price: Number(newProduct.price.replace(/\D/g, '')),
                     description: newProduct.description,
                     updatedAt: new Date().toISOString()
                 });
@@ -96,7 +102,7 @@ export default function KnowledgeBase() {
                 // Add New
                 await addDoc(collection(db, 'users', auth.currentUser.uid, 'products'), {
                     name: newProduct.name,
-                    price: Number(newProduct.price),
+                    price: Number(newProduct.price.replace(/\D/g, '')),
                     description: newProduct.description,
                     createdAt: new Date().toISOString()
                 });
@@ -110,7 +116,7 @@ export default function KnowledgeBase() {
     const handleEditProduct = (product: Product) => {
         setNewProduct({
             name: product.name,
-            price: String(product.price),
+            price: formatNumber(String(product.price)),
             description: product.description || ''
         });
         setIsEditing(true);
@@ -359,9 +365,9 @@ export default function KnowledgeBase() {
                         <div>
                             <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-2">Harga (Rp)</label>
                             <input
-                                type="number"
+                                type="text"
                                 value={newProduct.price}
-                                onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
+                                onChange={(e) => setNewProduct({ ...newProduct, price: formatNumber(e.target.value) })}
                                 placeholder="0"
                                 className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-[#061E29] outline-none"
                                 required
