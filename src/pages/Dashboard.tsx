@@ -199,144 +199,197 @@ export default function Dashboard() {
             </div>
 
             {/* Welcome Section */}
-            <div className="p-8 lg:p-12 bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100 overflow-hidden relative group">
-                <div className="relative z-10">
-                    <span className="text-xs font-bold tracking-widest uppercase text-neutral-400 mb-2 block">System Overview</span>
-                    <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-[#061E29]">
-                        Halo, {userName || 'Partner'}!
-                    </h2>
-                    <p className="text-neutral-500 max-w-xl mb-8 text-base lg:text-lg leading-relaxed">
-                        Latih asisten AI Anda sekarang. Semakin lengkap data produk, semakin cerdas jawaban chatbot Anda.
-                    </p>
+            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#061E29] to-[#0f3443] text-white shadow-2xl p-8 lg:p-12 border border-[#1a3b4b]/50 group">
+                 {/* Texture Overlay */}
+                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
+                
+                <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+                    <div>
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] font-bold tracking-widest uppercase text-emerald-300 mb-4 backdrop-blur-sm">
+                            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
+                            System Operational
+                        </span>
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white tracking-tight">
+                            Halo, {userName || 'Partner'}! 👋
+                        </h2>
+                        <p className="text-neutral-300 max-w-xl text-base lg:text-lg leading-relaxed font-light">
+                            Bisnis Anda berjalan otomatis hari ini. Cek prospek terbaru di bawah atau latih AI Anda agar semakin cerdas.
+                        </p>
+                    </div>
                     <Link
                         to="/dashboard/knowledge"
-                        className="inline-flex items-center gap-2 px-8 py-4 bg-[#061E29] text-white rounded-xl font-bold hover:bg-[#0a2d3d] transition-all shadow-md group-hover:translate-x-1"
+                        className="flex-shrink-0 inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-[#061E29] rounded-2xl font-bold transition-all shadow-lg shadow-emerald-900/20 hover:shadow-emerald-500/30 hover:-translate-y-1 active:scale-95"
                     >
-                        Mulai Setup Knowledge Base <ArrowRight size={18} />
+                        Setup Knowledge Base <ArrowRight size={20} />
                     </Link>
                 </div>
-                {/* Minimalist Decoration */}
-                <div className="absolute right-0 top-0 w-64 h-full bg-gradient-to-l from-neutral-50 to-transparent hidden lg:block"></div>
+                
+                {/* Abstract Decoration */}
+                <div className="absolute -right-20 -bottom-32 w-80 h-80 bg-emerald-500/20 blur-[100px] rounded-full pointer-events-none group-hover:bg-emerald-500/30 transition-all duration-1000"></div>
             </div>
 
             {/* Stats Cards */}
-            <h3 className="text-xl font-bold text-[#061E29] border-l-4 border-[#061E29] pl-4">Statistik Real-time</h3>
+            <div className="flex items-center gap-3 border-l-4 border-[#061E29] pl-4 py-1">
+                <h3 className="text-xl font-bold text-[#061E29]">Ringkasan Bisnis</h3>
+            </div>
+            
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-[#061E29] transition-colors">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-neutral-100 rounded-xl">
-                            <MessageSquare size={24} className="text-[#061E29]" />
-                        </div>
-                        <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Total Chat</span>
+                {/* Card 1 */}
+                <div className="group relative bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div className="absolute right-0 top-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
+                        <MessageSquare size={80} />
                     </div>
-                    <h3 className="text-3xl font-bold text-[#061E29] mb-1">Coming Soon</h3>
-                    <p className="text-xs text-neutral-400">Menunggu integrasi</p>
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="p-3 bg-blue-50 text-blue-600 rounded-xl group-hover:bg-blue-600 group-hover:text-white transition-colors">
+                                <MessageSquare size={24} />
+                            </div>
+                        </div>
+                        <h3 className="text-3xl font-bold text-[#061E29] mb-1">Coming Soon</h3>
+                        <p className="text-sm text-neutral-500 font-medium">Total Interaksi Chat</p>
+                    </div>
                 </div>
 
-                <div className="p-6 bg-white rounded-2xl border border-neutral-200 hover:border-[#061E29] transition-colors">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-neutral-100 rounded-xl">
-                            <Users size={24} className="text-[#061E29]" />
-                        </div>
-                        <span className="text-xs font-bold text-neutral-400 bg-neutral-50 px-2 py-1 rounded-md">Pelanggan</span>
+                {/* Card 2 */}
+                <div className="group relative bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div className="absolute right-0 top-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
+                        <Users size={80} />
                     </div>
-                    <h3 className="text-3xl font-bold text-[#061E29] mb-1">
-                        {loading ? '...' : customerCount}
-                    </h3>
-                    <p className="text-xs text-neutral-400">Prospek / Leads Baru</p>
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
+                                <Users size={24} />
+                            </div>
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
+                                +{customerCount} MINGGU INI
+                            </span>
+                        </div>
+                        <h3 className="text-3xl font-bold text-[#061E29] mb-1">
+                            {loading ? '...' : customerCount}
+                        </h3>
+                        <p className="text-sm text-neutral-500 font-medium">Prospek / Leads Baru</p>
+                    </div>
                 </div>
 
-                <div className="p-6 bg-[#061E29] text-white rounded-2xl shadow-xl shadow-neutral-200 transform lg:-translate-y-4">
-                    <div className="flex justify-between items-start mb-4">
-                        <div className="p-3 bg-white/10 rounded-xl">
-                            <ShoppingBag size={24} className="text-white" />
-                        </div>
-                        <span className="text-xs font-bold text-white/60 bg-white/10 px-2 py-1 rounded-md">Knowledge Base</span>
+                {/* Card 3 (Dark) */}
+                <div className="group relative bg-[#061E29] p-6 rounded-2xl border border-neutral-800 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden text-white">
+                    <div className="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110">
+                        <ShoppingBag size={80} className="text-white" />
                     </div>
-                    <h3 className="text-3xl font-bold text-white mb-1">
-                        {loading ? '...' : productCount}
-                    </h3>
-                    <p className="text-xs text-neutral-400">Data Produk Terlatih</p>
+                    <div className="relative z-10">
+                        <div className="flex justify-between items-start mb-4">
+                            <div className="p-3 bg-white/10 rounded-xl text-white group-hover:bg-white group-hover:text-[#061E29] transition-colors">
+                                <ShoppingBag size={24} />
+                            </div>
+                        </div>
+                        <h3 className="text-3xl font-bold text-white mb-1">
+                            {loading ? '...' : productCount}
+                        </h3>
+                        <p className="text-sm text-neutral-400 font-medium">Produk Terlatih</p>
+                    </div>
                 </div>
             </div>
 
             {/* Customer List Section */}
-            <div className="bg-white rounded-3xl border border-neutral-200 shadow-sm overflow-hidden">
-                <div className="p-6 border-b border-neutral-100 flex items-center justify-between">
-                    <div>
-                        <h3 className="text-lg font-bold text-[#061E29]">Daftar Prospek Pelanggan</h3>
-                        <p className="text-sm text-neutral-500">Data lead yang berhasil didapatkan oleh AI.</p>
+            <div className="bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100/50 overflow-hidden">
+                <div className="p-6 lg:p-8 border-b border-neutral-100 flex items-center justify-between bg-white">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
+                            <Users size={20} />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-[#061E29]">Daftar Prospek Masuk</h3>
+                            <p className="text-sm text-neutral-500 font-medium">Pelanggan yang memberikan kontak via Chatbot.</p>
+                        </div>
                     </div>
-                    <div className="bg-emerald-50 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">
+                    <div className="bg-[#061E29] text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md shadow-[#061E29]/20">
                         {customerCount} Total
                     </div>
                 </div>
 
                 <div className="overflow-x-auto">
                     {customers.length === 0 ? (
-                        <div className="p-8 text-center text-neutral-400">
-                            <Users className="mx-auto mb-2 opacity-20" size={48} />
-                            <p>Belum ada data pelanggan.</p>
-                            <p className="text-xs">Coba test chat di simulator atau tunggu pelanggan asli.</p>
+                        <div className="p-12 text-center">
+                            <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4 text-neutral-300">
+                                <Users size={32} />
+                            </div>
+                            <h4 className="text-neutral-900 font-bold mb-1">Belum ada data pelanggan</h4>
+                            <p className="text-sm text-neutral-500 max-w-xs mx-auto">
+                                Coba simulasikan percakapan di menu Chat Simulator dan berikan Nama/No HP Anda.
+                            </p>
+                            <Link to="/dashboard/chat" className="inline-block mt-4 text-sm font-bold text-emerald-600 hover:text-emerald-700">
+                                Ke Simulator &rarr;
+                            </Link>
                         </div>
                     ) : (
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="bg-neutral-50 text-xs font-bold text-neutral-500 uppercase tracking-wider">
-                                    <th className="p-4 border-b border-neutral-100">Nama Pelanggan</th>
-                                    <th className="p-4 border-b border-neutral-100">Kontak WhatsApp</th>
-                                    <th className="p-4 border-b border-neutral-100">Waktu</th>
-                                    <th className="p-4 border-b border-neutral-100 text-center">Status</th>
-                                    <th className="p-4 border-b border-neutral-100 text-center">Aksi</th>
+                                <tr className="bg-neutral-50/50 text-xs font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-100">
+                                    <th className="p-5 pl-8">Nama Pelanggan</th>
+                                    <th className="p-5">Kontak WhatsApp</th>
+                                    <th className="p-5">Waktu Masuk</th>
+                                    <th className="p-5 text-center">Status</th>
+                                    <th className="p-5 text-center pr-8">Aksi</th>
                                 </tr>
                             </thead>
-                            <tbody className="divide-y divide-neutral-100">
+                            <tbody className="divide-y divide-neutral-50">
                                 {customers.map((customer) => (
-                                    <tr key={customer.id} className="hover:bg-neutral-50/50 transition-colors group">
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-500 font-bold text-xs group-hover:bg-[#061E29] group-hover:text-white transition-colors">
-                                                    <User size={14} />
+                                    <tr key={customer.id} className="hover:bg-blue-50/30 transition-colors group">
+                                        <td className="p-5 pl-8">
+                                            <div className="flex items-center gap-4">
+                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center text-neutral-600 font-bold text-sm shadow-sm group-hover:from-[#061E29] group-hover:to-[#0f3443] group-hover:text-white transition-all">
+                                                    {customer.name ? customer.name.charAt(0).toUpperCase() : <User size={16} />}
                                                 </div>
-                                                <span className="font-semibold text-neutral-800">{customer.name || 'Tanpa Nama'}</span>
+                                                <div>
+                                                    <div className="font-bold text-[#061E29] text-sm">{customer.name || 'Tanpa Nama'}</div>
+                                                    <div className="text-xs text-neutral-400 font-medium">{customer.source || 'Chatbot'}</div>
+                                                </div>
                                             </div>
                                         </td>
-                                        <td className="p-4">
+                                        <td className="p-5">
                                             {customer.phone ? (
                                                 <a
                                                     href={`https://wa.me/${customer.phone.replace(/^0/, '62').replace(/\D/g, '')}`}
                                                     target="_blank"
                                                     rel="noopener noreferrer"
-                                                    className="inline-flex items-center gap-2 px-3 py-1.5 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 rounded-lg transition-colors text-xs font-bold"
+                                                    className="inline-flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 rounded-xl transition-all text-xs font-bold border border-emerald-100 group-hover:shadow-sm"
                                                 >
-                                                    <Phone size={12} />
-                                                    {customer.phone}
-                                                    <ExternalLink size={10} className="opacity-50" />
+                                                    <Phone size={14} />
+                                                    <span className="font-mono">{customer.phone}</span>
+                                                    <ExternalLink size={12} className="opacity-50" />
                                                 </a>
                                             ) : (
-                                                <span className="text-neutral-400 text-xs">-</span>
+                                                <span className="text-neutral-300 text-xs italic">Tidak ada nomor</span>
                                             )}
                                         </td>
-                                        <td className="p-4">
-                                            <div className="flex items-center gap-2 text-neutral-500 text-sm">
-                                                <Calendar size={14} />
-                                                {customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('id-ID', {
-                                                    day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit'
-                                                }) : '-'}
+                                        <td className="p-5">
+                                            <div className="flex flex-col gap-0.5">
+                                                <span className="text-sm font-medium text-neutral-700">
+                                                    {customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-'}
+                                                </span>
+                                                <span className="text-xs text-neutral-400 flex items-center gap-1">
+                                                    <Clock size={10} />
+                                                    {customer.createdAt ? new Date(customer.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
+                                                </span>
                                             </div>
                                         </td>
-                                        <td className="p-4 text-center">
-                                            <span className="inline-block px-2 py-1 rounded-md bg-blue-50 text-blue-600 text-[10px] font-bold uppercase tracking-wider border border-blue-100">
+                                        <td className="p-5 text-center">
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
+                                                customer.status === 'new' 
+                                                ? 'bg-blue-50 text-blue-600 border-blue-100' 
+                                                : 'bg-neutral-100 text-neutral-500 border-neutral-200'
+                                            }`}>
+                                                <span className={`w-1.5 h-1.5 rounded-full ${customer.status === 'new' ? 'bg-blue-500 animate-pulse' : 'bg-neutral-400'}`}></span>
                                                 {customer.status || 'New'}
                                             </span>
                                         </td>
-                                        <td className="p-4 text-center">
+                                        <td className="p-5 text-center pr-8">
                                             <button
                                                 onClick={() => handleDeleteCustomer(customer.id, customer.name)}
-                                                className="p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                                                className="p-2.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100"
                                                 title="Hapus Data"
                                             >
-                                                <Trash2 size={16} />
+                                                <Trash2 size={18} />
                                             </button>
                                         </td>
                                     </tr>
