@@ -15,23 +15,8 @@ export async function generateAIResponse(
     },
     history: { role: string; text: string }[]
 ) {
-    // Get API key safely for both Server (Node) and Client (Browser)
-    let apiKey = '';
-
-    if (typeof process !== 'undefined' && process.env) {
-        apiKey = process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY || '';
-    }
-
-    // Fallback for browser environment (Vite)
-    if (!apiKey && typeof window !== 'undefined') {
-        // @ts-ignore
-        const meta = import.meta as any;
-        apiKey = meta.env?.VITE_MISTRAL_API_KEY || '';
-    }
-
-    if (!apiKey) {
-        return "Error: API Key Mistral belum dikonfigurasi. Hubungi Admin.";
-    }
+    const geminiKey = (typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : (import.meta as any).env?.VITE_GEMINI_API_KEY) || '';
+    const mistralKey = (typeof process !== 'undefined' ? (process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY) : (import.meta as any).env?.VITE_MISTRAL_API_KEY) || '';
 
     const productList = (businessContext.products || [])
         .map(p => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
@@ -62,6 +47,7 @@ Tugas Utama & Etika Percakapan:
 
 3. REKOMENDASI TEPAT SASARAN:
    - Berikan informasi layanan HANYA yang relevan dengan pertanyaan pelanggan.
+   - Singkat, padat, dan jelas. Jangan memberikan jawaban yang terlalu panjang jika tidak diperlukan.
 
 4. ATURAN LEAD GENERATION:
    - JANGAN meminta Nama/WhatsApp jika pelanggan baru bertanya informasi umum atau harga.
@@ -78,40 +64,67 @@ Tugas Utama & Etika Percakapan:
    - Bold nama produk (**Nama Produk**).
 `.trim();
 
-    try {
-        const messages = [
-            { role: "system", content: systemInstructions },
-            ...history.map(h => ({
-                role: h.role === "user" ? "user" : "assistant",
-                content: h.text
-            })),
-            { role: "user", content: userMessage }
-        ];
+    // 1. Try Gemini First (Priority)
+    if (geminiKey) {
+        try {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    contents: [
+                        { role: "user", parts: [{ text: systemInstructions }] },
+                        ...history.map(h => ({
+                            role: h.role === "user" ? "user" : "model",
+                            parts: [{ text: h.text }]
+                        })),
+                        { role: "user", parts: [{ text: userMessage }] }
+                    ],
+                    generationConfig: {
+                        temperature: 0.7,
+                        maxOutputTokens: 500,
+                    }
+                })
+            });
 
-        const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Authorization": `Bearer ${apiKey}`,
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                model: "mistral-small-latest",
-                messages: messages,
-                temperature: 0.7,
-                max_tokens: 500
-            })
-        });
-
-        const data = await response.json();
-
-        if (data.error) {
-            console.error("Mistral Error:", data.error);
-            return `Maaf, terjadi masalah pada layanan AI: ${data.error.message || "Unknown error"}`;
+            const data = await response.json();
+            const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+            if (text) return text;
+            console.warn("Gemini empty response, falling back to Mistral...");
+        } catch (error) {
+            console.error("Gemini Error:", error);
         }
-
-        return data.choices?.[0]?.message?.content || "Maaf, saya tidak mendapatkan jawaban.";
-    } catch (error: any) {
-        console.error("AI Fetch Error:", error);
-        return `Maaf, gagal menyambung ke otak AI. (${error.message})`;
     }
+
+    // 2. Fallback to Mistral
+    if (mistralKey) {
+        try {
+            const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${mistralKey}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    model: "mistral-small-latest",
+                    messages: [
+                        { role: "system", content: systemInstructions },
+                        ...history.map(h => ({
+                            role: h.role === "user" ? "user" : "assistant",
+                            content: h.text
+                        })),
+                        { role: "user", content: userMessage }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 500
+                })
+            });
+
+            const data = await response.json();
+            return data.choices?.[0]?.message?.content || "Maaf, sedang ada kendala teknis. Coba lagi nanti.";
+        } catch (error) {
+            console.error("Mistral Fallback Error:", error);
+        }
+    }
+
+    return "Maaf, semua otak AI sedang offline. Silakan hubungi admin langsung.";
 }
