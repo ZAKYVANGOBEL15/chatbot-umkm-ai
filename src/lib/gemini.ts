@@ -67,14 +67,20 @@ Tugas Utama & Etika Percakapan:
     // 1. Try Gemini First (Priority)
     if (geminiKey) {
         try {
+            // Using v1 and Priming Strategy (most compatible way)
             const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${geminiKey}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    system_instruction: {
-                        parts: [{ text: systemInstructions }]
-                    },
                     contents: [
+                        {
+                            role: "user",
+                            parts: [{ text: `INTRUKSI SISTEM (Harap dipatuhi sepenuhnya):\n${systemInstructions}` }]
+                        },
+                        {
+                            role: "model",
+                            parts: [{ text: `Baik, saya mengerti. Saya adalah Customer Service AI untuk ${businessContext.name} dan akan melayani pelanggan sesuai instruksi tersebut.` }]
+                        },
                         ...history.map(h => ({
                             role: h.role === "user" ? "user" : "model",
                             parts: [{ text: h.text }]
