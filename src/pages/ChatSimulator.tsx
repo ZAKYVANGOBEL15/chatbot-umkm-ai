@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Send, Bot, Trash2, Smartphone, Lock, ThumbsDown } from 'lucide-react';
+import { Send, Bot, Trash2, Smartphone, Lock, ThumbsDown, MessageSquare } from 'lucide-react';
 import { auth, db } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { doc, getDoc, collection, getDocs, updateDoc } from 'firebase/firestore';
