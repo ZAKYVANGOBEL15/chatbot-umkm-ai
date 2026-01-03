@@ -200,9 +200,9 @@ export default function Dashboard() {
 
             {/* Welcome Section */}
             <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#061E29] to-[#0f3443] text-white shadow-2xl p-8 lg:p-12 border border-[#1a3b4b]/50 group">
-                 {/* Texture Overlay */}
+                {/* Texture Overlay */}
                 <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
-                
+
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div>
                         <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] font-bold tracking-widest uppercase text-emerald-300 mb-4 backdrop-blur-sm">
@@ -210,7 +210,7 @@ export default function Dashboard() {
                             System Operational
                         </span>
                         <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white tracking-tight">
-                            Halo, {userName || 'Partner'}! 👋
+                            Halo, {userName || 'Partner'}!
                         </h2>
                         <p className="text-neutral-300 max-w-xl text-base lg:text-lg leading-relaxed font-light">
                             Bisnis Anda berjalan otomatis hari ini. Cek prospek terbaru di bawah atau latih AI Anda agar semakin cerdas.
@@ -223,7 +223,7 @@ export default function Dashboard() {
                         Setup Knowledge Base <ArrowRight size={20} />
                     </Link>
                 </div>
-                
+
                 {/* Abstract Decoration */}
                 <div className="absolute -right-20 -bottom-32 w-80 h-80 bg-emerald-500/20 blur-[100px] rounded-full pointer-events-none group-hover:bg-emerald-500/30 transition-all duration-1000"></div>
             </div>
@@ -232,7 +232,7 @@ export default function Dashboard() {
             <div className="flex items-center gap-3 border-l-4 border-[#061E29] pl-4 py-1">
                 <h3 className="text-xl font-bold text-[#061E29]">Ringkasan Bisnis</h3>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {/* Card 1 */}
                 <div className="group relative bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
@@ -374,11 +374,10 @@ export default function Dashboard() {
                                             </div>
                                         </td>
                                         <td className="p-5 text-center">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${
-                                                customer.status === 'new' 
-                                                ? 'bg-blue-50 text-blue-600 border-blue-100' 
+                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${customer.status === 'new'
+                                                ? 'bg-blue-50 text-blue-600 border-blue-100'
                                                 : 'bg-neutral-100 text-neutral-500 border-neutral-200'
-                                            }`}>
+                                                }`}>
                                                 <span className={`w-1.5 h-1.5 rounded-full ${customer.status === 'new' ? 'bg-blue-500 animate-pulse' : 'bg-neutral-400'}`}></span>
                                                 {customer.status || 'New'}
                                             </span>
