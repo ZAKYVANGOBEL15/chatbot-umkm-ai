@@ -87,9 +87,16 @@ Tugas Utama & Etika Percakapan:
             });
 
             const data = await response.json();
+
+            if (data.error) {
+                console.error("Gemini API Error Detail:", JSON.stringify(data.error, null, 2));
+            }
+
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
             if (text) return text;
+
             console.warn("Gemini empty response, falling back to Mistral...");
+            if (!data.candidates) console.warn("Full Gemini Response:", JSON.stringify(data, null, 2));
         } catch (error) {
             console.error("Gemini Error:", error);
         }
