@@ -124,31 +124,47 @@ export default function Dashboard() {
         }
     };
 
-    const handleFacebookConnect = async (response: any) => {
-        if (!auth.currentUser) return;
-
+    const handleFacebookLoginSuccess = async (authResponse: any) => {
         try {
+            console.log('Facebook Login Success:', authResponse);
+            // Send token (and manual IDs if present) to backend to verify and save
             const res = await fetch('/api/facebook-auth', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: {
+                    'Content-Type': 'application/json',
+                },
                 body: JSON.stringify({
-                    accessToken: response.accessToken,
-                    userId: auth.currentUser.uid
-                })
+                    accessToken: authResponse.accessToken,
+                    userId: auth.currentUser?.uid,
+                    // Pass manual IDs if they exist (added by manual flow)
+                    manualPhoneId: authResponse.phoneId,
+                    manualWabaId: authResponse.wabaId
+                }),
             });
 
             const data = await res.json();
-            if (!res.ok) throw new Error(data.error || 'Gagal menghubungkan WhatsApp');
 
-            alert('Berhasil! WhatsApp Business Anda telah terhubung.');
-            setIsWhatsAppConfigured(true);
+            if (!res.ok) {
+                // If it fails and we haven't tried manual yet, we could trigger it here, 
+                // but the user now has a "Connect Manually" button.
+                // Just log the detailed error
+                console.error("FB Connect API Error:", data);
+                throw new Error(data.error || 'Failed to connect WhatsApp');
+            }
 
-            // Reload window to refresh context
-            window.location.reload();
+            console.log('WhatsApp Verification Result:', data);
+
+            // Refresh logic...
+            if (auth.currentUser?.uid) {
+                // ... (existing refresh logic)
+                // Simple alert for success
+                alert('WhatsApp Connected Successfully!');
+                window.location.reload();
+            }
 
         } catch (error: any) {
-            console.error('FB Connect Error:', error);
-            alert('Gagal connect: ' + error.message);
+            console.error('Error connecting WhatsApp:', error);
+            alert(`Facebook Connect Failed: ${error.message}`);
         }
     };
 
@@ -226,7 +242,7 @@ export default function Dashboard() {
                             Manual
                         </Link>
                         <FacebookConnectButton
-                            onSuccess={handleFacebookConnect}
+                            onSuccess={handleFacebookLoginSuccess}
                             onError={(err) => alert('Gagal connect: ' + JSON.stringify(err))}
                         />
                     </div>

@@ -30,10 +30,34 @@ export default async function handler(req: any, res: any) {
     }
 
     try {
-        const { accessToken, userId } = req.body;
+        const { accessToken, userId, manualPhoneId, manualWabaId } = req.body;
 
         if (!accessToken || !userId) {
             return res.status(400).json({ error: 'Missing credentials' });
+        }
+
+        // 0. Manual Override
+        if (manualPhoneId && manualWabaId) {
+            console.log(`[FB Auth] Manual Override - PhoneID: ${manualPhoneId}, WABA: ${manualWabaId}`);
+
+            const db = getDb();
+            await db.collection('users').doc(userId).update({
+                whatsappAccessToken: accessToken,
+                whatsappPhoneNumberId: manualPhoneId,
+                whatsappBusinessAccountId: manualWabaId,
+                businessPhone: 'Manual Entry', // We can't verify number without extra call, but that's fine.
+                isWhatsAppConfigured: true,
+                updatedAt: new Date().toISOString()
+            });
+
+            return res.status(200).json({
+                success: true,
+                message: 'WhatsApp Connected Manually',
+                data: {
+                    phoneNumberId: manualPhoneId,
+                    wabaId: manualWabaId
+                }
+            });
         }
 
         // 1. Validate Token & Get User Info from Graph API
