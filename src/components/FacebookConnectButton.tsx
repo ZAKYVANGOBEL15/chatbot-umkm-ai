@@ -42,12 +42,8 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
                 }
             },
             {
-                // Scopes required for WhatsApp Embedded Signup
-                scope: 'whatsapp_business_management,whatsapp_business_messaging',
-                extras: {
-                    feature: 'whatsapp_embedded_signup',
-                    // sessionInfoVersion: '2' // Optional
-                }
+                // Scopes required for WhatsApp Management
+                scope: 'whatsapp_business_management,whatsapp_business_messaging'
             }
         );
     };
@@ -66,8 +62,8 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
             onClick={handleLogin}
             disabled={!isSdkLoaded}
             className={`flex items-center gap-2 px-4 py-2 rounded-lg font-medium transition-all ${isSdkLoaded
-                    ? 'bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-md'
-                    : 'bg-gray-200 text-gray-400 cursor-wait'
+                ? 'bg-[#1877F2] hover:bg-[#166fe5] text-white shadow-md'
+                : 'bg-gray-200 text-gray-400 cursor-wait'
                 }`}
         >
             <MessageCircle size={20} />
