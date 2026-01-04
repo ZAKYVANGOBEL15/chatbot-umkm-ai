@@ -16,8 +16,14 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
     const [showManualInput, setShowManualInput] = React.useState(false);
     const [manualValues, setManualValues] = React.useState({ phoneId: '', wabaId: '' });
     const [tempToken, setTempToken] = React.useState('');
+    const isManualModeRef = React.useRef(false);
 
-    const handleLogin = () => {
+    const handleLogin = (isManual: boolean = false) => {
+        isManualModeRef.current = isManual;
+        if (isManual) {
+            setShowManualInput(true);
+        }
+
         if (!isSdkLoaded) {
             console.warn('Facebook SDK not loaded yet');
             return;
@@ -34,7 +40,8 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
                     console.log('Welcome!  Fetching your information.... ');
                     console.log('Access Token:', response.authResponse.accessToken);
 
-                    if (showManualInput) {
+                    // Check the Ref, not the state, to avoid stale closure issues
+                    if (isManualModeRef.current) {
                         setTempToken(response.authResponse.accessToken);
                         return; // Wait for manual submit
                     }
