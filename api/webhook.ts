@@ -203,6 +203,9 @@ export default async function handler(req: any, res: any) {
                                 await customersRef.doc(customerId).update({
                                     name: leadData.name,
                                     phone: leadData.phone, // Ensure phone is consistent
+                                    nik: leadData.nik || '-',
+                                    address: leadData.address || '-',
+                                    dob: leadData.dob || '-',
                                     phoneNumberId: phoneNumberId,
                                     status: 'new', // Or 'lead'
                                     lastInteraction: new Date().toISOString()

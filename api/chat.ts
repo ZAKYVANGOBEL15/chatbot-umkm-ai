@@ -136,6 +136,9 @@ export default async function handler(req: any, res: any) {
                     await db.collection('users').doc(userId).collection('customers').add({
                         name: leadData.name,
                         phone: leadData.phone,
+                        nik: leadData.nik || '-',
+                        address: leadData.address || '-',
+                        dob: leadData.dob || '-',
                         status: 'new', // new, contacted, converted
                         source: 'chatbot',
                         createdAt: new Date().toISOString(),

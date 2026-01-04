@@ -431,6 +431,13 @@ export default function Dashboard() {
                                 <tr className="bg-neutral-50/50 text-xs font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-100">
                                     <th className="p-5 pl-8">{businessType === 'medical' ? 'Nama Pasien' : 'Nama Pelanggan'}</th>
                                     <th className="p-5">Kontak WhatsApp</th>
+                                    {businessType === 'medical' && (
+                                        <>
+                                            <th className="p-5">NIK</th>
+                                            <th className="p-5">Tgl Lahir</th>
+                                            <th className="p-5">Alamat</th>
+                                        </>
+                                    )}
                                     <th className="p-5">Waktu Masuk</th>
                                     <th className="p-5 text-center">Status</th>
                                     <th className="p-5 text-center pr-8">Aksi</th>
@@ -466,6 +473,13 @@ export default function Dashboard() {
                                                 <span className="text-neutral-300 text-xs italic">Tidak ada nomor</span>
                                             )}
                                         </td>
+                                        {businessType === 'medical' && (
+                                            <>
+                                                <td className="p-5 text-xs font-mono text-neutral-600">{customer.nik || '-'}</td>
+                                                <td className="p-5 text-xs text-neutral-600">{customer.dob || '-'}</td>
+                                                <td className="p-5 text-xs text-neutral-600 max-w-[150px] truncate" title={customer.address}>{customer.address || '-'}</td>
+                                            </>
+                                        )}
                                         <td className="p-5">
                                             <div className="flex flex-col gap-0.5">
                                                 <span className="text-sm font-medium text-neutral-700">
