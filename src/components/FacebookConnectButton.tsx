@@ -43,7 +43,7 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
             },
             {
                 // Scopes required for WhatsApp Management
-                scope: 'whatsapp_business_management,whatsapp_business_messaging,business_management'
+                scope: 'whatsapp_business_management,whatsapp_business_messaging'
             }
         );
     };
