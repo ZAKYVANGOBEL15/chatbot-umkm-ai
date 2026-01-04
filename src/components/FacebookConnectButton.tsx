@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import { useFacebookSdk } from '../hooks/useFacebookSdk';
 import { MessageCircle } from 'lucide-react';
 
@@ -83,7 +84,7 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
     }
 
     if (showManualInput && tempToken) {
-        return (
+        return ReactDOM.createPortal(
             <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-[9999]">
                 <div className="bg-white p-6 rounded-lg shadow-xl w-96">
                     <h3 className="text-lg font-bold mb-4">Manual WhatsApp Connection</h3>
@@ -129,7 +130,8 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
                         </div>
                     </div>
                 </div>
-            </div>
+            </div>,
+            document.body
         );
     }
 
