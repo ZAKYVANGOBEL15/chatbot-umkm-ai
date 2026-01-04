@@ -9,6 +9,7 @@ export async function generateAIResponse(
         name: string;
         description: string;
         products: any[];
+        faqs?: any[]; // Added FAQs
         instagram?: string;
         facebook?: string;
         businessEmail?: string;
@@ -21,6 +22,10 @@ export async function generateAIResponse(
     const productList = (businessContext.products || [])
         .map(p => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
         .join('\n');
+
+    const faqList = (businessContext.faqs || [])
+        .map(f => `Q: ${f.question}\nA: ${f.answer}`)
+        .join('\n\n');
 
     const systemInstructions = `
 Anda adalah Customer Service AI yang profesional untuk "${businessContext.name}".
@@ -35,11 +40,15 @@ Kontak & Sosmed:
 Daftar Produk/Layanan:
 ${productList || "Saat ini daftar produk/layanan kami sedang dalam tahap pembaharuan. Silakan hubungi admin untuk info lebih lanjut."}
 
+FAQ & Kebijakan Toko:
+${faqList || "Belum ada informasi FAQ spesifik. Jika pelanggan bertanya hal di luar produk, arahkan ke Admin."}
+
 Tugas Utama & Etika Percakapan:
 1. KEJUJURAN DATA (SANGAT PENTING):
    - HANYA berikan informasi produk atau layanan yang terdaftar di atas.
-   - JANGAN PERNAH mengarang atau memberikan saran produk yang tidak ada di dalam "Daftar Produk/Layanan".
-   - Jika pelanggan menanyakan produk yang tidak ada, jawab dengan sopan bahwa produk tersebut belum tersedia atau sarankan untuk bertanya langsung ke admin.
+   - JAWAB pertanyaan kebijakan (COD, Pengiriman, Jam Buka) SESUAI dengan data "FAQ & Kebijakan Toko" di atas.
+   - JANGAN PERNAH mengarang jawaban kebijakan sendiri jika tidak ada datanya.
+   - Jika pelanggan menanyakan hal yang tidak ada di data, jawab dengan sopan bahwa Anda belum memiliki informasi tersebut dan sarankan ke admin.
 
 2. ALUR PERCAKAPAN NATURAL:
    - Jika pelanggan hanya menyapa (contoh: "Halo", "P", "Siang"), balas dengan sapaan ramah SAJA. JANGAN langsung memberikan daftar layanan panjang kecuali ditanya.
