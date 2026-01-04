@@ -251,6 +251,7 @@ export async function generateAIResponse(
 ) {
     const geminiKey = (typeof process !== 'undefined' ? process.env.VITE_GEMINI_API_KEY : (import.meta as any).env?.VITE_GEMINI_API_KEY) || '';
     const mistralKey = (typeof process !== 'undefined' ? (process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY) : (import.meta as any).env?.VITE_MISTRAL_API_KEY) || '';
+    const openrouterKey = (typeof process !== 'undefined' ? (process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY) : (import.meta as any).env?.VITE_OPENROUTER_API_KEY) || '';
 
     // Use business-type-specific system prompt
     const businessType = businessContext.businessType || 'retail'; // Default to retail if not specified
@@ -296,14 +297,49 @@ export async function generateAIResponse(
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
             if (text) return formatAIResponse(text);
 
-            console.warn("Gemini empty response, falling back to Mistral...");
-            if (!data.candidates) console.warn("Full Gemini Response:", JSON.stringify(data, null, 2));
+            console.warn("Gemini empty response, falling back...");
         } catch (error) {
             console.error("Gemini Error:", error);
         }
     }
 
-    // 2. Fallback to Mistral
+    // 2. Try OpenRouter (Llama 3.3 70B Free)
+    if (openrouterKey.trim()) {
+        try {
+            const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Authorization": `Bearer ${openrouterKey.trim()}`,
+                    "Content-Type": "application/json",
+                    "HTTP-Referer": "https://nusavite.vercel.app", // Optional for OpenRouter
+                    "X-Title": "ChatBot UMKM AI"
+                },
+                body: JSON.stringify({
+                    model: "meta-llama/llama-3.3-70b-instruct:free",
+                    messages: [
+                        { role: "system", content: systemInstructions },
+                        ...history.map(h => ({
+                            role: h.role === "user" ? "user" : "assistant",
+                            content: h.text
+                        })),
+                        { role: "user", content: userMessage }
+                    ],
+                    temperature: 0.7,
+                    max_tokens: 500
+                })
+            });
+
+            const data = await response.json();
+            const content = data.choices?.[0]?.message?.content;
+            if (content) return formatAIResponse(content);
+
+            console.warn("OpenRouter empty response, falling back to Mistral...");
+        } catch (error) {
+            console.error("OpenRouter Error:", error);
+        }
+    }
+
+    // 3. Fallback to Mistral
     if (mistralKey) {
         try {
             const response = await fetch("https://api.mistral.ai/v1/chat/completions", {
