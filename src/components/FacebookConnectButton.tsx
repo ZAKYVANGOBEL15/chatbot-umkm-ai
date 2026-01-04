@@ -147,7 +147,7 @@ export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
                 {isSdkLoaded ? 'Connect WhatsApp' : 'Loading SDK...'}
             </button>
             <button
-                onClick={() => { setShowManualInput(true); handleLogin(); }}
+                onClick={() => { setShowManualInput(true); handleLogin(true); }}
                 className="text-xs text-gray-500 hover:text-blue-600 underline"
             >
                 Having trouble? Connect Manually
