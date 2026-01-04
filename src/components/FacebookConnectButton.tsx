@@ -9,7 +9,6 @@ interface FacebookConnectButtonProps {
 
 export const FacebookConnectButton: React.FC<FacebookConnectButtonProps> = ({
     onSuccess,
-    onError,
 }) => {
     // No longer needing FB SDK hooks for this manual mode
     const [showManualInput, setShowManualInput] = React.useState(false);
