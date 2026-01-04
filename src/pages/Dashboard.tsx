@@ -18,6 +18,7 @@ export default function Dashboard() {
     const [userId, setUserId] = useState('');
     const [fetchError, setFetchError] = useState<string | null>(null);
     const [customers, setCustomers] = useState<any[]>([]); // Array to store customer data
+    const [businessType, setBusinessType] = useState<'retail' | 'medical'>('retail'); // Business type
 
     useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -64,6 +65,7 @@ export default function Dashboard() {
             if (userDoc.exists()) {
                 const data = userDoc.data();
                 setUserName(data.name || '');
+                setBusinessType(data.businessType || 'retail'); // Get business type
                 const status = data.subscriptionStatus || 'trial';
                 setSubscriptionStatus(status);
 
@@ -319,7 +321,7 @@ export default function Dashboard() {
                         <h3 className="text-3xl font-bold text-[#061E29] mb-1">
                             {loading ? '...' : customerCount}
                         </h3>
-                        <p className="text-sm text-neutral-500 font-medium">Prospek / Leads Baru</p>
+                        <p className="text-sm text-neutral-500 font-medium">{businessType === 'medical' ? 'Pasien Baru' : 'Prospek / Leads Baru'}</p>
                     </div>
                 </div>
 
@@ -350,8 +352,8 @@ export default function Dashboard() {
                             <Users size={20} />
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-[#061E29]">Daftar Prospek Masuk</h3>
-                            <p className="text-sm text-neutral-500 font-medium">Pelanggan yang memberikan kontak via Chatbot.</p>
+                            <h3 className="text-lg font-bold text-[#061E29]">{businessType === 'medical' ? 'Daftar Pasien Masuk' : 'Daftar Prospek Masuk'}</h3>
+                            <p className="text-sm text-neutral-500 font-medium">{businessType === 'medical' ? 'Pasien yang mendaftar via Chatbot.' : 'Pelanggan yang memberikan kontak via Chatbot.'}</p>
                         </div>
                     </div>
                     <div className="bg-[#061E29] text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md shadow-[#061E29]/20">
@@ -377,7 +379,7 @@ export default function Dashboard() {
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="bg-neutral-50/50 text-xs font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-100">
-                                    <th className="p-5 pl-8">Nama Pelanggan</th>
+                                    <th className="p-5 pl-8">{businessType === 'medical' ? 'Nama Pasien' : 'Nama Pelanggan'}</th>
                                     <th className="p-5">Kontak WhatsApp</th>
                                     <th className="p-5">Waktu Masuk</th>
                                     <th className="p-5 text-center">Status</th>
