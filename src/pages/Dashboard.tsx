@@ -124,6 +124,34 @@ export default function Dashboard() {
         }
     };
 
+    const handleFacebookConnect = async (response: any) => {
+        if (!auth.currentUser) return;
+
+        try {
+            const res = await fetch('/api/facebook-auth', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    accessToken: response.accessToken,
+                    userId: auth.currentUser.uid
+                })
+            });
+
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Gagal menghubungkan WhatsApp');
+
+            alert('Berhasil! WhatsApp Business Anda telah terhubung.');
+            setIsWhatsAppConfigured(true);
+
+            // Reload window to refresh context
+            window.location.reload();
+
+        } catch (error: any) {
+            console.error('FB Connect Error:', error);
+            alert('Gagal connect: ' + error.message);
+        }
+    };
+
     return (
         <div className="space-y-8 max-w-full overflow-hidden">
             {/* Subscription Status Banner */}
@@ -198,11 +226,8 @@ export default function Dashboard() {
                             Manual
                         </Link>
                         <FacebookConnectButton
-                            onSuccess={(response) => {
-                                console.log("WhatsApp Linked!", response);
-                                alert("Success! WhatsApp Connected via Embedded Signup.");
-                                setIsWhatsAppConfigured(true);
-                            }}
+                            onSuccess={handleFacebookConnect}
+                            onError={(err) => alert('Gagal connect: ' + JSON.stringify(err))}
                         />
                     </div>
                 )}
