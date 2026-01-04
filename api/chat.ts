@@ -84,6 +84,7 @@ export default async function handler(req: any, res: any) {
                 instagram: userData?.instagram || '',
                 facebook: userData?.facebook || '',
                 businessEmail: userData?.businessEmail || '',
+                businessType: userData?.businessType || 'retail',
                 products: products.length > 0 ? products : [],
                 faqs: faqs.length > 0 ? faqs : []
             };

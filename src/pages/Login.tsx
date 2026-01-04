@@ -35,8 +35,15 @@ export default function Login() {
                     subscriptionStatus: 'trial',
                     subscriptionPlan: 'basic'
                 });
+                navigate('/onboarding');
+            } else {
+                const userData = docSnap.data();
+                if (!userData.businessName || !userData.businessType) {
+                    navigate('/onboarding');
+                } else {
+                    navigate('/dashboard');
+                }
             }
-            navigate('/dashboard');
         } catch (err: any) {
             setError(getFriendlyErrorMessage(err.code));
         } finally {

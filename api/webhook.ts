@@ -141,7 +141,8 @@ export default async function handler(req: any, res: any) {
                         products: products,
                         instagram: userData.instagram,
                         facebook: userData.facebook,
-                        businessEmail: userData.businessEmail
+                        businessEmail: userData.businessEmail,
+                        businessType: userData.businessType || 'retail'
                     };
 
                     // C. Identify Customer & Fetch History
