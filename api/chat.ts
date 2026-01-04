@@ -75,13 +75,17 @@ export default async function handler(req: any, res: any) {
             const productsSnap = await db.collection('users').doc(userId).collection('products').get();
             const products = productsSnap.docs.map(d => d.data());
 
+            const faqsSnap = await db.collection('users').doc(userId).collection('faqs').get();
+            const faqs = faqsSnap.docs.map(d => d.data());
+
             finalContext = {
                 name: userData?.businessName || 'Bisnis Kami',
                 description: userData?.businessDescription || 'UMKM Indonesia.',
                 instagram: userData?.instagram || '',
                 facebook: userData?.facebook || '',
                 businessEmail: userData?.businessEmail || '',
-                products: products.length > 0 ? products : []
+                products: products.length > 0 ? products : [],
+                faqs: faqs.length > 0 ? faqs : []
             };
         } catch (dbErr) {
             console.error('Error fetching context from DB:', dbErr);

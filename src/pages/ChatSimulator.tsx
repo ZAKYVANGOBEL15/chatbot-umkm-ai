@@ -34,15 +34,18 @@ export default function ChatSimulator() {
                 // Load Business Context
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
+                const faqsSnap = await getDocs(collection(db, 'users', user.uid, 'faqs'));
 
                 const products = productsSnap.docs.map(d => d.data());
+                const faqs = faqsSnap.docs.map(d => d.data());
                 const userData = userDoc.data();
 
                 if (userData) {
                     setBusinessContext({
                         name: userData.businessName || 'Toko Kami',
                         description: userData.businessDescription || 'Toko serba ada.',
-                        products: products
+                        products: products,
+                        faqs: faqs
                     });
 
                     // Check Expiration
@@ -163,7 +166,7 @@ export default function ChatSimulator() {
         <div className="h-full flex flex-col lg:flex-row gap-6">
             {/* Main Chat Area */}
             <div className="flex-1 bg-white rounded-2xl shadow-sm border border-neutral-200/60 flex flex-col overflow-hidden relative min-h-0">
-                
+
                 {/* Modern Header */}
                 <div className="bg-white/80 backdrop-blur-md p-4 flex items-center justify-between border-b border-neutral-100 z-10 sticky top-0">
                     <div className="flex items-center gap-4">
@@ -181,9 +184,9 @@ export default function ChatSimulator() {
                             </div>
                         </div>
                     </div>
-                    <button 
-                        onClick={handleReset} 
-                        className="group p-2.5 hover:bg-red-50 rounded-xl text-neutral-400 hover:text-red-500 transition-all duration-300 border border-transparent hover:border-red-100" 
+                    <button
+                        onClick={handleReset}
+                        className="group p-2.5 hover:bg-red-50 rounded-xl text-neutral-400 hover:text-red-500 transition-all duration-300 border border-transparent hover:border-red-100"
                         title="Reset Percakapan"
                     >
                         <Trash2 size={20} className="group-hover:scale-110 transition-transform" />
@@ -195,7 +198,7 @@ export default function ChatSimulator() {
                     {messages.map((msg, idx) => (
                         <div key={idx} className={`flex flex-col ${msg.role === 'user' ? 'items-end' : 'items-start'} animate-in fade-in slide-in-from-bottom-4 duration-500 ease-out`}>
                             <div className={`flex ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'} items-end gap-2 max-w-[85%] lg:max-w-[75%]`}>
-                                
+
                                 {/* Avatar for Bot messages only */}
                                 {msg.role === 'model' && (
                                     <div className="w-8 h-8 rounded-full bg-white border border-neutral-100 flex items-center justify-center shrink-0 mb-1 shadow-sm text-[#061E29]">
@@ -265,7 +268,7 @@ export default function ChatSimulator() {
                                         >
                                             {isSavingCorrection ? (
                                                 <>
-                                                    <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin"/>
+                                                    <span className="w-3 h-3 border-2 border-white/30 border-t-white rounded-full animate-spin" />
                                                     Menyimpan...
                                                 </>
                                             ) : 'Simpan Perbaikan'}
@@ -275,7 +278,7 @@ export default function ChatSimulator() {
                             )}
                         </div>
                     ))}
-                    
+
                     {loading && (
                         <div className="flex items-center gap-2 ml-1">
                             <div className="w-8 h-8 rounded-full bg-white border border-neutral-100 flex items-center justify-center shrink-0 shadow-sm">
@@ -312,7 +315,7 @@ export default function ChatSimulator() {
                             </a>
                         </div>
                     )}
-                    
+
                     <form onSubmit={handleSend} className="max-w-4xl mx-auto relative group">
                         <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                             <div className="w-8 h-8 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-400">
@@ -353,7 +356,7 @@ export default function ChatSimulator() {
                         </div>
                         <h3 className="font-bold text-neutral-800">Simulator Mode</h3>
                     </div>
-                    
+
                     <p className="text-sm text-neutral-600 mb-6 leading-relaxed">
                         Pratinjau respons chatbot di WhatsApp. Klik tombol <ThumbsDown size={14} className="inline text-red-400 mx-1" /> jika jawaban salah untuk melatih AI secara instan.
                     </p>
@@ -374,9 +377,15 @@ export default function ChatSimulator() {
                                         {businessContext?.products?.length || 0} items
                                     </span>
                                 </div>
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-neutral-500">FAQs Loaded</span>
+                                    <span className="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
+                                        {businessContext?.faqs?.length || 0} items
+                                    </span>
+                                </div>
                             </div>
                         </div>
-                        
+
                         <div className="p-4 rounded-xl bg-gradient-to-br from-[#061E29] to-neutral-800 text-white shadow-lg relative overflow-hidden group cursor-default">
                             <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity">
                                 <Bot size={64} />
