@@ -103,6 +103,44 @@ export default function Dashboard() {
         }
     };
 
+    const handleExportExcel = () => {
+        if (customers.length === 0) {
+            alert("Tidak ada data untuk diekspor.");
+            return;
+        }
+
+        // Define headers - specialized for Klinik
+        const headers = ["Nama Pasien", "Kontak WhatsApp", "NIK", "Tanggal Lahir", "Alamat", "Tanggal Daftar", "Waktu Daftar"];
+
+        // Map customers to rows
+        const rows = customers.map(customer => [
+            customer.name || '-',
+            customer.phone || '-',
+            customer.nik || '-',
+            customer.dob || '-',
+            customer.address || '-',
+            customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('id-ID') : '-',
+            customer.createdAt ? new Date(customer.createdAt).toLocaleTimeString('id-ID') : '-'
+        ]);
+
+        // Create CSV content
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+        ].join('\n');
+
+        // Create blob and download link
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.setAttribute("href", url);
+        link.setAttribute("download", `data_pasien_${new Date().toISOString().split('T')[0]}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
     const handleUpgrade = async () => {
         if (!userId) return;
         setLoading(true);
@@ -356,8 +394,19 @@ export default function Dashboard() {
                             <p className="text-sm text-neutral-500 font-medium">{businessType === 'medical' ? 'Pasien yang mendaftar via Chatbot.' : 'Pelanggan yang memberikan kontak via Chatbot.'}</p>
                         </div>
                     </div>
-                    <div className="bg-[#061E29] text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md shadow-[#061E29]/20">
-                        {customerCount} Total
+                    <div className="flex items-center gap-3">
+                        <div className="bg-[#061E29] text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md shadow-[#061E29]/20">
+                            {customerCount} Total
+                        </div>
+                        {businessType === 'medical' && (
+                            <button
+                                onClick={handleExportExcel}
+                                className="px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold hover:bg-emerald-200 transition-colors flex items-center gap-2"
+                            >
+                                <ShoppingBag size={14} className="rotate-180" />
+                                Export Excel
+                            </button>
+                        )}
                     </div>
                 </div>
 
