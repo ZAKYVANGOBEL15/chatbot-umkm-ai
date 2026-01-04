@@ -123,14 +123,15 @@ export default function Dashboard() {
             customer.createdAt ? new Date(customer.createdAt).toLocaleTimeString('id-ID') : '-'
         ]);
 
-        // Create CSV content
+        // Create CSV content with semicolon delimiter (best for Excel in Indonesia)
         const csvContent = [
-            headers.join(','),
-            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(','))
+            headers.join(';'),
+            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
         ].join('\n');
 
-        // Create blob and download link
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        // Add UTF-8 BOM to ensure Excel opens it with correct encoding and split columns
+        const BOM = '\uFEFF';
+        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement("a");
         link.setAttribute("href", url);
