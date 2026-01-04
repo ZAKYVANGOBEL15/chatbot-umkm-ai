@@ -78,7 +78,13 @@ export default async function handler(req: any, res: any) {
         }
 
         if (!phoneNumberId) {
-            return res.status(404).json({ error: 'No WhatsApp Phone Number found linked to this account.' });
+            return res.status(404).json({
+                error: 'No WhatsApp Phone Number found linked to this account.',
+                debug: {
+                    accountsData: accountsData,
+                    message: "Please check if your Facebook account has a WhatsApp Business Account set up."
+                }
+            });
         }
 
         console.log(`[FB Auth] Found WhatsApp Info - PhoneID: ${phoneNumberId}, Number: ${businessPhone}, WABA: ${wabaId}`);
