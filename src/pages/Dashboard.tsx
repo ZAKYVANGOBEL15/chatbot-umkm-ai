@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, User, ExternalLink, Trash2, Zap } from 'lucide-react';
+import { FacebookConnectButton } from '../components/FacebookConnectButton';
 import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -189,12 +190,21 @@ export default function Dashboard() {
                     </div>
                 </div>
                 {!isWhatsAppConfigured && (
-                    <Link
-                        to="/dashboard/settings"
-                        className="px-4 py-2 bg-amber-600 text-white text-[10px] font-extrabold uppercase tracking-wider rounded-lg hover:bg-amber-700 transition-colors"
-                    >
-                        Setup Sekarang
-                    </Link>
+                    <div className="flex gap-2">
+                        <Link
+                            to="/dashboard/settings"
+                            className="px-4 py-2 bg-white text-amber-600 border border-amber-200 text-[10px] font-extrabold uppercase tracking-wider rounded-lg hover:bg-amber-50 transition-colors flex items-center"
+                        >
+                            Manual
+                        </Link>
+                        <FacebookConnectButton
+                            onSuccess={(response) => {
+                                console.log("WhatsApp Linked!", response);
+                                alert("Success! WhatsApp Connected via Embedded Signup.");
+                                setIsWhatsAppConfigured(true);
+                            }}
+                        />
+                    </div>
                 )}
             </div>
 
@@ -216,6 +226,7 @@ export default function Dashboard() {
                             Bisnis Anda berjalan otomatis hari ini. Cek prospek terbaru di bawah atau latih AI Anda agar semakin cerdas.
                         </p>
                     </div>
+
                     <Link
                         to="/dashboard/knowledge"
                         className="flex-shrink-0 inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-[#061E29] rounded-2xl font-bold transition-all shadow-lg shadow-emerald-900/20 hover:shadow-emerald-500/30 hover:-translate-y-1 active:scale-95"
