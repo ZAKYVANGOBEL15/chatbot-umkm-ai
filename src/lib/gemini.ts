@@ -195,6 +195,40 @@ PENTING: Prioritaskan kepuasan customer dan bangun trust. Happy customer = repea
 `.trim();
 }
 
+/**
+ * Post-process AI response to fix common formatting issues
+ */
+function formatAIResponse(text: string): string {
+    // Fix compressed data fields - ensure each field is on a new line
+    // Pattern: "Field1: Field2: Field3:" -> "Field1:\nField2:\nField3:"
+
+    // Common medical data fields
+    const medicalFields = [
+        'Nama Lengkap:',
+        'NIK:',
+        'Tanggal Lahir',
+        'Alamat Lengkap:',
+        'Nomor WhatsApp:',
+        'Nomor Telepon:'
+    ];
+
+    let formatted = text;
+
+    // Fix pattern where fields are on same line
+    // Example: "Nama Lengkap: NIK: Tanggal Lahir:" -> "Nama Lengkap:\nNIK:\nTanggal Lahir:"
+    for (let i = 0; i < medicalFields.length; i++) {
+        for (let j = 0; j < medicalFields.length; j++) {
+            if (i !== j) {
+                // Replace "Field1: Field2:" with "Field1:\n\nField2:"
+                const pattern = new RegExp(`(${medicalFields[i].replace(/[()]/g, '\\$&')})\\s+(${medicalFields[j].replace(/[()]/g, '\\$&')})`, 'g');
+                formatted = formatted.replace(pattern, '$1\n\n$2');
+            }
+        }
+    }
+
+    return formatted;
+}
+
 export async function generateAIResponse(
     userMessage: string,
     businessContext: {
@@ -254,7 +288,7 @@ export async function generateAIResponse(
             }
 
             const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
-            if (text) return text;
+            if (text) return formatAIResponse(text);
 
             console.warn("Gemini empty response, falling back to Mistral...");
             if (!data.candidates) console.warn("Full Gemini Response:", JSON.stringify(data, null, 2));
@@ -288,7 +322,8 @@ export async function generateAIResponse(
             });
 
             const data = await response.json();
-            return data.choices?.[0]?.message?.content || "Maaf, sedang ada kendala teknis. Coba lagi nanti.";
+            const content = data.choices?.[0]?.message?.content || "Maaf, sedang ada kendala teknis. Coba lagi nanti.";
+            return formatAIResponse(content);
         } catch (error) {
             console.error("Mistral Fallback Error:", error);
         }
