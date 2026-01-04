@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles, Instagram, Facebook, Mail, Pencil, X } from 'lucide-react';
+import { Plus, Trash2, Save, Store, Package, Globe, Loader2, Sparkles, Instagram, Facebook, Mail, Pencil, X, HelpCircle, MessageCircleQuestion } from 'lucide-react';
 import { doc, getDoc, updateDoc, collection, addDoc, onSnapshot, deleteDoc, query } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 
@@ -10,6 +10,12 @@ interface Product {
     description: string;
 }
 
+interface FAQ {
+    id: string;
+    question: string;
+    answer: string;
+}
+
 export default function KnowledgeBase() {
     const [businessName, setBusinessName] = useState('');
     const [businessDesc, setBusinessDesc] = useState('');
@@ -17,12 +23,18 @@ export default function KnowledgeBase() {
     const [facebook, setFacebook] = useState('');
     const [businessEmail, setBusinessEmail] = useState('');
     const [products, setProducts] = useState<Product[]>([]);
+    const [faqs, setFaqs] = useState<FAQ[]>([]);
     const [loading, setLoading] = useState(true);
 
     // Product Form
     const [newProduct, setNewProduct] = useState({ name: '', price: '', description: '' });
     const [isEditing, setIsEditing] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
+
+    // FAQ Form
+    const [newFaq, setNewFaq] = useState({ question: '', answer: '' });
+    const [isEditingFaq, setIsEditingFaq] = useState(false);
+    const [editingFaqId, setEditingFaqId] = useState<string | null>(null);
 
     const formatNumber = (val: string) => {
         if (!val) return '';
@@ -53,17 +65,31 @@ export default function KnowledgeBase() {
         loadProfile();
 
         // Listen to Products
-        const q = query(collection(db, 'users', auth.currentUser!.uid, 'products'));
-        const unsubscribe = onSnapshot(q, (snapshot) => {
+        const qProducts = query(collection(db, 'users', auth.currentUser!.uid, 'products'));
+        const unsubscribeProducts = onSnapshot(qProducts, (snapshot) => {
             const items: Product[] = [];
             snapshot.forEach((doc) => {
                 items.push({ id: doc.id, ...doc.data() } as Product);
             });
             setProducts(items);
+            if (!loading) setLoading(false); // Only unset if not waiting for FAQs
+        });
+
+        // Listen to FAQs
+        const qFaqs = query(collection(db, 'users', auth.currentUser!.uid, 'faqs'));
+        const unsubscribeFaqs = onSnapshot(qFaqs, (snapshot) => {
+            const items: FAQ[] = [];
+            snapshot.forEach((doc) => {
+                items.push({ id: doc.id, ...doc.data() } as FAQ);
+            });
+            setFaqs(items);
             setLoading(false);
         });
 
-        return () => unsubscribe();
+        return () => {
+            unsubscribeProducts();
+            unsubscribeFaqs();
+        };
     }, []);
 
     const handleSaveProfile = async () => {
@@ -84,12 +110,12 @@ export default function KnowledgeBase() {
         }
     };
 
+    // Product Handlers
     const handleAddProduct = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!auth.currentUser) return;
         try {
             if (isEditing && editingId) {
-                // Update Existing
                 await updateDoc(doc(db, 'users', auth.currentUser.uid, 'products', editingId), {
                     name: newProduct.name,
                     price: Number(newProduct.price.replace(/\D/g, '')),
@@ -99,7 +125,6 @@ export default function KnowledgeBase() {
                 setIsEditing(false);
                 setEditingId(null);
             } else {
-                // Add New
                 await addDoc(collection(db, 'users', auth.currentUser.uid, 'products'), {
                     name: newProduct.name,
                     price: Number(newProduct.price.replace(/\D/g, '')),
@@ -121,12 +146,11 @@ export default function KnowledgeBase() {
         });
         setIsEditing(true);
         setEditingId(product.id);
-
-        // Scroll to form
-        window.scrollTo({ top: 300, behavior: 'smooth' });
+        const form = document.getElementById('product-form');
+        form?.scrollIntoView({ behavior: 'smooth' });
     };
 
-    const cancelEdit = () => {
+    const cancelEditProduct = () => {
         setIsEditing(false);
         setEditingId(null);
         setNewProduct({ name: '', price: '', description: '' });
@@ -138,6 +162,57 @@ export default function KnowledgeBase() {
             await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'products', id));
         }
     };
+
+    // FAQ Handlers
+    const handleAddFaq = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!auth.currentUser) return;
+        try {
+            if (isEditingFaq && editingFaqId) {
+                await updateDoc(doc(db, 'users', auth.currentUser.uid, 'faqs', editingFaqId), {
+                    question: newFaq.question,
+                    answer: newFaq.answer,
+                    updatedAt: new Date().toISOString()
+                });
+                setIsEditingFaq(false);
+                setEditingFaqId(null);
+            } else {
+                await addDoc(collection(db, 'users', auth.currentUser.uid, 'faqs'), {
+                    question: newFaq.question,
+                    answer: newFaq.answer,
+                    createdAt: new Date().toISOString()
+                });
+            }
+            setNewFaq({ question: '', answer: '' });
+        } catch (e) {
+            alert(isEditingFaq ? 'Gagal update FAQ.' : 'Gagal tambah FAQ.');
+        }
+    };
+
+    const handleEditFaq = (faq: FAQ) => {
+        setNewFaq({
+            question: faq.question,
+            answer: faq.answer
+        });
+        setIsEditingFaq(true);
+        setEditingFaqId(faq.id);
+        const form = document.getElementById('faq-form');
+        form?.scrollIntoView({ behavior: 'smooth' });
+    };
+
+    const cancelEditFaq = () => {
+        setIsEditingFaq(false);
+        setEditingFaqId(null);
+        setNewFaq({ question: '', answer: '' });
+    };
+
+    const handleDeleteFaq = async (id: string) => {
+        if (!auth.currentUser) return;
+        if (confirm('Yakin hapus pertanyaan ini?')) {
+            await deleteDoc(doc(db, 'users', auth.currentUser.uid, 'faqs', id));
+        }
+    };
+
 
     const handleCrawl = async () => {
         if (!crawlUrl) return alert('Masukkan URL website dulu bro!');
@@ -242,7 +317,7 @@ export default function KnowledgeBase() {
                         </button>
                     </div>
                 </div>
-                
+
                 {/* Modern Decoration */}
                 <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-emerald-500/20 blur-[120px] rounded-full -mr-32 -mt-32 pointer-events-none opacity-40 group-hover:opacity-60 transition-opacity duration-1000"></div>
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-500/10 blur-[80px] rounded-full -ml-20 -mb-20 pointer-events-none"></div>
@@ -338,6 +413,110 @@ export default function KnowledgeBase() {
                 </div>
             </section>
 
+            {/* Support / FAQ Section - Moved up as it is high priority */}
+            <section className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl shadow-neutral-100 border border-neutral-200">
+                <div className="flex items-center gap-4 mb-8">
+                    <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                        <MessageCircleQuestion size={22} />
+                    </div>
+                    <div>
+                        <h2 className="text-xl lg:text-2xl font-bold text-[#061E29]">FAQ / Tanya Jawab</h2>
+                        <p className="text-sm text-neutral-500">Pertanyaan umum yang sering diajukan pelanggan.</p>
+                    </div>
+                </div>
+
+                {/* Add FAQ Form */}
+                <form id="faq-form" onSubmit={handleAddFaq} className={`p-6 rounded-2xl mb-8 border transition-all ${isEditingFaq ? 'bg-blue-50 border-blue-200' : 'bg-neutral-50 border-neutral-200'}`}>
+                    <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-sm font-bold text-[#061E29] uppercase tracking-wider">
+                            {isEditingFaq ? 'Edit Pertanyaan (FAQ)' : 'Tambah FAQ Baru'}
+                        </h3>
+                        {isEditingFaq && (
+                            <button
+                                type="button"
+                                onClick={cancelEditFaq}
+                                className="text-xs flex items-center gap-1 text-blue-600 hover:text-blue-700 font-bold"
+                            >
+                                <X size={14} /> Batal Edit
+                            </button>
+                        )}
+                    </div>
+                    <div className="grid grid-cols-1 gap-4">
+                        <div>
+                            <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-2">Pertanyaan (User)</label>
+                            <input
+                                type="text"
+                                value={newFaq.question}
+                                onChange={(e) => setNewFaq({ ...newFaq, question: e.target.value })}
+                                placeholder="Contoh: Apakah bisa COD? / Berapa lama pengiriman?"
+                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-900 outline-none"
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-[10px] uppercase font-bold text-neutral-400 mb-2">Jawaban (Bot)</label>
+                            <textarea
+                                value={newFaq.answer}
+                                onChange={(e) => setNewFaq({ ...newFaq, answer: e.target.value })}
+                                placeholder="Contoh: Bisa kak, kami melayani COD khusus area Jabodetabek ya."
+                                rows={3}
+                                className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-900 outline-none"
+                                required
+                            />
+                        </div>
+                        <div className="flex justify-end">
+                            <button type="submit" className={`flex items-center justify-center gap-2 px-6 py-3 text-white rounded-xl font-bold shadow-md transition-all ${isEditingFaq ? 'bg-blue-600 hover:bg-blue-700' : 'bg-[#061E29] hover:bg-[#0a2d3d]'}`}>
+                                {isEditingFaq ? <Save size={18} /> : <Plus size={18} />}
+                                {isEditingFaq ? 'Update FAQ' : 'Tambah FAQ'}
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                {/* FAQ List */}
+                <div className="space-y-4">
+                    {faqs.length === 0 ? (
+                        <div className="p-8 text-center bg-neutral-50 rounded-2xl border border-neutral-100 border-dashed">
+                            <div className="w-12 h-12 bg-neutral-200 text-neutral-400 rounded-full flex items-center justify-center mx-auto mb-3">
+                                <HelpCircle size={24} />
+                            </div>
+                            <p className="text-sm text-neutral-500 font-medium">Belum ada FAQ. Tambahkan pertanyaan umum agar AI lebih pintar.</p>
+                        </div>
+                    ) : (
+                        faqs.map((faq) => (
+                            <div key={faq.id} className="group p-5 bg-white border border-neutral-100 rounded-2xl hover:border-blue-100 hover:shadow-md transition-all">
+                                <div className="flex justify-between items-start gap-4">
+                                    <div className="space-y-2 w-full">
+                                        <div className="flex items-start gap-3">
+                                            <span className="flex-shrink-0 px-2 py-1 bg-blue-50 text-blue-700 text-[10px] font-bold rounded mb-auto mt-0.5">Q</span>
+                                            <h4 className="font-bold text-[#061E29]">{faq.question}</h4>
+                                        </div>
+                                        <div className="flex items-start gap-3">
+                                            <span className="flex-shrink-0 px-2 py-1 bg-emerald-50 text-emerald-700 text-[10px] font-bold rounded mb-auto mt-0.5">A</span>
+                                            <p className="text-sm text-neutral-600 leading-relaxed">{faq.answer}</p>
+                                        </div>
+                                    </div>
+                                    <div className="flex items-center gap-1 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <button
+                                            onClick={() => handleEditFaq(faq)}
+                                            className="p-2 text-neutral-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-all"
+                                        >
+                                            <Pencil size={16} />
+                                        </button>
+                                        <button
+                                            onClick={() => handleDeleteFaq(faq.id)}
+                                            className="p-2 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all"
+                                        >
+                                            <Trash2 size={16} />
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        ))
+                    )}
+                </div>
+            </section>
+
             {/* Products Section */}
             <section className="bg-white p-6 lg:p-8 rounded-3xl shadow-xl shadow-neutral-100 border border-neutral-200">
                 <div className="flex items-center gap-4 mb-8">
@@ -351,7 +530,7 @@ export default function KnowledgeBase() {
                 </div>
 
                 {/* Add Product Form */}
-                <form onSubmit={handleAddProduct} className={`p-6 rounded-2xl mb-8 border transition-all ${isEditing ? 'bg-emerald-50 border-emerald-200' : 'bg-neutral-50 border-neutral-200'}`}>
+                <form id="product-form" onSubmit={handleAddProduct} className={`p-6 rounded-2xl mb-8 border transition-all ${isEditing ? 'bg-emerald-50 border-emerald-200' : 'bg-neutral-50 border-neutral-200'}`}>
                     <div className="flex items-center justify-between mb-4">
                         <h3 className="text-sm font-bold text-[#061E29] uppercase tracking-wider">
                             {isEditing ? 'Edit Data Produk' : 'Tambah Data Baru'}
@@ -359,7 +538,7 @@ export default function KnowledgeBase() {
                         {isEditing && (
                             <button
                                 type="button"
-                                onClick={cancelEdit}
+                                onClick={cancelEditProduct}
                                 className="text-xs flex items-center gap-1 text-emerald-600 hover:text-emerald-700 font-bold"
                             >
                                 <X size={14} /> Batal Edit
