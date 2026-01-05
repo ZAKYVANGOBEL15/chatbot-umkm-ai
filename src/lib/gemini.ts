@@ -63,7 +63,7 @@ TUGAS:
    - Tahap 4: Tampilkan RINGKASAN dan tanya "Apakah data sudah benar?".
 
 4. LEAD DATA CAPTURE:
-   HANYA jika pasien EKSPLISIT bilang "Ya/Betul/Sudah benar" setelah ringkasan, sertakan:
+   HANYA jika pasien EKSPLISIT bilang "Ya/Betul/Sudah benar" setelah ringkasan, sertakan DI AKHIR PESAN:
    :::LEAD_DATA={"name":"[Nama]","phone":"[Nomor]","address":"[Alamat]","dob":"[Tanggal Lahir]"}:::
 
 GAYA KOMUNIKASI:

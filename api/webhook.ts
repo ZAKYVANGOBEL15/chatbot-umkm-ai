@@ -192,7 +192,7 @@ export default async function handler(req: any, res: any) {
                     );
 
                     // --- LEAD GENERATION LOGIC ---
-                    const match = reply.match(/:::LEAD_DATA=(.*?):::/);
+                    const match = reply.match(/:::LEAD_DATA\s*=?\s*(\{.*?\})?:::/);
                     if (match && match[1]) {
                         try {
                             const leadData = JSON.parse(match[1]);

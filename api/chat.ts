@@ -118,8 +118,8 @@ export default async function handler(req: any, res: any) {
 
 
         // --- LEAD GENERATION LOGIC ---
-        // Check for the secret LEAD_DATA tag, allowing for optional spaces
-        const match = reply.match(/:::LEAD_DATA\s*=\s*(.*?):::/);
+        // Robust regex to catch :::LEAD_DATA={...}::: or :::LEAD_DATA={...}:::
+        const match = reply.match(/:::LEAD_DATA\s*=?\s*(\{.*?\})?:::/);
         let leadCaptured = false;
         let leadInfo = null;
 
