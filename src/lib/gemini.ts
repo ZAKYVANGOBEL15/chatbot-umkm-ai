@@ -459,7 +459,7 @@ PENTING: Prioritaskan kepuasan customer dan bangun trust. Happy customer = repea
 }
 
 /**
- * Post-process AI response to fix common formatting issues
+ * Post-process AI response to fix common formatting issues and handle LEAD_DATA securely
  */
 function formatAIResponse(text: string): string {
     // Fix compressed data fields - ensure each field is on a new line
@@ -488,6 +488,11 @@ function formatAIResponse(text: string): string {
             }
         }
     }
+
+    // Handle LEAD_DATA securely by removing it from the response to the user
+    // The LEAD_DATA should be processed separately by the application, not shown to users
+    const leadDataRegex = /:::LEAD_DATA=\{[^}]*\}:::/g;
+    formatted = formatted.replace(leadDataRegex, '');
 
     return formatted;
 }
@@ -632,4 +637,24 @@ export async function generateAIResponse(
     }
 
     return "Maaf, semua otak AI sedang offline. Silakan hubungi admin langsung.";
+}
+
+/**
+ * Extract LEAD_DATA from AI response for secure processing
+ */
+export function extractLeadData(aiResponse: string) {
+    const leadDataRegex = /:::LEAD_DATA=(\{[^}]*\}):::/;
+    const match = aiResponse.match(leadDataRegex);
+
+    if (match && match[1]) {
+        try {
+            const leadData = JSON.parse(match[1]);
+            return leadData;
+        } catch (error) {
+            console.error("Error parsing LEAD_DATA:", error);
+            return null;
+        }
+    }
+
+    return null;
 }
