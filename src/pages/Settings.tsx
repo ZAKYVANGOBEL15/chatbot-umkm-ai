@@ -321,7 +321,7 @@ export default function Settings() {
                         <Zap className="w-5 h-5" /> Hubungi Admin via WhatsApp
                     </a>
                     <a
-                        href="mailto:nusavite06@gmail.com"
+                        href="mailto:nusavite06@gmail.com?subject=Bantuan%20Teknis%20ChatBot%20AI&body=Halo,%20saya%20membutuhkan%20bantuan%20teknis%20untuk%20integrasi%20ChatBot%20AI."
                         className="inline-flex items-center gap-2 px-8 py-4 bg-white/10 text-white font-bold rounded-xl hover:bg-white/20 transition-colors w-full sm:w-auto border border-white/10"
                     >
                         <Mail className="w-5 h-5" /> Hubungi via Email
