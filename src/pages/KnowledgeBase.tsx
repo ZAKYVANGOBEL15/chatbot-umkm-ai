@@ -354,7 +354,7 @@ export default function KnowledgeBase() {
                             onChange={(e) => setBusinessDesc(e.target.value)}
                             rows={4}
                             className="w-full px-4 py-3 border border-neutral-200 rounded-xl focus:ring-2 focus:ring-[#061E29] outline-none transition-all placeholder:text-neutral-300 font-medium"
-                            placeholder="Alamat: Jl. Sam Ratulangi No. 159. Jam Buka: Senin-Sabtu 09.00-20.00. Kami adalah klinik kecantikan profesional..."
+                            placeholder="Alamat: Jl. Kesehatan Raya No. 123. Jam Buka: Senin-Jumat 08.00-17.00, Sabtu 08.00-13.00. Kami adalah klinik kesehatan yang menyediakan layanan pemeriksaan, pengobatan, dan konsultasi medis terpercaya..."
                         />
                     </div>
                 </div>
@@ -448,7 +448,7 @@ export default function KnowledgeBase() {
                                 type="text"
                                 value={newFaq.question}
                                 onChange={(e) => setNewFaq({ ...newFaq, question: e.target.value })}
-                                placeholder="Contoh: Apakah bisa COD? / Berapa lama pengiriman?"
+                                placeholder="Contoh: Jam buka klinik? / Apakah bisa booking online?"
                                 className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-900 outline-none"
                                 required
                             />
@@ -458,7 +458,7 @@ export default function KnowledgeBase() {
                             <textarea
                                 value={newFaq.answer}
                                 onChange={(e) => setNewFaq({ ...newFaq, answer: e.target.value })}
-                                placeholder="Contoh: Bisa kak, kami melayani COD khusus area Jabodetabek ya."
+                                placeholder="Contoh: Bisa kak, jam buka kami Senin-Jumat 08.00-17.00. Untuk booking online bisa melalui WhatsApp kami."
                                 rows={3}
                                 className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-blue-900 outline-none"
                                 required
@@ -552,7 +552,7 @@ export default function KnowledgeBase() {
                                 type="text"
                                 value={newProduct.name}
                                 onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
-                                placeholder="Misal: Brownies Cokelat"
+                                placeholder="Misal: Pemeriksaan Umum"
                                 className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-[#061E29] outline-none"
                                 required
                             />
@@ -574,7 +574,7 @@ export default function KnowledgeBase() {
                                 type="text"
                                 value={newProduct.description}
                                 onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
-                                placeholder="Deskripsi rasa, ukuran, atau fitur..."
+                                placeholder="Deskripsi layanan, durasi, atau keunggulan..."
                                 className="w-full px-4 py-3 border border-neutral-200 rounded-xl bg-white focus:ring-2 focus:ring-[#061E29] outline-none"
                             />
                         </div>
