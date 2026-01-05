@@ -1,44 +1,8 @@
-/**
- * AI Service using Mistral AI
- * Provides stable access for both Dashboard Simulator and WhatsApp Webhook.
- */
-
-/**
- * Detect if the user is speaking in English
- */
-function isEnglish(text: string): boolean {
-    // Simple heuristic: if text contains more English words than Indonesian, consider it English
-    const englishWords = [
-        'the', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from',
-        'is', 'are', 'was', 'were', 'be', 'been', 'have', 'has', 'had', 'do', 'does', 'did',
-        'can', 'could', 'will', 'would', 'should', 'may', 'might', 'must', 'need', 'want',
-        'hello', 'hi', 'good', 'bad', 'help', 'please', 'thank', 'thanks', 'you', 'your',
-        'health', 'medical', 'doctor', 'appointment', 'medicine', 'treatment', 'clinic',
-        'shop', 'buy', 'purchase', 'product', 'service', 'order', 'price', 'cost', 'money',
-        'how', 'what', 'where', 'when', 'who', 'why', 'which', 'this', 'that', 'these', 'those'
-    ];
-
-    const textLower = text.toLowerCase();
-    const words = textLower.match(/\b\w+\b/g) || [];
-
-    if (words.length === 0) return false;
-
-    let englishCount = 0;
-    for (const word of words) {
-        if (englishWords.includes(word)) {
-            englishCount++;
-        }
-    }
-
-    // If more than 30% of the words are English, consider the text as English
-    return (englishCount / words.length) > 0.3;
-}
 
 /**
  * Generate business-type-specific system prompt in appropriate language
  */
 function getSystemPrompt(
-    businessType: 'retail' | 'medical',
     businessContext: {
         name: string;
         description: string;
@@ -47,8 +11,7 @@ function getSystemPrompt(
         instagram?: string;
         facebook?: string;
         businessEmail?: string;
-    },
-    isUserEnglish: boolean = false
+    }
 ): string {
     const productList = (businessContext.products || [])
         .map(p => `- ${p.name} (Rp ${Number(p.price).toLocaleString('id-ID')}): ${p.description}`)
@@ -170,11 +133,9 @@ export async function generateAIResponse(
     const mistralKey = (typeof process !== 'undefined' ? (process.env.MISTRAL_API_KEY || process.env.VITE_MISTRAL_API_KEY) : (import.meta as any).env?.VITE_MISTRAL_API_KEY) || '';
     const openrouterKey = (typeof process !== 'undefined' ? (process.env.OPENROUTER_API_KEY || process.env.VITE_OPENROUTER_API_KEY) : (import.meta as any).env?.VITE_OPENROUTER_API_KEY) || '';
 
-    // Detect if user is speaking in English
-    const isUserEnglish = isEnglish(userMessage);
 
     // Use specialized clinic system prompt
-    const systemInstructions = getSystemPrompt('medical', businessContext, isUserEnglish);
+    const systemInstructions = getSystemPrompt(businessContext);
 
 
     // 1. Try Gemini First (Priority)
