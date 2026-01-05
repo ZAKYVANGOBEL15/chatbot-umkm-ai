@@ -78,6 +78,12 @@ export default async function handler(req: any, res: any) {
             const faqsSnap = await db.collection('users').doc(userId).collection('faqs').get();
             const faqs = faqsSnap.docs.map(d => d.data());
 
+            const docsSnap = await db.collection('users').doc(userId).collection('documents').get();
+            const documents = docsSnap.docs.map(d => {
+                const data = d.data();
+                return { name: data.name, url: data.url };
+            });
+
             finalContext = {
                 name: userData?.businessName || 'Bisnis Kami',
                 description: userData?.businessDescription || 'UMKM Indonesia.',
@@ -86,7 +92,8 @@ export default async function handler(req: any, res: any) {
                 businessEmail: userData?.businessEmail || '',
                 businessType: userData?.businessType || 'retail',
                 products: products.length > 0 ? products : [],
-                faqs: faqs.length > 0 ? faqs : []
+                faqs: faqs.length > 0 ? faqs : [],
+                documents: documents.length > 0 ? documents : []
             };
         } catch (dbErr) {
             console.error('Error fetching context from DB:', dbErr);

@@ -41,7 +41,7 @@ export default function Login() {
                 if (!userData.businessName || !userData.businessType) {
                     navigate('/onboarding');
                 } else {
-                    navigate('/dashboard');
+                    navigate('/role-selection');
                 }
             }
         } catch (err: any) {

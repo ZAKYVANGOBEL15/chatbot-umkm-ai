@@ -29,6 +29,7 @@ export default function Register() {
                 await setDoc(docRef, {
                     name: user.displayName || 'User',
                     email: user.email,
+                    role: 'admin', // Default root user is admin
                     businessName: '',
                     createdAt: now.toISOString(),
                     trialExpiresAt: trialExpiresAt.toISOString(),

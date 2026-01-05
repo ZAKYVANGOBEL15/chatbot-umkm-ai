@@ -1,0 +1,161 @@
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { auth, db } from '../lib/firebase';
+import { doc, getDoc } from 'firebase/firestore';
+import { onAuthStateChanged } from 'firebase/auth';
+import { User, ShieldCheck, Users, ArrowLeft, Lock } from 'lucide-react';
+
+export default function RoleSelector() {
+    const [user, setUser] = useState(auth.currentUser);
+    const [loading, setLoading] = useState(true);
+    const [step, setStep] = useState<'select' | 'pin'>('select');
+    const [pin, setPin] = useState('');
+    const [correctPin, setCorrectPin] = useState('');
+    const [error, setError] = useState('');
+    const [isVerifying, setIsVerifying] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+            if (currentUser) {
+                setUser(currentUser);
+                try {
+                    const userDoc = await getDoc(doc(db, 'users', currentUser.uid));
+                    if (userDoc.exists()) {
+                        setCorrectPin(userDoc.data().adminPin || '');
+                    }
+                } catch (err) {
+                    console.error("Error fetching admin pin:", err);
+                }
+                setLoading(false);
+            } else {
+                navigate('/login');
+            }
+        });
+        return () => unsubscribe();
+    }, [navigate]);
+
+    const handleSelectRole = (role: 'admin' | 'karyawan') => {
+        if (role === 'karyawan') {
+            sessionStorage.setItem(`userRole_${user?.uid}`, 'karyawan');
+            navigate('/dashboard/chat');
+        } else {
+            setStep('pin');
+        }
+    };
+
+    const handleVerifyPin = (e: React.FormEvent) => {
+        e.preventDefault();
+        setError('');
+        setIsVerifying(true);
+
+        if (pin === correctPin) {
+            sessionStorage.setItem(`userRole_${user?.uid}`, 'admin');
+            navigate('/dashboard');
+        } else {
+            setError('PIN yang Anda masukkan salah.');
+            setPin('');
+        }
+        setIsVerifying(false);
+    };
+
+    if (loading) return null;
+
+    return (
+        <div className="min-h-screen bg-neutral-50 flex flex-col items-center justify-center p-6 font-sans">
+            <div className="w-full max-w-md">
+                <div className="text-center mb-10">
+                    <img src="/NV.png" alt="Nusavite" className="h-16 mx-auto mb-4" />
+                    <h2 className="text-3xl font-bold text-[#061E29]">Pilih Akses</h2>
+                    <p className="text-neutral-500 mt-2">Pilih bagaimana Anda ingin masuk ke sistem hari ini</p>
+                </div>
+
+                <div className="bg-white p-8 rounded-3xl shadow-xl shadow-neutral-200/50 border border-neutral-100">
+                    {step === 'select' ? (
+                        <div className="space-y-4">
+                            {/* Admin Option */}
+                            <button
+                                onClick={() => handleSelectRole('admin')}
+                                className="w-full p-6 border-2 border-neutral-100 rounded-2xl flex items-center gap-6 hover:border-[#061E29] hover:bg-neutral-50 transition-all group text-left"
+                            >
+                                <div className="p-4 bg-neutral-100 rounded-xl group-hover:bg-[#061E29] group-hover:text-white transition-colors">
+                                    <ShieldCheck size={32} />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-xl text-[#061E29]">Pemilik / Admin</h3>
+                                    <p className="text-sm text-neutral-500">Akses penuh ke semua pengaturan & data Bisnis.</p>
+                                </div>
+                            </button>
+
+                            {/* Karyawan Option */}
+                            <button
+                                onClick={() => handleSelectRole('karyawan')}
+                                className="w-full p-6 border-2 border-neutral-100 rounded-2xl flex items-center gap-6 hover:border-[#061E29] hover:bg-neutral-50 transition-all group text-left"
+                            >
+                                <div className="p-4 bg-neutral-100 rounded-xl group-hover:bg-[#061E29] group-hover:text-white transition-colors">
+                                    <Users size={32} />
+                                </div>
+                                <div className="flex-1">
+                                    <h3 className="font-bold text-xl text-[#061E29]">Staf / Karyawan</h3>
+                                    <p className="text-sm text-neutral-500">Akses terbatas hanya untuk bantuan SOP (Chat AI).</p>
+                                </div>
+                            </button>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            <button
+                                onClick={() => setStep('select')}
+                                className="flex items-center gap-2 text-sm font-bold text-neutral-400 hover:text-[#061E29] transition-colors mb-4"
+                            >
+                                <ArrowLeft size={16} /> Kembali
+                            </button>
+
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-blue-50 text-[#061E29] rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Lock size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-[#061E29]">Masukkan PIN Admin</h3>
+                                <p className="text-sm text-neutral-500 mt-1">Gunakan PIN yang Anda buat saat pendaftaran.</p>
+                            </div>
+
+                            <form onSubmit={handleVerifyPin} className="space-y-6">
+                                <div>
+                                    <input
+                                        type="password"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        maxLength={6}
+                                        autoFocus
+                                        required
+                                        value={pin}
+                                        onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))}
+                                        placeholder="••••••"
+                                        className="w-full text-center text-4xl tracking-[1em] py-4 border-b-2 border-neutral-200 focus:border-[#061E29] focus:outline-none transition-all placeholder:text-neutral-100"
+                                    />
+                                </div>
+
+                                {error && (
+                                    <div className="p-3 bg-red-50 text-red-600 text-xs font-bold rounded-xl text-center border border-red-100">
+                                        {error}
+                                    </div>
+                                )}
+
+                                <button
+                                    type="submit"
+                                    disabled={pin.length < 4 || isVerifying}
+                                    className="w-full py-4 bg-[#061E29] text-white font-bold rounded-2xl hover:bg-[#0a2d3d] transition-all shadow-lg shadow-[#061E29]/20 disabled:opacity-50"
+                                >
+                                    {isVerifying ? 'Memverifikasi...' : 'Verifikasi & Masuk'}
+                                </button>
+                            </form>
+                        </div>
+                    )}
+                </div>
+
+                <div className="mt-8 text-center text-xs text-neutral-400 flex items-center justify-center gap-2">
+                    <User size={12} /> Terhubung sebagai: <span className="font-bold text-neutral-600">{user?.email}</span>
+                </div>
+            </div>
+        </div>
+    );
+}

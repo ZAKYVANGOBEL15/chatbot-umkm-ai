@@ -5,8 +5,8 @@ const ChatSimulation = () => {
   const [step, setStep] = useState(0);
   const [displayText, setDisplayText] = useState('');
 
-  const customerMessage = "Permisi, untuk tipe kamar Deluxe harganya berapa ya per malam?";
-  const aiMessage = "Halo kak! Untuk tipe kamar Deluxe harganya Rp 500.000 per malam, sudah termasuk sarapan untuk 2 orang. Mau dibantu reservasi?";
+  const customerMessage = "Admin, gimana prosedur klaim reimbursement kacamata untuk karyawan ya?";
+  const aiMessage = "Halo! Sesuai SOP Perusahaan, klaim kacamata bisa dilakukan lewat portal HR dengan melampirkan resi asli dan resep dokter. Maksimal klaim adalah Rp 1.000.000 per tahun ya!";
 
   useEffect(() => {
     let timeout: NodeJS.Timeout;
@@ -52,7 +52,7 @@ const ChatSimulation = () => {
       {/* Customer Message */}
       <div className={`transition-all duration-500 transform ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
         <div className="bg-neutral-50 p-6 rounded-2xl rounded-tl-none text-neutral-800 border border-neutral-100">
-          <p className="text-xs text-neutral-500 mb-2 font-bold uppercase">Customer bertanya:</p>
+          <p className="text-xs text-neutral-500 mb-2 font-bold uppercase">Karyawan Bertanya:</p>
           {step === 1 ? displayText : customerMessage}
         </div>
       </div>
@@ -61,7 +61,7 @@ const ChatSimulation = () => {
       {step >= 2 && (
         <div className={`transition-all duration-500 transform ${step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
           <div className="bg-[#2D3C59] p-6 rounded-2xl rounded-tr-none text-white ml-auto max-w-[90%] shadow-lg">
-            <p className="text-xs text-[#6e85b1] mb-2 font-bold uppercase">Chatbot Menjawab:</p>
+            <p className="text-xs text-[#6e85b1] mb-2 font-bold uppercase">SOP Expert Menjawab:</p>
             {step === 2 ? (
               <div className="flex gap-1.5 py-1">
                 <span className="w-2 h-2 bg-white/40 rounded-full animate-bounce"></span>
@@ -134,12 +134,12 @@ export default function LandingPage() {
             </div>
 
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-bold tracking-tighter mb-8 text-[#2D3C59] leading-[0.9]">
-              Asisten AI <br className="hidden md:block" />
-              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2D3C59] to-[#4a5f85]">Pintar</span>
+              SOP Assistant <br className="hidden md:block" />
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2D3C59] to-[#4a5f85]">Bisnis</span>
             </h1>
 
             <p className="text-xl md:text-3xl text-neutral-500 mb-14 leading-relaxed max-w-3xl mx-auto font-light tracking-tight">
-              Otomatisasi <span className="text-[#2D3C59] font-medium">admin</span> dan <span className="text-[#2D3C59] font-medium">layanan pelanggan</span> Anda dengan Chatbot AI yang siap melayani 24/7 di WhatsApp.
+              Bantu <span className="text-[#2D3C59] font-medium">karyawan</span> bekerja lebih cepat dan efisien dengan asisten AI yang hafal seluruh <span className="text-[#2D3C59] font-medium">SOP & Prosedur</span> kantor Anda.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
@@ -169,17 +169,17 @@ export default function LandingPage() {
       {/* How It Works Section */}
       <section id="how-it-works" className="py-32 bg-white relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
+          <div className="flex flex-col justify-between items-center text-center mb-20 gap-8">
             <div>
               <span className="text-sm font-bold tracking-widest uppercase text-[#2D3C59]/60 mb-3 block">Simple Setup</span>
-              <h2 className="text-4xl md:text-6xl font-bold text-[#2D3C59] tracking-tight">3 Langkah Mudah <br />Mulai Otomatisasi</h2>
+              <h2 className="text-4xl md:text-6xl font-bold text-[#2D3C59] tracking-tight">3 Langkah Mudah <br />Digitalisasi SOP</h2>
             </div>
-            <p className="max-w-md text-neutral-500 text-lg leading-relaxed text-right md:text-left">
+            <p className="max-w-md text-neutral-500 text-lg leading-relaxed text-center">
               Tidak perlu coding. Tidak perlu instalasi rumit. Fokus pada bisnis, biarkan AI bekerja.
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-12 relative group">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-12 relative group">
             <div className="absolute top-1/2 left-0 w-full h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent hidden md:block -z-10"></div>
 
             {/* Step 1 */}
@@ -194,24 +194,24 @@ export default function LandingPage() {
             </div>
 
             {/* Step 2 */}
-            <div className="relative bg-white p-8 rounded-[2rem] border border-neutral-100 shadow-xl shadow-neutral-100/50 hover:shadow-2xl hover:shadow-[#2D3C59]/10 transition-all duration-300 hover:-translate-y-2 mt-0 md:mt-12">
+            <div className="relative bg-white p-8 rounded-[2rem] border border-neutral-100 shadow-xl shadow-neutral-100/50 hover:shadow-2xl hover:shadow-[#2D3C59]/10 transition-all duration-300 hover:-translate-y-2 mt-8 md:mt-0">
               <div className="w-20 h-20 bg-white border-2 border-[#2D3C59] text-[#2D3C59] rounded-2xl flex items-center justify-center mb-8 shadow-lg">
                 <Database className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-[#2D3C59]">2. Input Pengetahuan</h3>
+              <h3 className="text-2xl font-bold mb-4 text-[#2D3C59]">2. Input Dokumen SOP</h3>
               <p className="text-neutral-500 leading-relaxed font-light">
-                Masukkan data produk, harga, dan FAQ bisnis Anda ke dashboard. AI akan langsung mempelajarinya.
+                Unggah atau ketik prosedur kerja, kebijakan internal, dan FAQ bisnis Anda ke dashboard.
               </p>
             </div>
 
             {/* Step 3 */}
-            <div className="relative bg-white p-8 rounded-[2rem] border border-neutral-100 shadow-xl shadow-neutral-100/50 hover:shadow-2xl hover:shadow-[#2D3C59]/10 transition-all duration-300 hover:-translate-y-2 mt-0 md:mt-24">
+            <div className="relative bg-white p-8 rounded-[2rem] border border-neutral-100 shadow-xl shadow-neutral-100/50 hover:shadow-2xl hover:shadow-[#2D3C59]/10 transition-all duration-300 hover:-translate-y-2 mt-8 md:mt-0">
               <div className="w-20 h-20 bg-[#2D3C59] text-white rounded-2xl flex items-center justify-center mb-8 shadow-lg shadow-[#2D3C59]/30">
                 <FastForward className="w-8 h-8" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 text-[#2D3C59]">3. AI Siap Bekerja</h3>
+              <h3 className="text-2xl font-bold mb-4 text-[#2D3C59]">3. Siap Membantu Staf</h3>
               <p className="text-neutral-500 leading-relaxed font-light">
-                Aktifkan bot! AI Anda sekarang siap menjawab ribuan chat pelanggan secara otomatis 24/7.
+                Karyawan bisa bertanya apapun seputar prosedur kantor lewat WhatsApp atau Dashboard secara instan.
               </p>
             </div>
           </div>
@@ -247,7 +247,7 @@ export default function LandingPage() {
               </div>
               <h3 className="text-2xl font-bold mb-4 tracking-tight">Integrasi WhatsApp</h3>
               <p className="text-white/60 leading-relaxed font-light">
-                Hubungkan AI langsung ke WhatsApp Business Anda. Balas ribuan chat pelanggan secara instan dan personal.
+                Hubungkan AI langsung ke WhatsApp. Balas pertanyaan operasional karyawan secara instan dan personal.
               </p>
             </div>
 
@@ -265,11 +265,11 @@ export default function LandingPage() {
             {/* Service 3 */}
             <div className="p-10 rounded-[2.5rem] bg-white/5 border border-white/10 hover:bg-white/10 backdrop-blur-sm transition-all duration-300 group hover:-translate-y-1">
               <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center mb-10 group-hover:scale-110 transition-transform duration-300">
-                <Bot className="w-7 h-7 text-[#2D3C59]" />
+                <Database className="w-7 h-7 text-[#2D3C59]" />
               </div>
-              <h3 className="text-2xl font-bold mb-4 tracking-tight">Lead Generation</h3>
+              <h3 className="text-2xl font-bold mb-4 tracking-tight">Database Prosedur</h3>
               <p className="text-white/60 leading-relaxed font-light">
-                Bot secara otomatis mengumpulkan Nama & Nomor WhatsApp pelanggan yang tertarik untuk Anda follow-up.
+                Simpan semua pengetahuan bisnis dalam satu tempat. AI akan menjadi pusat informasi yang selalu update.
               </p>
             </div>
           </div>
@@ -299,9 +299,9 @@ export default function LandingPage() {
               <div className="w-14 h-14 bg-neutral-100 rounded-2xl flex items-center justify-center mb-8 group-hover:bg-[#2D3C59] transition-colors duration-500">
                 <Smartphone className="w-6 h-6 text-[#2D3C59] group-hover:text-white transition-colors" />
               </div>
-              <h3 className="text-xl font-bold mb-3 text-[#2D3C59]">Respon 24/7</h3>
+              <h3 className="text-xl font-bold mb-3 text-[#2D3C59]">Konsultasi Cepat</h3>
               <p className="text-neutral-500 leading-relaxed">
-                Customer bertanya jam 2 pagi di WhatsApp? Chatbot menjawab sesuai data yang Anda input.
+                Staf bingung dengan aturan kantor? Cukup tanya ke bot WhatsApp, jawaban keluar dalam hitungan detik.
               </p>
             </div>
 
@@ -336,10 +336,10 @@ export default function LandingPage() {
 
               <ul className="space-y-6 mb-12">
                 {[
-                  'Input harga & layanan unlimited',
-                  'Update informasi secara real-time',
-                  'Chatbot bekerja otomatis di WhatsApp Anda',
-                  'Tamu terlayani instan tanpa admin manual'
+                  'Input prosedur & SOP unlimited',
+                  'Update kebijakan secara real-time',
+                  'Asisten bekerja otomatis lewat WhatsApp',
+                  'Staf lebih mandiri tanpa tanya Owner terus'
                 ].map((item, index) => (
                   <li key={index} className="flex items-center gap-5 group">
                     <div className="w-8 h-8 rounded-full bg-[#2D3C59]/5 flex items-center justify-center flex-shrink-0 group-hover:bg-[#2D3C59] transition-colors duration-300">
@@ -450,7 +450,7 @@ export default function LandingPage() {
                 </div>
 
                 <p className="text-neutral-500 mb-10 text-lg leading-relaxed font-light">
-                  Solusi lengkap untuk otomatisasi admin WhatsApp. AI pintar yang siap melayani pelanggan Anda 24/7 tanpa henti.
+                  Solusi lengkap untuk otomatisasi bantuan internal WhatsApp. AI pintar yang siap melayani staf Anda 24/7 tanpa henti.
                 </p>
 
                 <ul className="grid sm:grid-cols-2 gap-y-5 gap-x-8 text-left w-full">
@@ -460,7 +460,7 @@ export default function LandingPage() {
                     'Respon Otomatis 24 Jam',
                     'Dashboard Kontrol',
                     'Unlimited Chat & Database',
-                    'Lead Generation Otomatis',
+                    'Efisiensi Operasional Staf',
                     'Update Data Real-time',
                     'Support Prioritas'
                   ].map((item, index) => (
@@ -479,7 +479,7 @@ export default function LandingPage() {
                 <div className="mb-10 relative z-10">
                   <span className="text-neutral-400 text-xs uppercase font-bold tracking-widest block mb-3">Biaya Langganan</span>
                   <div className="flex items-baseline justify-center whitespace-nowrap">
-                    <span className="text-5xl font-black text-[#2D3C59] tracking-tighter">200rb</span>
+                    <span className="text-5xl font-black text-[#2D3C59] tracking-tighter">499rb</span>
                   </div>
                   <span className="text-neutral-400 text-sm font-medium">Rupiah / bulan</span>
                 </div>
@@ -499,7 +499,7 @@ export default function LandingPage() {
                 </a>
 
                 <p className="mt-8 text-neutral-400 text-xs font-medium">
-                  Garansi uang kembali 7 hari.<br />Batalkan kapan saja.
+                  Support Bisnis, Kantor & UMKM.<br />Efisiensi staf terjamin.
                 </p>
               </div>
             </div>
@@ -513,7 +513,7 @@ export default function LandingPage() {
           <div className="w-24 h-1 bg-[#2D3C59] mx-auto mb-12 rounded-full"></div>
           <h2 className="text-5xl md:text-6xl font-bold text-[#2D3C59] mb-8 tracking-tighter">Siap Automasi Bisnis?</h2>
           <p className="text-neutral-500 mb-12 text-xl font-light max-w-2xl mx-auto">
-            Mulai trial gratis 5 hari dan rasakan bagaimana AI membantu menangani pelanggan Anda.
+            Mulai trial gratis 5 hari dan rasakan bagaimana AI membantu menangani pertanyaan internal Anda.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a

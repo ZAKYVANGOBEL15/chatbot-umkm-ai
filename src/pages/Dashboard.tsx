@@ -1,14 +1,15 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, Users, ShoppingBag, Clock, ArrowRight, Phone, User, ExternalLink, Trash2, Zap } from 'lucide-react';
+import { MessageSquare, ShoppingBag, Clock, ArrowRight, Zap } from 'lucide-react';
 import { FacebookConnectButton } from '../components/FacebookConnectButton';
-import { collection, getDocs, doc, getDoc, onSnapshot, deleteDoc } from 'firebase/firestore';
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
 import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Dashboard() {
     const [productCount, setProductCount] = useState(0);
-    const [customerCount, setCustomerCount] = useState(0);
+    const [faqCount, setFaqCount] = useState(0);
+    const [docCount, setDocCount] = useState(0);
     const [loading, setLoading] = useState(true);
     const [userName, setUserName] = useState('');
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
@@ -17,8 +18,6 @@ export default function Dashboard() {
     const [isWhatsAppConfigured, setIsWhatsAppConfigured] = useState(false);
     const [userId, setUserId] = useState('');
     const [fetchError, setFetchError] = useState<string | null>(null);
-    const [customers, setCustomers] = useState<any[]>([]); // Array to store customer data
-    const [businessType, setBusinessType] = useState<'retail' | 'medical'>('retail'); // Business type
 
     useEffect(() => {
         const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
@@ -34,38 +33,31 @@ export default function Dashboard() {
 
     const fetchUserData = async (user: any) => {
         try {
-            // 1. Products (Static)
+            // 1. Products 
             const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
             setProductCount(productsSnap.size);
 
-            // 2. Customers (Realtime Listener)
-            // 2. Customers (Realtime Listener)
-            onSnapshot(collection(db, 'users', user.uid, 'customers'),
-                (snapshot) => {
-                    setCustomerCount(snapshot.size);
-                    const loadedCustomers = snapshot.docs.map(doc => ({
-                        id: doc.id,
-                        ...doc.data()
-                    })).sort((a: any, b: any) => {
-                        // Sort by newest first (handling potential missing fields safely)
-                        const dateA = new Date(a.createdAt || 0).getTime();
-                        const dateB = new Date(b.createdAt || 0).getTime();
-                        return dateB - dateA;
-                    });
-                    setCustomers(loadedCustomers);
-                },
-                (err) => {
-                    console.error("Snapshot error:", err);
-                    setFetchError(`Gagal memuat data pelanggan: ${err.message}`);
-                }
-            );
+            // 2. FAQs
+            const faqsSnap = await getDocs(collection(db, 'users', user.uid, 'faqs'));
+            setFaqCount(faqsSnap.size);
 
-            // 3. User Profile
+            // 3. Documents
+            const docsSnap = await getDocs(collection(db, 'users', user.uid, 'documents'));
+            setDocCount(docsSnap.size);
+
+            // 4. User Profile
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             if (userDoc.exists()) {
                 const data = userDoc.data();
                 setUserName(data.name || '');
-                setBusinessType(data.businessType || 'retail'); // Get business type
+
+                // RBAC: Read role from Session Storage
+                const sessionRole = sessionStorage.getItem(`userRole_${user.uid}`);
+                if (sessionRole === 'karyawan') {
+                    window.location.href = '/dashboard/chat';
+                    return;
+                }
+
                 const status = data.subscriptionStatus || 'trial';
                 setSubscriptionStatus(status);
 
@@ -87,59 +79,6 @@ export default function Dashboard() {
         } finally {
             setLoading(false);
         }
-    };
-
-    const handleDeleteCustomer = async (customerId: string, customerName: string) => {
-        if (!userId) return;
-
-        if (window.confirm(`Apakah Anda yakin ingin menghapus data "${customerName}"? Data yang dihapus tidak dapat dikembalikan.`)) {
-            try {
-                await deleteDoc(doc(db, 'users', userId, 'customers', customerId));
-                // No need to manually update state, onSnapshot will handle it!
-            } catch (error: any) {
-                console.error("Error deleting customer:", error);
-                alert("Gagal menghapus data: " + error.message);
-            }
-        }
-    };
-
-    const handleExportExcel = () => {
-        if (customers.length === 0) {
-            alert("Tidak ada data untuk diekspor.");
-            return;
-        }
-
-        // Define headers - specialized for Klinik
-        const headers = ["Nama Pasien", "Kontak WhatsApp", "NIK", "Tanggal Lahir", "Alamat", "Tanggal Daftar", "Waktu Daftar"];
-
-        // Map customers to rows
-        const rows = customers.map(customer => [
-            customer.name || '-',
-            customer.phone || '-',
-            customer.nik || '-',
-            customer.dob || '-',
-            customer.address || '-',
-            customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('id-ID') : '-',
-            customer.createdAt ? new Date(customer.createdAt).toLocaleTimeString('id-ID') : '-'
-        ]);
-
-        // Create CSV content with semicolon delimiter (best for Excel in Indonesia)
-        const csvContent = [
-            headers.join(';'),
-            ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
-        ].join('\n');
-
-        // Add UTF-8 BOM to ensure Excel opens it with correct encoding and split columns
-        const BOM = '\uFEFF';
-        const blob = new Blob([BOM + csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.setAttribute("href", url);
-        link.setAttribute("download", `data_pasien_${new Date().toISOString().split('T')[0]}.csv`);
-        link.style.visibility = 'hidden';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
     };
 
     const handleUpgrade = async () => {
@@ -168,7 +107,6 @@ export default function Dashboard() {
     const handleFacebookLoginSuccess = async (authResponse: any) => {
         try {
             console.log('Facebook Login Success:', authResponse);
-            // Send token (and manual IDs if present) to backend to verify and save
             const res = await fetch('/api/facebook-auth', {
                 method: 'POST',
                 headers: {
@@ -177,7 +115,6 @@ export default function Dashboard() {
                 body: JSON.stringify({
                     accessToken: authResponse.accessToken,
                     userId: auth.currentUser?.uid,
-                    // Pass manual IDs if they exist (added by manual flow)
                     manualPhoneId: authResponse.phoneId,
                     manualWabaId: authResponse.wabaId
                 }),
@@ -186,19 +123,13 @@ export default function Dashboard() {
             const data = await res.json();
 
             if (!res.ok) {
-                // If it fails and we haven't tried manual yet, we could trigger it here, 
-                // but the user now has a "Connect Manually" button.
-                // Just log the detailed error
                 console.error("FB Connect API Error:", data);
                 throw new Error(data.error || 'Failed to connect WhatsApp');
             }
 
             console.log('WhatsApp Verification Result:', data);
 
-            // Refresh logic...
             if (auth.currentUser?.uid) {
-                // ... (existing refresh logic)
-                // Simple alert for success
                 alert('WhatsApp Connected Successfully!');
                 window.location.reload();
             }
@@ -210,7 +141,7 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="space-y-8 max-w-full overflow-hidden">
+        <div className="space-y-8 max-w-full overflow-hidden text-[#061E29]">
             {/* Subscription Status Banner */}
             {subscriptionStatus === 'active' ? (
                 <div className="bg-[#061E29] text-white rounded-xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-lg shadow-neutral-200">
@@ -246,6 +177,7 @@ export default function Dashboard() {
                     </button>
                 </div>
             )}
+
             {/* Error Alert */}
             {fetchError && (
                 <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl relative" role="alert">
@@ -269,7 +201,7 @@ export default function Dashboard() {
                         </p>
                         <p className={`text-xs ${isWhatsAppConfigured ? 'text-emerald-700' : 'text-amber-700'} mt-0.5`}>
                             {isWhatsAppConfigured
-                                ? 'Chatbot siap melayani pelanggan Anda di WhatsApp.'
+                                ? 'Chatbot siap melayani karyawan Anda di WhatsApp.'
                                 : 'Segera masukkan API Key Meta Anda di menu Pengaturan.'}
                         </p>
                     </div>
@@ -291,43 +223,36 @@ export default function Dashboard() {
             </div>
 
             {/* Welcome Section */}
-            <div className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#061E29] to-[#0f3443] text-white shadow-2xl p-8 lg:p-12 border border-[#1a3b4b]/50 group">
-                {/* Texture Overlay */}
-                <div className="absolute inset-0 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] opacity-20 brightness-100 contrast-150 mix-blend-overlay"></div>
-
+            <div className="relative overflow-hidden rounded-3xl bg-white text-[#061E29] shadow-sm p-8 lg:p-12 border border-neutral-200 group">
                 <div className="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
                     <div>
-                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/10 text-[10px] font-bold tracking-widest uppercase text-emerald-300 mb-4 backdrop-blur-sm">
-                            <span className="w-1.5 h-1.5 bg-emerald-400 rounded-full animate-pulse"></span>
-                            System Operational
+                        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-[10px] font-bold tracking-widest uppercase text-emerald-600 mb-4">
+                            <span className="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span>
+                            Internal System Active
                         </span>
-                        <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-white tracking-tight">
+                        <h2 className="text-3xl lg:text-4xl font-bold mb-4 text-[#061E29] tracking-tight">
                             Halo, {userName || 'Partner'}!
                         </h2>
-                        <p className="text-neutral-300 max-w-xl text-base lg:text-lg leading-relaxed font-light">
-                            Bisnis Anda berjalan otomatis hari ini. Cek prospek terbaru di bawah atau latih AI Anda agar semakin cerdas.
+                        <p className="text-neutral-500 max-w-xl text-base lg:text-lg leading-relaxed font-normal">
+                            Pusat kendali SOP dan asisten pintar klinik Anda. Kelola basis pengetahuan dan bantu karyawan bekerja lebih efektif hari ini.
                         </p>
                     </div>
 
                     <Link
                         to="/dashboard/knowledge"
-                        className="flex-shrink-0 inline-flex items-center gap-3 px-8 py-4 bg-emerald-500 hover:bg-emerald-400 text-[#061E29] rounded-2xl font-bold transition-all shadow-lg shadow-emerald-900/20 hover:shadow-emerald-500/30 hover:-translate-y-1 active:scale-95"
+                        className="flex-shrink-0 inline-flex items-center gap-3 px-8 py-4 bg-[#061E29] hover:bg-[#0a2d3d] text-white rounded-2xl font-bold transition-all shadow-lg hover:-translate-y-1 active:scale-95"
                     >
                         Setup Knowledge Base <ArrowRight size={20} />
                     </Link>
                 </div>
-
-                {/* Abstract Decoration */}
-                <div className="absolute -right-20 -bottom-32 w-80 h-80 bg-emerald-500/20 blur-[100px] rounded-full pointer-events-none group-hover:bg-emerald-500/30 transition-all duration-1000"></div>
             </div>
 
             {/* Stats Cards */}
             <div className="flex items-center gap-3 border-l-4 border-[#061E29] pl-4 py-1">
-                <h3 className="text-xl font-bold text-[#061E29]">Ringkasan Bisnis</h3>
+                <h3 className="text-xl font-bold text-[#061E29]">Ringkasan Operasional</h3>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {/* Card 1 */}
                 <div className="group relative bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                     <div className="absolute right-0 top-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
                         <MessageSquare size={80} />
@@ -339,185 +264,47 @@ export default function Dashboard() {
                             </div>
                         </div>
                         <h3 className="text-3xl font-bold text-[#061E29] mb-1">Coming Soon</h3>
-                        <p className="text-sm text-neutral-500 font-medium">Total Interaksi Chat</p>
+                        <p className="text-sm text-neutral-500 font-medium">Log Interaksi Karyawan</p>
                     </div>
                 </div>
 
-                {/* Card 2 */}
                 <div className="group relative bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
                     <div className="absolute right-0 top-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
-                        <Users size={80} />
+                        <ShoppingBag size={80} />
                     </div>
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-4">
                             <div className="p-3 bg-emerald-50 text-emerald-600 rounded-xl group-hover:bg-emerald-600 group-hover:text-white transition-colors">
-                                <Users size={24} />
+                                <ShoppingBag size={24} />
                             </div>
-                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100">
-                                +{customerCount} MINGGU INI
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-1 rounded-md border border-emerald-100 uppercase">
+                                Aktif
                             </span>
                         </div>
                         <h3 className="text-3xl font-bold text-[#061E29] mb-1">
-                            {loading ? '...' : customerCount}
+                            {loading ? '...' : docCount}
                         </h3>
-                        <p className="text-sm text-neutral-500 font-medium">{businessType === 'medical' ? 'Pasien Baru' : 'Prospek / Leads Baru'}</p>
+                        <p className="text-sm text-neutral-500 font-medium">File & Link SOP Terdaftar</p>
                     </div>
                 </div>
-
-                {/* Card 3 (Dark) */}
-                <div className="group relative bg-[#061E29] p-6 rounded-2xl border border-neutral-800 shadow-xl hover:shadow-2xl hover:-translate-y-1 transition-all duration-300 overflow-hidden text-white">
-                    <div className="absolute right-0 top-0 p-3 opacity-10 group-hover:opacity-20 transition-opacity transform group-hover:scale-110">
-                        <ShoppingBag size={80} className="text-white" />
+                {/* Card 3 */}
+                <div className="group relative bg-white p-6 rounded-2xl border border-neutral-100 shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden">
+                    <div className="absolute right-0 top-0 p-3 opacity-5 group-hover:opacity-10 transition-opacity transform group-hover:scale-110">
+                        <Zap size={80} className="text-[#061E29]" />
                     </div>
                     <div className="relative z-10">
                         <div className="flex justify-between items-start mb-4">
-                            <div className="p-3 bg-white/10 rounded-xl text-white group-hover:bg-white group-hover:text-[#061E29] transition-colors">
-                                <ShoppingBag size={24} />
+                            <div className="p-3 bg-amber-50 text-amber-600 rounded-xl group-hover:bg-amber-600 group-hover:text-white transition-colors">
+                                <Zap size={24} />
                             </div>
                         </div>
-                        <h3 className="text-3xl font-bold text-white mb-1">
-                            {loading ? '...' : productCount}
+                        <h3 className="text-3xl font-bold text-[#061E29] mb-1">
+                            {loading ? '...' : (productCount + faqCount)}
                         </h3>
-                        <p className="text-sm text-neutral-400 font-medium">Produk Terlatih</p>
+                        <p className="text-sm text-neutral-500 font-medium">Total Item Pengetahuan</p>
                     </div>
                 </div>
             </div>
-
-            {/* Customer List Section */}
-            <div className="bg-white rounded-3xl border border-neutral-200 shadow-xl shadow-neutral-100/50 overflow-hidden">
-                <div className="p-6 lg:p-8 border-b border-neutral-100 flex items-center justify-between bg-white">
-                    <div className="flex items-center gap-3">
-                        <div className="p-2 bg-emerald-50 text-emerald-600 rounded-lg">
-                            <Users size={20} />
-                        </div>
-                        <div>
-                            <h3 className="text-lg font-bold text-[#061E29]">{businessType === 'medical' ? 'Daftar Pasien Masuk' : 'Daftar Prospek Masuk'}</h3>
-                            <p className="text-sm text-neutral-500 font-medium">{businessType === 'medical' ? 'Pasien yang mendaftar via Chatbot.' : 'Pelanggan yang memberikan kontak via Chatbot.'}</p>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                        <div className="bg-[#061E29] text-white px-4 py-1.5 rounded-full text-xs font-bold shadow-md shadow-[#061E29]/20">
-                            {customerCount} Total
-                        </div>
-                        {businessType === 'medical' && (
-                            <button
-                                onClick={handleExportExcel}
-                                className="px-4 py-1.5 bg-emerald-100 text-emerald-700 rounded-full text-xs font-bold hover:bg-emerald-200 transition-colors flex items-center gap-2"
-                            >
-                                <ShoppingBag size={14} className="rotate-180" />
-                                Export Excel
-                            </button>
-                        )}
-                    </div>
-                </div>
-
-                <div className="overflow-x-auto">
-                    {customers.length === 0 ? (
-                        <div className="p-12 text-center">
-                            <div className="w-16 h-16 bg-neutral-50 rounded-full flex items-center justify-center mx-auto mb-4 text-neutral-300">
-                                <Users size={32} />
-                            </div>
-                            <h4 className="text-neutral-900 font-bold mb-1">Belum ada data pelanggan</h4>
-                            <p className="text-sm text-neutral-500 max-w-xs mx-auto">
-                                Coba simulasikan percakapan di menu Chat Simulator dan berikan Nama/No HP Anda.
-                            </p>
-                            <Link to="/dashboard/chat" className="inline-block mt-4 text-sm font-bold text-emerald-600 hover:text-emerald-700">
-                                Ke Simulator &rarr;
-                            </Link>
-                        </div>
-                    ) : (
-                        <table className="w-full text-left border-collapse">
-                            <thead>
-                                <tr className="bg-neutral-50/50 text-xs font-bold text-neutral-500 uppercase tracking-widest border-b border-neutral-100">
-                                    <th className="p-5 pl-8">{businessType === 'medical' ? 'Nama Pasien' : 'Nama Pelanggan'}</th>
-                                    <th className="p-5">Kontak WhatsApp</th>
-                                    {businessType === 'medical' && (
-                                        <>
-                                            <th className="p-5">NIK</th>
-                                            <th className="p-5">Tgl Lahir</th>
-                                            <th className="p-5">Alamat</th>
-                                        </>
-                                    )}
-                                    <th className="p-5">Waktu Masuk</th>
-                                    <th className="p-5 text-center">Status</th>
-                                    <th className="p-5 text-center pr-8">Aksi</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-neutral-50">
-                                {customers.map((customer) => (
-                                    <tr key={customer.id} className="hover:bg-blue-50/30 transition-colors group">
-                                        <td className="p-5 pl-8">
-                                            <div className="flex items-center gap-4">
-                                                <div className="w-10 h-10 rounded-full bg-gradient-to-br from-neutral-100 to-neutral-200 flex items-center justify-center text-neutral-600 font-bold text-sm shadow-sm group-hover:from-[#061E29] group-hover:to-[#0f3443] group-hover:text-white transition-all">
-                                                    {customer.name ? customer.name.charAt(0).toUpperCase() : <User size={16} />}
-                                                </div>
-                                                <div>
-                                                    <div className="font-bold text-[#061E29] text-sm">{customer.name || 'Tanpa Nama'}</div>
-                                                    <div className="text-xs text-neutral-400 font-medium">{customer.source || 'Chatbot'}</div>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="p-5">
-                                            {customer.phone ? (
-                                                <a
-                                                    href={`https://wa.me/${customer.phone.replace(/^0/, '62').replace(/\D/g, '')}`}
-                                                    target="_blank"
-                                                    rel="noopener noreferrer"
-                                                    className="inline-flex items-center gap-2 px-3 py-2 bg-emerald-50 text-emerald-700 hover:bg-emerald-100 hover:text-emerald-800 rounded-xl transition-all text-xs font-bold border border-emerald-100 group-hover:shadow-sm"
-                                                >
-                                                    <Phone size={14} />
-                                                    <span className="font-mono">{customer.phone}</span>
-                                                    <ExternalLink size={12} className="opacity-50" />
-                                                </a>
-                                            ) : (
-                                                <span className="text-neutral-300 text-xs italic">Tidak ada nomor</span>
-                                            )}
-                                        </td>
-                                        {businessType === 'medical' && (
-                                            <>
-                                                <td className="p-5 text-xs font-mono text-neutral-600">{customer.nik || '-'}</td>
-                                                <td className="p-5 text-xs text-neutral-600">{customer.dob || '-'}</td>
-                                                <td className="p-5 text-xs text-neutral-600 max-w-[150px] truncate" title={customer.address}>{customer.address || '-'}</td>
-                                            </>
-                                        )}
-                                        <td className="p-5">
-                                            <div className="flex flex-col gap-0.5">
-                                                <span className="text-sm font-medium text-neutral-700">
-                                                    {customer.createdAt ? new Date(customer.createdAt).toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' }) : '-'}
-                                                </span>
-                                                <span className="text-xs text-neutral-400 flex items-center gap-1">
-                                                    <Clock size={10} />
-                                                    {customer.createdAt ? new Date(customer.createdAt).toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) : ''}
-                                                </span>
-                                            </div>
-                                        </td>
-                                        <td className="p-5 text-center">
-                                            <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider border ${customer.status === 'new'
-                                                ? 'bg-blue-50 text-blue-600 border-blue-100'
-                                                : 'bg-neutral-100 text-neutral-500 border-neutral-200'
-                                                }`}>
-                                                <span className={`w-1.5 h-1.5 rounded-full ${customer.status === 'new' ? 'bg-blue-500 animate-pulse' : 'bg-neutral-400'}`}></span>
-                                                {customer.status || 'New'}
-                                            </span>
-                                        </td>
-                                        <td className="p-5 text-center pr-8">
-                                            <button
-                                                onClick={() => handleDeleteCustomer(customer.id, customer.name)}
-                                                className="p-2.5 text-neutral-400 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all border border-transparent hover:border-red-100"
-                                                title="Hapus Data"
-                                            >
-                                                <Trash2 size={18} />
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    )}
-                </div>
-            </div>
-
-
         </div>
     );
 }

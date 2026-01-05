@@ -9,3 +9,15 @@ html {
     @apply antialiased text-gray-900 bg-gray-50;
   }
 }
+
+/* Markdown Link Styling */
+.markdown-body a {
+  color: #2563eb;
+  text-decoration: underline;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.markdown-body a:hover {
+  color: #1d4ed8;
+}

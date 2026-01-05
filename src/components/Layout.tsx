@@ -2,24 +2,55 @@ import React from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import { LayoutDashboard, MessageSquare, Box, Settings, LogOut, Menu, X } from 'lucide-react';
 import { auth } from '../lib/firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 
 export default function Layout() {
     const navigate = useNavigate();
     const location = useLocation();
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(true);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+    const [role, setRole] = React.useState<'admin' | 'karyawan' | null>(null);
+
+    React.useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Read role from Session Storage (set by RoleSelector)
+                const sessionRole = sessionStorage.getItem(`userRole_${user.uid}`) as 'admin' | 'karyawan' | null;
+
+                if (!sessionRole) {
+                    // If no role in session, force user to pick one
+                    navigate('/role-selection');
+                    return;
+                }
+
+                setRole(sessionRole);
+
+                // Path Protection: Redirect karyawan if accessing restricted paths
+                if (sessionRole === 'karyawan') {
+                    if (location.pathname === '/dashboard' || location.pathname === '/dashboard/knowledge' || location.pathname === '/dashboard/settings') {
+                        navigate('/dashboard/chat');
+                    }
+                }
+            } else {
+                navigate('/login');
+            }
+        });
+        return () => unsubscribe();
+    }, [location.pathname, navigate]);
 
     const handleLogout = async () => {
         await auth.signOut();
         navigate('/login');
     };
 
-    const menuItems = [
-        { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard' },
-        { icon: MessageSquare, label: 'Chat Simulator', path: '/dashboard/chat' },
-        { icon: Box, label: 'AI Knowledge Base', path: '/dashboard/knowledge' }, // Professional rebranding
-        { icon: Settings, label: 'Pengaturan', path: '/dashboard/settings' },
+    const allMenuItems = [
+        { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', roles: ['admin'] },
+        { icon: MessageSquare, label: 'Chat SOP Expert', path: '/dashboard/chat', roles: ['admin', 'karyawan'] },
+        { icon: Box, label: 'SOP & Knowledge', path: '/dashboard/knowledge', roles: ['admin'] },
+        { icon: Settings, label: 'Pengaturan', path: '/dashboard/settings', roles: ['admin'] },
     ];
+
+    const menuItems = allMenuItems.filter(item => role && item.roles.includes(role));
 
     return (
         <div className="flex h-screen bg-white overflow-hidden text-neutral-900 font-sans selection:bg-[#061E29] selection:text-white">

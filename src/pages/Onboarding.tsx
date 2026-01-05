@@ -11,6 +11,7 @@ export default function Onboarding() {
     const [loading, setLoading] = useState(true);
     const [businessName, setBusinessName] = useState('');
     const [businessType, setBusinessType] = useState<BusinessType>('retail');
+    const [adminPin, setAdminPin] = useState('');
     const [isSubmitting, setIsSubmitting] = useState(false);
     const navigate = useNavigate();
 
@@ -27,13 +28,19 @@ export default function Onboarding() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        if (!user || !businessName.trim()) return;
+        if (!user || !businessName.trim() || !adminPin.trim()) return;
+
+        if (adminPin.length < 4) {
+            alert("PIN Admin minimal 4 digit.");
+            return;
+        }
 
         setIsSubmitting(true);
         try {
             await updateDoc(doc(db, 'users', user.uid), {
                 businessName: businessName.trim(),
                 businessType,
+                adminPin: adminPin.trim(),
                 onboardingCompleted: true,
                 updatedAt: new Date().toISOString()
             });
@@ -70,8 +77,8 @@ export default function Onboarding() {
                                 <div
                                     onClick={() => setBusinessType('retail')}
                                     className={`cursor-pointer rounded-xl border-2 p-4 flex items-center gap-4 transition-all hover:scale-[1.02] ${businessType === 'retail'
-                                            ? 'border-[#2D3C59] bg-[#2D3C59]/5 shadow-lg'
-                                            : 'border-neutral-200 hover:border-neutral-300'
+                                        ? 'border-[#2D3C59] bg-[#2D3C59]/5 shadow-lg'
+                                        : 'border-neutral-200 hover:border-neutral-300'
                                         }`}
                                 >
                                     <div className={`p-3 rounded-full ${businessType === 'retail' ? 'bg-[#2D3C59] text-white' : 'bg-neutral-100 text-neutral-500'}`}>
@@ -94,8 +101,8 @@ export default function Onboarding() {
                                 <div
                                     onClick={() => setBusinessType('medical')}
                                     className={`cursor-pointer rounded-xl border-2 p-4 flex items-center gap-4 transition-all hover:scale-[1.02] ${businessType === 'medical'
-                                            ? 'border-[#2D3C59] bg-[#2D3C59]/5 shadow-lg'
-                                            : 'border-neutral-200 hover:border-neutral-300'
+                                        ? 'border-[#2D3C59] bg-[#2D3C59]/5 shadow-lg'
+                                        : 'border-neutral-200 hover:border-neutral-300'
                                         }`}
                                 >
                                     <div className={`p-3 rounded-full ${businessType === 'medical' ? 'bg-[#2D3C59] text-white' : 'bg-neutral-100 text-neutral-500'}`}>
@@ -133,10 +140,29 @@ export default function Onboarding() {
                             />
                         </div>
 
+                        {/* Admin PIN */}
+                        <div>
+                            <label htmlFor="adminPin" className="block text-sm font-medium text-neutral-700">
+                                PIN Keamanan Admin <span className="text-red-500">*</span>
+                            </label>
+                            <input
+                                id="adminPin"
+                                type="password"
+                                inputMode="numeric"
+                                pattern="[0-9]*"
+                                required
+                                value={adminPin}
+                                onChange={(e) => setAdminPin(e.target.value.replace(/\D/g, ''))}
+                                placeholder="4-6 Digit Angka"
+                                className="mt-1 appearance-none block w-full px-4 py-3 border border-neutral-300 rounded-xl shadow-sm placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#2D3C59] focus:border-transparent transition-all"
+                            />
+                            <p className="mt-2 text-[10px] text-neutral-500 italic">PIN ini digunakan untuk membatasi akses karyawan ke menu Admin.</p>
+                        </div>
+
                         {/* Submit Button */}
                         <button
                             type="submit"
-                            disabled={isSubmitting || !businessName.trim()}
+                            disabled={isSubmitting || !businessName.trim() || !adminPin.trim()}
                             className="w-full py-4 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-[#2D3C59] hover:bg-[#1a2537] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#2D3C59] disabled:opacity-50 disabled:cursor-not-allowed transition-all"
                         >
                             {isSubmitting ? 'Menyimpan...' : '✓ Lanjutkan ke Dashboard'}

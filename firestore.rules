@@ -21,6 +21,11 @@ service cloud.firestore {
       match /faqs/{faqId} {
         allow read, write: if request.auth != null && request.auth.uid == userId;
       }
+
+      // [BARU] Izinkan User akses sub-collection 'documents' (File SOP)
+      match /documents/{docId} {
+        allow read, write: if request.auth != null && request.auth.uid == userId;
+      }
     }
   }
 }

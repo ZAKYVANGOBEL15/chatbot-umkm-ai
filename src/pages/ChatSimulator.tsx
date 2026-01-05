@@ -14,7 +14,7 @@ interface Message {
 
 export default function ChatSimulator() {
     const [messages, setMessages] = useState<Message[]>([
-        { role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait produk kami?', id: 'init' }
+        { role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait SOP atau prosedur klinik hari ini?', id: 'init' }
     ]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
@@ -35,17 +35,20 @@ export default function ChatSimulator() {
                 const userDoc = await getDoc(doc(db, 'users', user.uid));
                 const productsSnap = await getDocs(collection(db, 'users', user.uid, 'products'));
                 const faqsSnap = await getDocs(collection(db, 'users', user.uid, 'faqs'));
+                const docsSnap = await getDocs(collection(db, 'users', user.uid, 'documents'));
 
                 const products = productsSnap.docs.map(d => d.data());
                 const faqs = faqsSnap.docs.map(d => d.data());
+                const documents = docsSnap.docs.map(d => d.data());
                 const userData = userDoc.data();
 
                 if (userData) {
                     setBusinessContext({
-                        name: userData.businessName || 'Toko Kami',
-                        description: userData.businessDescription || 'Toko serba ada.',
+                        name: userData.businessName || 'Klinik Kami',
+                        description: userData.businessDescription || 'Asisten operasional internal klinik.',
                         products: products,
-                        faqs: faqs
+                        faqs: faqs,
+                        documents: documents
                     });
 
                     // Check Expiration
@@ -118,7 +121,7 @@ export default function ChatSimulator() {
     };
 
     const handleReset = () => {
-        setMessages([{ role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait produk kami?', id: 'init' }]);
+        setMessages([{ role: 'model', text: 'Halo! Ada yang bisa saya bantu terkait SOP atau prosedur klinik hari ini?', id: 'init' }]);
     };
 
     const handleCorrection = async () => {
@@ -381,6 +384,12 @@ export default function ChatSimulator() {
                                     <span className="text-neutral-500">FAQs Loaded</span>
                                     <span className="font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded border border-blue-100">
                                         {businessContext?.faqs?.length || 0} items
+                                    </span>
+                                </div>
+                                <div className="flex items-center justify-between text-xs">
+                                    <span className="text-neutral-500">Documents Loaded</span>
+                                    <span className="font-semibold text-purple-600 bg-purple-50 px-2 py-1 rounded border border-purple-100">
+                                        {businessContext?.documents?.length || 0} files
                                     </span>
                                 </div>
                             </div>

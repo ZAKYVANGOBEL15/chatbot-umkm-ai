@@ -5,6 +5,7 @@ import Onboarding from './pages/Onboarding';
 import Dashboard from './pages/Dashboard';
 import Layout from './components/Layout';
 import ProtectedRoute from './components/ProtectedRoute';
+import RoleSelector from './pages/RoleSelector';
 
 import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
@@ -24,6 +25,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/onboarding" element={<Onboarding />} />
+        <Route path="/role-selection" element={<RoleSelector />} />
         <Route path="/terms" element={<Terms />} />
         <Route path="/privacy" element={<Privacy />} />
 
