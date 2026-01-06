@@ -529,12 +529,7 @@ export default function LandingPage() {
                   <span className="text-neutral-400 text-sm font-medium">Rupiah / bulan</span>
                 </div>
 
-                <div className="mb-10 p-5 bg-emerald-50 rounded-2xl w-full border border-emerald-100">
-                  <p className="text-emerald-800 font-bold uppercase tracking-tight text-xs mb-1">
-                    Promo Spesial
-                  </p>
-                  <p className="text-emerald-700 text-sm font-medium">Gratis Biaya Setup (Hemat 500rb)</p>
-                </div>
+
 
                 <a
                   href="https://chatbot.nusavite.com/register"
