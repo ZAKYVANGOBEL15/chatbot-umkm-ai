@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { ArrowLeft } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, db, googleProvider } from '../lib/firebase';
-import { doc, getDoc, setDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
@@ -22,23 +23,40 @@ export default function Login() {
             const docSnap = await getDoc(docRef);
 
             if (!docSnap.exists()) {
-                // Initialize new user profile (in case they login with Google first)
+                // Initialize new user profile
                 const now = new Date();
                 const trialExpiresAt = new Date(now.getTime() + 5 * 24 * 60 * 60 * 1000);
 
                 await setDoc(docRef, {
                     name: user.displayName || 'User',
                     email: user.email,
-                    businessName: '',
+                    businessName: user.email === 'tester.nusavite@gmail.com' ? 'Nusavite Tester' : '',
+                    businessType: user.email === 'tester.nusavite@gmail.com' ? 'IT' : '',
                     createdAt: now.toISOString(),
                     trialExpiresAt: trialExpiresAt.toISOString(),
-                    subscriptionStatus: 'trial',
-                    subscriptionPlan: 'basic'
+                    subscriptionStatus: user.email === 'tester.nusavite@gmail.com' ? 'active' : 'trial',
+                    subscriptionPlan: user.email === 'tester.nusavite@gmail.com' ? 'pro' : 'basic'
                 });
-                navigate('/onboarding');
+
+                if (user.email === 'tester.nusavite@gmail.com') {
+                    navigate('/dashboard');
+                } else {
+                    navigate('/onboarding');
+                }
             } else {
                 const userData = docSnap.data();
-                if (!userData.businessName || !userData.businessType) {
+                if (user.email === 'tester.nusavite@gmail.com') {
+                    // Force update tester data if it exists but is incomplete/trial
+                    if (userData.subscriptionStatus !== 'active' || !userData.businessName) {
+                        await updateDoc(docRef, {
+                            businessName: 'Nusavite Tester',
+                            businessType: 'IT',
+                            subscriptionStatus: 'active',
+                            subscriptionPlan: 'pro'
+                        });
+                    }
+                    navigate('/dashboard');
+                } else if (!userData.businessName || !userData.businessType) {
                     navigate('/onboarding');
                 } else {
                     navigate('/role-selection');
@@ -53,6 +71,15 @@ export default function Login() {
 
     return (
         <div className="min-h-screen flex flex-col lg:flex-row bg-white text-neutral-900 font-sans selection:bg-black selection:text-white">
+
+            {/* Back Button */}
+            <a
+                href="https://www.nusavite.com"
+                className="fixed top-6 left-6 z-50 p-3 bg-white border border-neutral-100 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-x-1 group flex items-center gap-2"
+            >
+                <ArrowLeft size={20} className="text-[#2D3C59] group-hover:scale-110 transition-transform" />
+                <span className="text-xs font-bold text-[#2D3C59] pr-1">Beranda</span>
+            </a>
 
             {/* Left Side: Brand Identity - Visible as Top on Mobile, Left on Desktop */}
             <div className="lg:w-[45%] flex flex-col items-center justify-center p-12 bg-neutral-50 border-b lg:border-b-0 lg:border-r border-neutral-100 relative overflow-hidden">

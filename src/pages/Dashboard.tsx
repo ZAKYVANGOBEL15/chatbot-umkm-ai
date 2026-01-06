@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, ShoppingBag, Clock, ArrowRight, Zap } from 'lucide-react';
-import { FacebookConnectButton } from '../components/FacebookConnectButton';
+import { MessageSquare, ShoppingBag, ArrowRight, Zap, Clock } from 'lucide-react';
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db, auth } from '../lib/firebase';
 import { Link } from 'react-router-dom';
@@ -14,8 +13,6 @@ export default function Dashboard() {
     const [userName, setUserName] = useState('');
     const [subscriptionStatus, setSubscriptionStatus] = useState('trial');
     const [daysLeft, setDaysLeft] = useState(0);
-    const [expiryDateString, setExpiryDateString] = useState('');
-    const [isWhatsAppConfigured, setIsWhatsAppConfigured] = useState(false);
     const [userId, setUserId] = useState('');
     const [fetchError, setFetchError] = useState<string | null>(null);
 
@@ -49,29 +46,32 @@ export default function Dashboard() {
             const userDoc = await getDoc(doc(db, 'users', user.uid));
             if (userDoc.exists()) {
                 const data = userDoc.data();
-                setUserName(data.name || '');
+                setUserName(data.businessName || '');
 
                 // RBAC: Read role from Session Storage
-                const sessionRole = sessionStorage.getItem(`userRole_${user.uid}`);
+                const isTester = user.email === 'tester.nusavite@gmail.com';
+                let sessionRole = sessionStorage.getItem(`userRole_${user.uid}`);
+
+                if (isTester && !sessionRole) {
+                    sessionRole = 'admin';
+                    sessionStorage.setItem(`userRole_${user.uid}`, 'admin');
+                }
+
                 if (sessionRole === 'karyawan') {
                     window.location.href = '/dashboard/chat';
                     return;
                 }
 
-                const status = data.subscriptionStatus || 'trial';
+                const status = isTester ? 'active' : (data.subscriptionStatus || 'trial');
                 setSubscriptionStatus(status);
 
-                if (status === 'active' && data.subscriptionExpiresAt) {
-                    const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'long', year: 'numeric' };
-                    setExpiryDateString(new Date(data.subscriptionExpiresAt).toLocaleDateString('id-ID', options));
-                } else if (status === 'trial' && data.trialExpiresAt) {
+                if (status === 'trial' && data.trialExpiresAt) {
                     const expiry = new Date(data.trialExpiresAt);
                     const now = new Date();
                     const diff = expiry.getTime() - now.getTime();
                     const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
                     setDaysLeft(days > 0 ? days : 0);
                 }
-                setIsWhatsAppConfigured(!!(data.whatsappPhoneNumberId && data.whatsappAccessToken));
             }
         } catch (error: any) {
             console.error("Dashboard fetch error:", error);
@@ -104,41 +104,7 @@ export default function Dashboard() {
         }
     };
 
-    const handleFacebookLoginSuccess = async (authResponse: any) => {
-        try {
-            console.log('Facebook Login Success:', authResponse);
-            const res = await fetch('/api/facebook-auth', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    accessToken: authResponse.accessToken,
-                    userId: auth.currentUser?.uid,
-                    manualPhoneId: authResponse.phoneId,
-                    manualWabaId: authResponse.wabaId
-                }),
-            });
-
-            const data = await res.json();
-
-            if (!res.ok) {
-                console.error("FB Connect API Error:", data);
-                throw new Error(data.error || 'Failed to connect WhatsApp');
-            }
-
-            console.log('WhatsApp Verification Result:', data);
-
-            if (auth.currentUser?.uid) {
-                alert('WhatsApp Connected Successfully!');
-                window.location.reload();
-            }
-
-        } catch (error: any) {
-            console.error('Error connecting WhatsApp:', error);
-            alert(`Facebook Connect Failed: ${error.message}`);
-        }
-    };
+    if (loading) return <div>Loading...</div>;
 
     return (
         <div className="space-y-8 max-w-full overflow-hidden text-[#061E29]">
@@ -151,7 +117,7 @@ export default function Dashboard() {
                         </div>
                         <div>
                             <p className="text-sm font-bold text-white">Paket Premium Aktif</p>
-                            <p className="text-xs text-neutral-400 mt-0.5">Layanan aktif hingga: <span className="text-white font-bold">{expiryDateString || '1 Bulan'}</span>.</p>
+                            <p className="text-xs text-neutral-400 mt-0.5">Layanan aktif dan siap digunakan sepenuhnya.</p>
                         </div>
                     </div>
                 </div>
@@ -187,40 +153,6 @@ export default function Dashboard() {
                 </div>
             )}
 
-            {/* WhatsApp Connection Status Section */}
-            <div className={`p-4 rounded-xl border flex items-center justify-between gap-4 shadow-sm transition-all ${isWhatsAppConfigured
-                ? 'bg-emerald-50 border-emerald-100'
-                : 'bg-amber-50 border-amber-100 animate-pulse'}`}>
-                <div className="flex items-center gap-4">
-                    <div className={`p-2 rounded-lg ${isWhatsAppConfigured ? 'bg-emerald-500' : 'bg-amber-500'}`}>
-                        <MessageSquare size={20} className="text-white" />
-                    </div>
-                    <div>
-                        <p className={`text-sm font-bold ${isWhatsAppConfigured ? 'text-emerald-900' : 'text-amber-900'}`}>
-                            WhatsApp Status: {isWhatsAppConfigured ? 'Terhubung (Ready)' : 'Belum Dikonfigurasi'}
-                        </p>
-                        <p className={`text-xs ${isWhatsAppConfigured ? 'text-emerald-700' : 'text-amber-700'} mt-0.5`}>
-                            {isWhatsAppConfigured
-                                ? 'Chatbot siap melayani karyawan Anda di WhatsApp.'
-                                : 'Segera masukkan API Key Meta Anda di menu Pengaturan.'}
-                        </p>
-                    </div>
-                </div>
-                {!isWhatsAppConfigured && (
-                    <div className="flex gap-2">
-                        <Link
-                            to="/dashboard/settings"
-                            className="px-4 py-2 bg-white text-amber-600 border border-amber-200 text-[10px] font-extrabold uppercase tracking-wider rounded-lg hover:bg-amber-50 transition-colors flex items-center"
-                        >
-                            Manual
-                        </Link>
-                        <FacebookConnectButton
-                            onSuccess={handleFacebookLoginSuccess}
-                            onError={(err) => alert('Gagal connect: ' + JSON.stringify(err))}
-                        />
-                    </div>
-                )}
-            </div>
 
             {/* Welcome Section */}
             <div className="relative overflow-hidden rounded-3xl bg-white text-[#061E29] shadow-sm p-8 lg:p-12 border border-neutral-200 group">

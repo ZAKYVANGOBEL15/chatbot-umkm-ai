@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Bot, Code, CheckCircle, MessageSquare, Smartphone, Zap, HelpCircle, UserPlus, Database, FastForward } from 'lucide-react';
+import { Bot, Code, CheckCircle, MessageSquare, Smartphone, Zap, HelpCircle, UserPlus, Database, FastForward, Menu, X } from 'lucide-react';
 
 const ChatSimulation = () => {
   const [step, setStep] = useState(0);
@@ -79,25 +79,31 @@ const ChatSimulation = () => {
 };
 
 export default function LandingPage() {
-
-
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   return (
     <div className="min-h-screen bg-white text-neutral-900 selection:bg-[#2D3C59] selection:text-white font-sans overflow-x-hidden">
       {/* Navigation */}
       <nav className="fixed w-full z-50 bg-white/70 backdrop-blur-lg border-b border-neutral-100 transition-all duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-24">
-            <a href="/" className="flex items-center gap-2 group">
-              <img src="/logo.png" alt="Logo" className="h-10 w-auto group-hover:scale-105 transition-transform duration-300" />
-            </a>
-            <div className="hidden md:block">
+          <div className="flex items-center h-24">
+            {/* Left: Logo */}
+            <div className="flex-1 flex items-center">
+              <a href="/" className="flex items-center gap-2 group">
+                <img src="/logo.png" alt="Logo" className="h-10 w-auto group-hover:scale-105 transition-transform duration-300" />
+              </a>
+            </div>
+
+            {/* Center: Navigation */}
+            <div className="hidden md:flex justify-center">
               <div className="flex items-center gap-8 bg-neutral-50/80 px-8 py-3 rounded-full border border-neutral-100 backdrop-blur-sm">
                 <a href="#how-it-works" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">CARA KERJA</a>
                 <a href="#features" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">FITUR</a>
                 <a href="#pricing" className="text-sm font-medium text-neutral-600 hover:text-[#2D3C59] transition-colors relative after:content-[''] after:absolute after:w-0 after:h-0.5 after:bg-[#2D3C59] after:left-0 after:-bottom-1 after:transition-all hover:after:w-full">HARGA</a>
               </div>
             </div>
-            <div className="flex items-center gap-4">
+
+            {/* Right: Auth Buttons (Desktop) */}
+            <div className="hidden md:flex flex-1 items-center justify-end gap-4">
               <a
                 href="https://chatbot.nusavite.com/login"
                 className="text-neutral-500 hover:text-[#2D3C59] font-medium text-sm transition-colors px-4 py-2 hover:bg-neutral-50 rounded-full"
@@ -111,12 +117,51 @@ export default function LandingPage() {
                 Daftar Gratis
               </a>
             </div>
+
+            {/* Mobile Menu Button */}
+            <div className="md:hidden flex flex-1 justify-end">
+              <button
+                onClick={() => setIsMenuOpen(!isMenuOpen)}
+                className="p-2 text-[#2D3C59] hover:bg-neutral-50 rounded-xl transition-colors"
+                aria-label="Toggle Menu"
+              >
+                {isMenuOpen ? <X size={28} /> : <Menu size={28} />}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Menu Dropdown */}
+        <div className={`md:hidden absolute w-full bg-white border-b border-neutral-100 transition-all duration-300 overflow-hidden ${isMenuOpen ? 'max-h-[500px] opacity-100 pb-8' : 'max-h-0 opacity-0'}`}>
+          <div className="px-6 space-y-4 pt-4">
+            <div className="flex flex-col gap-4">
+              <a href="#how-it-works" onClick={() => setIsMenuOpen(false)} className="text-lg font-semibold text-neutral-600 hover:text-[#2D3C59] py-2">CARA KERJA</a>
+              <a href="#features" onClick={() => setIsMenuOpen(false)} className="text-lg font-semibold text-neutral-600 hover:text-[#2D3C59] py-2">FITUR</a>
+              <a href="#pricing" onClick={() => setIsMenuOpen(false)} className="text-lg font-semibold text-neutral-600 hover:text-[#2D3C59] py-2">HARGA</a>
+            </div>
+
+            <div className="h-px bg-neutral-100 my-4" />
+
+            <div className="flex flex-col gap-4">
+              <a
+                href="https://chatbot.nusavite.com/login"
+                className="w-full text-center text-neutral-600 font-bold py-4 rounded-2xl border border-neutral-100 hover:bg-neutral-50"
+              >
+                Login
+              </a>
+              <a
+                href="https://chatbot.nusavite.com/register"
+                className="w-full text-center bg-[#2D3C59] text-white font-bold py-4 rounded-2xl shadow-lg shadow-[#2D3C59]/20"
+              >
+                Mulai Daftar Gratis
+              </a>
+            </div>
           </div>
         </div>
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 lg:pt-56 lg:pb-32 overflow-hidden bg-gradient-to-b from-neutral-50/50 to-white">
+      <section className="relative pt-40 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-b from-neutral-50/50 to-white">
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent"></div>
 
         {/* Decorative elements */}
@@ -426,7 +471,7 @@ export default function LandingPage() {
       </section>
 
       {/* Pricing Section */}
-      <section className="py-32 bg-neutral-50 border-t border-neutral-200">
+      <section id="pricing" className="py-32 bg-neutral-50 border-t border-neutral-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <span className="text-sm font-bold tracking-widest uppercase text-neutral-400 mb-3 block">Investasi Cerdas</span>
@@ -479,7 +524,7 @@ export default function LandingPage() {
                 <div className="mb-10 relative z-10">
                   <span className="text-neutral-400 text-xs uppercase font-bold tracking-widest block mb-3">Biaya Langganan</span>
                   <div className="flex items-baseline justify-center whitespace-nowrap">
-                    <span className="text-5xl font-black text-[#2D3C59] tracking-tighter">499rb</span>
+                    <span className="text-5xl font-black text-[#2D3C59] tracking-tighter">Rp 499.000</span>
                   </div>
                   <span className="text-neutral-400 text-sm font-medium">Rupiah / bulan</span>
                 </div>
@@ -532,10 +577,21 @@ export default function LandingPage() {
             </a>
           </div>
           <div className="mt-24 pt-8 border-t border-neutral-100">
-            <p className="text-neutral-500 text-sm mb-4 font-medium">
-              Kotamobagu, Sulawesi Utara, Indonesia
-            </p>
-            <div className="text-neutral-400 text-[10px] font-black tracking-widest uppercase">
+            <div className="flex flex-col items-center gap-4 mb-8">
+              <p className="text-neutral-500 text-sm font-medium">
+                nusavite06@gmail.com • +62 895-4029-45495
+              </p>
+              <p className="text-neutral-400 text-xs">
+                Kotamobagu, Sulawesi Utara, Indonesia
+              </p>
+            </div>
+
+            <div className="flex justify-center gap-8 mb-8 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+              <a href="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat & Ketentuan</a>
+              <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
+            </div>
+
+            <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
               &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved
             </div>
           </div>

@@ -78,7 +78,8 @@ export default function Privacy() {
 
                         {/* Footer Link */}
                         <section className="border-t pt-8 text-center">
-                            <p className="text-gray-500 text-sm mb-4">Punya pertanyaan lebih lanjut?</p>
+                            <p className="text-gray-500 text-sm mb-2">Punya pertanyaan lebih lanjut?</p>
+                            <p className="text-neutral-400 text-xs mb-6 font-medium">nusavite06@gmail.com • Kotamobagu, Sulawesi Utara</p>
                             <a
                                 href="https://wa.me/62895402945495"
                                 target="_blank"

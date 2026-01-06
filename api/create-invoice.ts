@@ -42,7 +42,7 @@ export default async function handler(req: any, res: any) {
         const authHeader = Buffer.from(`${XENDIT_SECRET_KEY}:`).toString('base64');
 
         // Invoice Details
-        const amount = 200000; // Updated price based on new strategy (Rp 200rb)
+        const amount = 499000; // Updated price based on new strategy (Rp 499rb)
         const externalId = `inv-${userId}-${Date.now()}`;
 
         const response = await fetch('https://api.xendit.co/v2/invoices', {

@@ -28,6 +28,10 @@ export default function RoleSelector() {
                     console.error("Error fetching admin pin:", err);
                 }
                 setLoading(false);
+                if (currentUser.email === 'tester.nusavite@gmail.com') {
+                    sessionStorage.setItem(`userRole_${currentUser.uid}`, 'admin');
+                    navigate('/dashboard');
+                }
             } else {
                 navigate('/login');
             }

@@ -20,7 +20,7 @@ export default function ProtectedRoute() {
                     const docSnap = await getDoc(docRef);
                     if (docSnap.exists()) {
                         const data = docSnap.data();
-                        if (!data.businessName || !data.businessType) {
+                        if ((!data.businessName || !data.businessType) && currentUser.email !== 'tester.nusavite@gmail.com') {
                             setNeedsOnboarding(true);
                         }
                     }

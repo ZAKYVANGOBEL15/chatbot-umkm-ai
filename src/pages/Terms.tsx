@@ -82,9 +82,10 @@ export default function Terms() {
                             <p className="text-gray-600 mb-4">
                                 Jika Anda memiliki pertanyaan terkait layanan atau pembayaran, silakan hubungi tim kami:
                             </p>
-                            <div className="bg-gray-100 p-4 rounded-lg inline-block">
-                                <p className="text-gray-800 font-mono">WhatsApp: +62 895-4029-45495</p>
-                                <p className="text-gray-800 font-mono mt-2">Lokasi: Kotamobagu, Sulawesi Utara, Indonesia</p>
+                            <div className="bg-gray-100 p-6 rounded-2xl inline-block w-full">
+                                <p className="text-gray-800 font-bold">Email: nusavite06@gmail.com</p>
+                                <p className="text-gray-800 font-bold mt-2">WhatsApp: +62 895-4029-45495</p>
+                                <p className="text-gray-600 text-sm mt-4 italic">Alamat: Kotamobagu, Sulawesi Utara, Indonesia</p>
                             </div>
                         </section>
                     </div>
