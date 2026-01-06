@@ -88,7 +88,7 @@ export default function Onboarding() {
                                     </div>
                                     <div className="flex-1">
                                         <h3 className={`font-bold text-lg ${businessType === 'retail' ? 'text-[#2D3C59]' : 'text-neutral-700'}`}>Retail / UMKM</h3>
-                                        <p className="text-xs text-neutral-500 mt-1">Toko Online, F&B, Jasa Umum</p>
+                                        <p className="text-xs text-neutral-500 mt-1">Kantor, Toko Online, F&B, Jasa Umum</p>
                                     </div>
                                     <div className={`w-6 h-6 rounded-full border-2 flex items-center justify-center ${businessType === 'retail' ? 'border-[#2D3C59]' : 'border-neutral-300'
                                         }`}>
