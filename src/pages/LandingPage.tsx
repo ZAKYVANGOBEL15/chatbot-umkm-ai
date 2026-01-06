@@ -447,11 +447,11 @@ export default function LandingPage() {
               },
               {
                 q: "Apakah saya harus online di laptop terus?",
-                a: "Sama sekali ngga perlu. Bot bekerja di server cloud kami 24 jam nonstop. Anda bisa mematikan laptop atau HP, dan bot tetap akan menjawab pelanggan Anda."
+                a: "Sama sekali ngga perlu. Bot bekerja di server cloud kami 24 jam nonstop. Anda bisa mematikan laptop atau HP, dan bot tetap akan menjawab pertanyaan staf Anda."
               },
               {
-                q: "Bagaimana cara mengganti data produk?",
-                a: "Cukup login ke Dashboard Nusavite, ubah harganya atau keterangannya, simpan, dan AI akan otomatis menggunakan data terbaru dalam hitungan detik."
+                q: "Bagaimana cara update SOP/Prosedur?",
+                a: "Cukup login ke Dashboard Nusavite, ubah detail prosedur atau kebijakannya, simpan, dan AI akan otomatis menggunakan data terbaru dalam hitungan detik."
               }
             ].map((faq, index) => (
               <div key={index} className="p-10 rounded-[2.5rem] border border-neutral-100 bg-neutral-50/30 hover:bg-white hover:border-neutral-200 hover:shadow-xl hover:shadow-neutral-100/50 transition-all duration-300 group">
