@@ -594,10 +594,10 @@ export default function LandingPage() {
                   className="h-6 md:h-8 object-contain"
                 />
                 <div className="flex items-center gap-2">
-                  <div className="w-8 h-8 rounded-lg bg-[#2D3C59] flex items-center justify-center p-1.5 grayscale-0">
-                    <img src="/NV.png" alt="Nusavite" className="w-full h-full object-contain brightness-0 invert" />
-                  </div>
-                  <span className="text-neutral-400 font-bold text-sm tracking-tight grayscale-0">Nusavite Engine</span>
+                  <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-[#2D3C59] fill-current grayscale-0">
+                    <path d="M37.5273 0L75.0546 65H0L37.5273 0Z" fill="currentColor" />
+                  </svg>
+                  <span className="text-neutral-400 font-bold text-sm tracking-tight grayscale-0">Vercel Edge</span>
                 </div>
               </div>
             </div>
