@@ -1,4 +1,6 @@
 import { getDb } from './lib/db.js';
+// @ts-ignore
+import midtransClient from 'midtrans-client';
 
 export default async function handler(req: any, res: any) {
     // 1. Handle CORS
@@ -30,56 +32,58 @@ export default async function handler(req: any, res: any) {
         }
 
         const userData = userDoc.data();
-        const userEmail = userData?.email || 'customer@example.com';
+        const userEmail = userData?.email || '';
         const userName = userData?.name || 'Customer';
 
-        // Xendit Config
-        const XENDIT_SECRET_KEY = process.env.XENDIT_SECRET_KEY;
-        if (!XENDIT_SECRET_KEY) {
-            return res.status(500).json({ error: 'Xendit Secret Key not configured' });
+        // Midtrans Config
+        const isProduction = process.env.MIDTRANS_IS_PRODUCTION === 'true';
+        const serverKey = process.env.MIDTRANS_SERVER_KEY;
+        const clientKey = process.env.MIDTRANS_CLIENT_KEY;
+
+        if (!serverKey) {
+            return res.status(500).json({ error: 'Midtrans Server Key not configured' });
         }
 
-        const authHeader = Buffer.from(`${XENDIT_SECRET_KEY}:`).toString('base64');
-
-        // Invoice Details
-        const amount = 499000; // Updated price based on new strategy (Rp 499rb)
-        const externalId = `inv-${userId}-${Date.now()}`;
-
-        const response = await fetch('https://api.xendit.co/v2/invoices', {
-            method: 'POST',
-            headers: {
-                'Authorization': `Basic ${authHeader}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                external_id: externalId,
-                amount: amount,
-                payer_email: userEmail,
-                description: `Pembayaran Langganan Premium - ${userData?.businessName || 'ChatBot AI'}`,
-                customer: {
-                    given_names: userName,
-                    email: userEmail
-                },
-                success_redirect_url: `${req.headers.origin || 'https://www.nusavite.com'}/dashboard`,
-                failure_redirect_url: `${req.headers.origin || 'https://www.nusavite.com'}/dashboard`,
-                currency: 'IDR'
-            })
+        const snap = new midtransClient.Snap({
+            isProduction: isProduction,
+            serverKey: serverKey,
+            clientKey: clientKey
         });
 
-        const invoice = await response.json();
+        // Transaction Details
+        const amount = 200000; // Updated price based on simplified strategy (Rp 200rb)
+        const orderId = `nv-${userId}-${Date.now()}`;
 
-        if (invoice.error_code) {
-            console.error('Xendit Error:', invoice);
-            return res.status(400).json({ error: invoice.message });
-        }
+        const parameter = {
+            transaction_details: {
+                order_id: orderId,
+                gross_amount: amount
+            },
+            customer_details: {
+                first_name: userName,
+                email: userEmail
+            },
+            item_details: [{
+                id: 'premium_monthly',
+                price: amount,
+                quantity: 1,
+                name: 'Langganan Nusavite AI - 1 Bulan'
+            }],
+            callbacks: {
+                finish: `${req.headers.origin || 'https://www.nusavite.com'}/dashboard`
+            }
+        };
+
+        const transaction = await snap.createTransaction(parameter);
 
         return res.status(200).json({
-            invoiceUrl: invoice.invoice_url,
-            externalId: invoice.external_id
+            invoiceUrl: transaction.redirect_url,
+            orderId: orderId,
+            token: transaction.token
         });
 
     } catch (error: any) {
-        console.error('Create Invoice Error:', error);
-        return res.status(500).json({ error: 'Internal Server Error' });
+        console.error('Midtrans Create Transaction Error:', error);
+        return res.status(500).json({ error: 'Internal Server Error', details: error.message });
     }
 }
