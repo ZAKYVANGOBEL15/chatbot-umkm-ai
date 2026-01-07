@@ -523,7 +523,7 @@ export default function LandingPage() {
 
                 <div className="mb-10 relative z-10 text-center">
                   <div className="inline-block px-3 py-1 bg-[#2D3C59] text-white text-[10px] font-bold rounded-full mb-4 animate-bounce">
-                    PROMO PERILISAN ⚡
+                    PROMO PERILISAN
                   </div>
                   <span className="text-neutral-400 text-xs uppercase font-bold tracking-widest block mb-3">Biaya Langganan</span>
                   <div className="flex flex-col items-center justify-center whitespace-nowrap">
