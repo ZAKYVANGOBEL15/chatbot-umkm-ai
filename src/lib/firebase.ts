@@ -5,7 +5,7 @@ import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "fire
 
 const firebaseConfig = {
     apiKey: "AIzaSyAMmz9F-2gLoBuSdZp-JabiMfjiuah0T9o",
-    authDomain: "nusavite.com",
+    authDomain: "www.nusavite.com",
     projectId: "nusavite-official",
     storageBucket: "nusavite-official.firebasestorage.app",
     messagingSenderId: "232447680096",
