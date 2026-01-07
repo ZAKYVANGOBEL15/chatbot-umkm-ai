@@ -1,15 +1,16 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
-import { onAuthStateChanged } from 'firebase/auth';
-import { User, ShieldCheck, Users, ArrowLeft, Lock } from 'lucide-react';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import { onAuthStateChanged, GoogleAuthProvider, reauthenticateWithPopup } from 'firebase/auth';
+import { User, ShieldCheck, Users, ArrowLeft, Lock, RefreshCw } from 'lucide-react';
 
 export default function RoleSelector() {
     const [user, setUser] = useState(auth.currentUser);
     const [loading, setLoading] = useState(true);
-    const [step, setStep] = useState<'select' | 'pin'>('select');
+    const [step, setStep] = useState<'select' | 'pin' | 'reset'>('select');
     const [pin, setPin] = useState('');
+    const [newPin, setNewPin] = useState('');
     const [correctPin, setCorrectPin] = useState('');
     const [error, setError] = useState('');
     const [isVerifying, setIsVerifying] = useState(false);
@@ -63,6 +64,41 @@ export default function RoleSelector() {
         setIsVerifying(false);
     };
 
+    const handleForgotPin = async () => {
+        if (!user) return;
+        setError('');
+        setIsVerifying(true);
+        try {
+            const provider = new GoogleAuthProvider();
+            await reauthenticateWithPopup(user, provider);
+            // If success, go to reset step
+            setStep('reset');
+        } catch (err: any) {
+            console.error("Re-auth error:", err);
+            setError('Gagal memverifikasi akun Google. Silakan coba lagi.');
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
+    const handleResetPin = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!user || newPin.length < 4) return;
+        setIsVerifying(true);
+        try {
+            await updateDoc(doc(db, 'users', user.uid), {
+                adminPin: newPin,
+                updatedAt: new Date().toISOString()
+            });
+            sessionStorage.setItem(`userRole_${user.uid}`, 'admin');
+            navigate('/dashboard');
+        } catch (err) {
+            setError('Gagal memperbarui PIN. Silakan coba lagi.');
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
     if (loading) return null;
 
     return (
@@ -105,7 +141,7 @@ export default function RoleSelector() {
                                 </div>
                             </button>
                         </div>
-                    ) : (
+                    ) : step === 'pin' ? (
                         <div className="space-y-6">
                             <button
                                 onClick={() => setStep('select')}
@@ -150,6 +186,49 @@ export default function RoleSelector() {
                                     className="w-full py-4 bg-[#061E29] text-white font-bold rounded-2xl hover:bg-[#0a2d3d] transition-all shadow-lg shadow-[#061E29]/20 disabled:opacity-50"
                                 >
                                     {isVerifying ? 'Memverifikasi...' : 'Verifikasi & Masuk'}
+                                </button>
+
+                                <button
+                                    type="button"
+                                    onClick={handleForgotPin}
+                                    className="w-full text-sm font-bold text-neutral-400 hover:text-[#061E29] transition-colors mt-2"
+                                >
+                                    Lupa PIN? Reset via Google
+                                </button>
+                            </form>
+                        </div>
+                    ) : (
+                        <div className="space-y-6">
+                            <div className="text-center">
+                                <div className="w-16 h-16 bg-green-50 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <RefreshCw size={32} />
+                                </div>
+                                <h3 className="text-xl font-bold text-[#061E29]">Set PIN Baru</h3>
+                                <p className="text-sm text-neutral-500 mt-1">Identitas terverifikasi. Masukkan PIN baru untuk Admin.</p>
+                            </div>
+
+                            <form onSubmit={handleResetPin} className="space-y-6">
+                                <div>
+                                    <input
+                                        type="password"
+                                        inputMode="numeric"
+                                        pattern="[0-9]*"
+                                        maxLength={6}
+                                        autoFocus
+                                        required
+                                        value={newPin}
+                                        onChange={(e) => setNewPin(e.target.value.replace(/\D/g, ''))}
+                                        placeholder="PIN BARU"
+                                        className="w-full text-center text-4xl tracking-[0.2em] py-4 border-b-2 border-neutral-200 focus:border-[#061E29] focus:outline-none transition-all placeholder:text-neutral-100"
+                                    />
+                                </div>
+
+                                <button
+                                    type="submit"
+                                    disabled={newPin.length < 4 || isVerifying}
+                                    className="w-full py-4 bg-green-600 text-white font-bold rounded-2xl hover:bg-green-700 transition-all shadow-lg shadow-green-600/20 disabled:opacity-50"
+                                >
+                                    {isVerifying ? 'Menyimpan...' : 'Simpan PIN & Masuk'}
                                 </button>
                             </form>
                         </div>
