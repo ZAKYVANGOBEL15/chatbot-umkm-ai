@@ -577,7 +577,7 @@ export default function LandingPage() {
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-300 mb-8">Official Partners & Infrastructure</p>
               <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
                 <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Midtrans.png"
+                  src="/midtrans-logoo.jpg"
                   alt="Midtrans"
                   className="h-6 md:h-8 object-contain"
                 />
