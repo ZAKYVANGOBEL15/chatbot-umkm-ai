@@ -571,26 +571,50 @@ export default function LandingPage() {
               Konsultasi Dulu
             </a>
           </div>
-          <div className="mt-24 pt-8 border-t border-neutral-100">
-            <div className="flex flex-col items-center gap-4 mb-8">
-              <p className="text-neutral-500 text-sm font-medium">
-                nusavite06@gmail.com • +62 895-4029-45495
-              </p>
-              <p className="text-neutral-400 text-xs">
-                Kotamobagu, Sulawesi Utara, Indonesia
-              </p>
+          <div className="mt-24">
+            {/* Partnership Logos */}
+            <div className="flex flex-col items-center mb-16 px-4">
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-300 mb-8">Official Partners & Infrastructure</p>
+              <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/b/b5/Midtrans.png"
+                  alt="Midtrans"
+                  className="h-6 md:h-8 object-contain"
+                />
+                <img
+                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+                  alt="Google Cloud"
+                  className="h-6 md:h-8 object-contain"
+                />
+                <div className="flex items-center gap-2">
+                  <div className="w-8 h-8 rounded-lg bg-[#2D3C59] flex items-center justify-center p-1.5 grayscale-0">
+                    <img src="/NV.png" alt="Nusavite" className="w-full h-full object-contain brightness-0 invert" />
+                  </div>
+                  <span className="text-neutral-400 font-bold text-sm tracking-tight grayscale-0">Nusavite Engine</span>
+                </div>
+              </div>
             </div>
 
-            <div className="flex justify-center gap-8 mb-8 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-              <a href="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat & Ketentuan</a>
-              <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
-            </div>
+            <div className="pt-12 border-t border-neutral-100">
+              <div className="flex flex-col items-center gap-4 mb-8">
+                <p className="text-neutral-500 text-sm font-medium">
+                  nusavite06@gmail.com • +62 895-4029-45495
+                </p>
+                <p className="text-neutral-400 text-xs text-center">
+                  Kotamobagu, Sulawesi Utara, Indonesia
+                </p>
+              </div>
 
-            <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
-              &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved
+              <div className="flex justify-center gap-8 mb-8 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                <a href="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat & Ketentuan</a>
+                <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
+              </div>
+
+              <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
+                &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved
+              </div>
             </div>
           </div>
-        </div>
       </section>
     </div>
   );
