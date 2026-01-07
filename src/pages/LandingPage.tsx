@@ -521,10 +521,14 @@ export default function LandingPage() {
               <div className="w-full md:w-[400px] p-10 md:p-14 bg-neutral-50/50 flex flex-col justify-center items-center text-center border-b md:border-b-0 border-neutral-100 relative overflow-hidden">
                 <div className="absolute top-0 right-0 w-32 h-32 bg-[#2D3C59]/5 rounded-bl-full -mr-16 -mt-16"></div>
 
-                <div className="mb-10 relative z-10">
+                <div className="mb-10 relative z-10 text-center">
+                  <div className="inline-block px-3 py-1 bg-[#2D3C59] text-white text-[10px] font-bold rounded-full mb-4 animate-bounce">
+                    PROMO PERILISAN ⚡
+                  </div>
                   <span className="text-neutral-400 text-xs uppercase font-bold tracking-widest block mb-3">Biaya Langganan</span>
-                  <div className="flex items-baseline justify-center whitespace-nowrap">
-                    <span className="text-5xl font-black text-[#2D3C59] tracking-tighter">Rp 499.000</span>
+                  <div className="flex flex-col items-center justify-center whitespace-nowrap">
+                    <span className="text-neutral-400 text-sm line-through opacity-50 mb-1">Rp 499.000</span>
+                    <span className="text-5xl font-black text-[#2D3C59] tracking-tighter">Rp 200.000</span>
                   </div>
                   <span className="text-neutral-400 text-sm font-medium">Rupiah / bulan</span>
                 </div>
