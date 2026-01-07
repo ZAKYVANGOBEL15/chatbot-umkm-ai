@@ -21,6 +21,8 @@ export default function Onboarding() {
             setLoading(false);
             if (!currentUser) {
                 navigate('/login');
+            } else if (currentUser.email === 'tester.nusavite@gmail.com') {
+                navigate('/dashboard');
             }
         });
         return () => unsubscribe();

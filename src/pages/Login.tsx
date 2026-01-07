@@ -32,6 +32,8 @@ export default function Login() {
                     email: user.email,
                     businessName: user.email === 'tester.nusavite@gmail.com' ? 'Nusavite Tester' : '',
                     businessType: user.email === 'tester.nusavite@gmail.com' ? 'IT' : '',
+                    adminPin: user.email === 'tester.nusavite@gmail.com' ? '123456' : '',
+                    onboardingCompleted: user.email === 'tester.nusavite@gmail.com' ? true : false,
                     createdAt: now.toISOString(),
                     trialExpiresAt: trialExpiresAt.toISOString(),
                     subscriptionStatus: user.email === 'tester.nusavite@gmail.com' ? 'active' : 'trial',
@@ -47,16 +49,18 @@ export default function Login() {
                 const userData = docSnap.data();
                 if (user.email === 'tester.nusavite@gmail.com') {
                     // Force update tester data if it exists but is incomplete/trial
-                    if (userData.subscriptionStatus !== 'active' || !userData.businessName) {
+                    if (userData.subscriptionStatus !== 'active' || !userData.businessName || !userData.onboardingCompleted) {
                         await updateDoc(docRef, {
                             businessName: 'Nusavite Tester',
                             businessType: 'IT',
+                            adminPin: '123456',
+                            onboardingCompleted: true,
                             subscriptionStatus: 'active',
                             subscriptionPlan: 'pro'
                         });
                     }
                     navigate('/dashboard');
-                } else if (!userData.businessName || !userData.businessType) {
+                } else if (!userData.onboardingCompleted || !userData.businessName || !userData.businessType) {
                     navigate('/onboarding');
                 } else {
                     navigate('/role-selection');
