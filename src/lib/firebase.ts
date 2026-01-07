@@ -4,14 +4,13 @@ import { getFirestore } from "firebase/firestore";
 import { getStorage, ref, uploadBytes, getDownloadURL, deleteObject } from "firebase/storage";
 
 const firebaseConfig = {
-    apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
-    authDomain: window.location.hostname.includes('nusavite.com')
-        ? 'chatbot.nusavite.com'
-        : import.meta.env.VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID,
-    storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: import.meta.env.VITE_FIREBASE_APP_ID
+    apiKey: "AIzaSyAMmz9F-2gLoBuSdZp-JabiMfjiuah0T9o",
+    authDomain: "nusavite-official.firebaseapp.com",
+    projectId: "nusavite-official",
+    storageBucket: "nusavite-official.firebasestorage.app",
+    messagingSenderId: "232447680096",
+    appId: "1:232447680096:web:20c55b7f7f5f1f48692d05",
+    measurementId: "G-N8MSF03XQ3"
 };
 
 const app = initializeApp(firebaseConfig);
