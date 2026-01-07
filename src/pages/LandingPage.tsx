@@ -576,11 +576,14 @@ export default function LandingPage() {
             <div className="flex flex-col items-center mb-16 px-4">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-300 mb-8">Official Partners & Infrastructure</p>
               <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-30 grayscale hover:grayscale-0 transition-all duration-500">
-                <img
-                  src="/midtrans-logoo.jpg"
-                  alt="Midtrans"
-                  className="h-6 md:h-8 object-contain"
-                />
+                <div className="flex items-center gap-3">
+                  <span className="text-neutral-400 font-bold text-[10px] uppercase tracking-wider">Official Payment Partner</span>
+                  <img
+                    src="/midtrans-logoo.jpg"
+                    alt="Midtrans"
+                    className="h-6 md:h-8 object-contain"
+                  />
+                </div>
                 <img
                   src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
                   alt="Google Cloud"
