@@ -111,12 +111,16 @@ export default async function handler(req: any, res: any) {
 
                 // A. Find the user associated with this Phone Number ID
                 const usersRef = db.collection('users');
+                console.log(`[WhatsApp] Searching for user with whatsappPhoneNumberId: ${phoneNumberId}`);
                 const querySnapshot = await usersRef.where('whatsappPhoneNumberId', '==', phoneNumberId).get();
+
+                console.log(`[WhatsApp] Search result count: ${querySnapshot.size}`);
 
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
                     const userData = userDoc.data();
                     const userId = userDoc.id;
+                    console.log(`[WhatsApp] Found user: ${userId} (${userData.businessName})`);
 
                     // --- SUBSCRIPTION CHECK ---
                     const status = userData.subscriptionStatus || 'trial';
