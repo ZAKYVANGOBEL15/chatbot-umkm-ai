@@ -251,7 +251,8 @@ export default async function handler(req: any, res: any) {
 
                     // E. Send Message Back to WhatsApp
                     if (accessToken) {
-                        const waResponse = await fetch(`https://graph.facebook.com/v17.0/${phoneNumberId}/messages`, {
+                        console.log(`[WhatsApp] Attempting to send reply to ${from} via v22.0...`);
+                        const waResponse = await fetch(`https://graph.facebook.com/v22.0/${phoneNumberId}/messages`, {
                             method: 'POST',
                             headers: {
                                 'Authorization': `Bearer ${accessToken}`,
