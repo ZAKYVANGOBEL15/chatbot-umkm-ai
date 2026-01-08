@@ -92,6 +92,9 @@ export default async function handler(req: any, res: any) {
             const db = getDb();
             const data = req.body;
 
+            // FULL PAYLOAD LOGGING (DEBUG ONLY)
+            console.log('[Webhook] Full Payload:', JSON.stringify(data, null, 2));
+
             // Log raw structure for debugging
             const value = data.entry?.[0]?.changes?.[0]?.value;
             const message = value?.messages?.[0];
@@ -132,9 +135,11 @@ export default async function handler(req: any, res: any) {
                         isExpired = new Date(userData.trialExpiresAt).getTime() < Date.now();
                     }
 
+                    console.log(`[WhatsApp] User Status: ${status}, Expired: ${isExpired}`);
+
                     if (isExpired) {
                         console.warn(`[WhatsApp] User ${userId} (${userData.businessName}) has an expired ${status}. Skipping response.`);
-                        return res.status(200).send('OK'); // Acknowledge Meta but don't reply
+                        return res.status(200).send('OK');
                     }
                     // --------------------------
 
