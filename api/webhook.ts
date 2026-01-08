@@ -92,24 +92,11 @@ export default async function handler(req: any, res: any) {
             const db = getDb();
             const data = req.body;
 
-            // FULL PAYLOAD LOGGING (DEBUG ONLY)
-            console.log('[Webhook] Full Payload:', JSON.stringify(data, null, 2));
-
-            // Log raw structure for debugging
+            // Extract message structure
             const value = data.entry?.[0]?.changes?.[0]?.value;
             const message = value?.messages?.[0];
             const statuses = value?.statuses?.[0];
             const phoneNumberId = value?.metadata?.phone_number_id;
-
-            console.log(`[Webhook] Event Type: ${message ? 'Message' : (statuses ? 'Status Update' : 'Other')}`);
-            if (statuses && statuses.status === 'failed') {
-                const recipient = statuses.recipient_id;
-                console.error(`[Webhook] Delivery Failed to ${recipient}:`, JSON.stringify(statuses.errors, null, 2));
-            }
-
-            if (phoneNumberId) {
-                console.log(`[Webhook] Business Phone Number ID: ${phoneNumberId}`);
-            }
 
             if (message && message.type === 'text' && phoneNumberId) {
                 const from = message.from;
@@ -119,16 +106,10 @@ export default async function handler(req: any, res: any) {
 
                 // A. Find the user associated with this Phone Number ID
                 const usersRef = db.collection('users');
-                console.log(`[WhatsApp] Searching for user with whatsappPhoneNumberId: ${phoneNumberId}`);
-                const querySnapshot = await usersRef.where('whatsappPhoneNumberId', '==', phoneNumberId).get();
-
-                console.log(`[WhatsApp] Search result count: ${querySnapshot.size}`);
-
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
                     const userData = userDoc.data();
                     const userId = userDoc.id;
-                    console.log(`[WhatsApp] Found user: ${userId} (${userData.businessName})`);
 
                     // --- SUBSCRIPTION CHECK ---
                     const status = userData.subscriptionStatus || 'trial';
@@ -140,10 +121,8 @@ export default async function handler(req: any, res: any) {
                         isExpired = new Date(userData.trialExpiresAt).getTime() < Date.now();
                     }
 
-                    console.log(`[WhatsApp] User Status: ${status}, Expired: ${isExpired}`);
-
                     if (isExpired) {
-                        console.warn(`[WhatsApp] User ${userId} (${userData.businessName}) has an expired ${status}. Skipping response.`);
+                        console.warn(`[WhatsApp] User ${userId} has an expired ${status}. Skipping.`);
                         return res.status(200).send('OK');
                     }
                     // --------------------------
