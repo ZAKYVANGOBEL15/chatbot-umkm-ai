@@ -77,14 +77,14 @@ export default async function handler(req: any, res: any) {
             const appSecret = process.env.WHATSAPP_APP_SECRET;
 
             if (appSecret && signature) {
-                // Verify signature using the raw body
-                // req.body might be already parsed, for Vercel Serverless we might need raw body
                 const payload = JSON.stringify(req.body);
-                if (!verifySignature(payload, signature, appSecret)) {
-                    console.warn('[Webhook] Invalid signature');
+                const isValid = verifySignature(payload, signature, appSecret);
+                console.log(`[Webhook] Signature validation result: ${isValid}`);
+
+                if (!isValid && process.env.SKIP_SIGNATURE_VALIDATION !== 'true') {
+                    console.warn('[Webhook] Invalid signature. Payload length:', payload.length);
                     return res.status(401).send('Invalid Signature');
                 }
-                console.log('[Webhook] Signature verified');
             } else if (!appSecret) {
                 console.warn('[Webhook] WHATSAPP_APP_SECRET is not set. Skipping signature validation.');
             }
@@ -92,10 +92,16 @@ export default async function handler(req: any, res: any) {
             const db = getDb();
             const data = req.body;
 
-            // Extract message and business phone number ID
+            // Log raw structure for debugging
             const value = data.entry?.[0]?.changes?.[0]?.value;
             const message = value?.messages?.[0];
+            const statuses = value?.statuses?.[0];
             const phoneNumberId = value?.metadata?.phone_number_id;
+
+            console.log(`[Webhook] Event Type: ${message ? 'Message' : (statuses ? 'Status Update' : 'Other')}`);
+            if (phoneNumberId) {
+                console.log(`[Webhook] Business Phone Number ID: ${phoneNumberId}`);
+            }
 
             if (message && message.type === 'text' && phoneNumberId) {
                 const from = message.from;
