@@ -98,14 +98,21 @@ export default async function handler(req: any, res: any) {
             const statuses = value?.statuses?.[0];
             const phoneNumberId = value?.metadata?.phone_number_id;
 
+            if (statuses && statuses.status === 'failed') {
+                const recipient = statuses.recipient_id;
+                console.error(`[Webhook] Delivery Failed to ${recipient}:`, JSON.stringify(statuses.errors, null, 2));
+            }
+
             if (message && message.type === 'text' && phoneNumberId) {
                 const from = message.from;
                 const text = message.text.body;
 
-                console.log(`[WhatsApp] Message from ${from}: ${text} (ID: ${phoneNumberId})`);
+                console.log(`[WhatsApp] Message from ${from}: ${text}`);
 
                 // A. Find the user associated with this Phone Number ID
                 const usersRef = db.collection('users');
+                const querySnapshot = await usersRef.where('whatsappPhoneNumberId', '==', phoneNumberId).get();
+
                 if (!querySnapshot.empty) {
                     const userDoc = querySnapshot.docs[0];
                     const userData = userDoc.data();
