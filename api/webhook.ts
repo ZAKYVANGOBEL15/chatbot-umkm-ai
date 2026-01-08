@@ -102,6 +102,10 @@ export default async function handler(req: any, res: any) {
             const phoneNumberId = value?.metadata?.phone_number_id;
 
             console.log(`[Webhook] Event Type: ${message ? 'Message' : (statuses ? 'Status Update' : 'Other')}`);
+            if (statuses && statuses.status === 'failed') {
+                console.error('[Webhook] Delivery Failed:', JSON.stringify(statuses.errors, null, 2));
+            }
+
             if (phoneNumberId) {
                 console.log(`[Webhook] Business Phone Number ID: ${phoneNumberId}`);
             }
