@@ -106,10 +106,12 @@ export default async function handler(req: any, res: any) {
             if (message && message.type === 'text' && phoneNumberId) {
                 const from = message.from;
                 const text = message.text.body;
+                const messageId = message.id;
 
-                console.log(`[WhatsApp] Message from ${from}: ${text}`);
+                console.log(`[WhatsApp] Message from ${from}: ${text} (ID: ${messageId})`);
 
                 // A. Find the user associated with this Phone Number ID
+                const db = getDb();
                 const usersRef = db.collection('users');
                 const querySnapshot = await usersRef.where('whatsappPhoneNumberId', '==', phoneNumberId).get();
 
@@ -117,6 +119,20 @@ export default async function handler(req: any, res: any) {
                     const userDoc = querySnapshot.docs[0];
                     const userData = userDoc.data();
                     const userId = userDoc.id;
+
+                    // --- IDEMPOTENCY CHECK ---
+                    const processedRef = db.collection('users').doc(userId).collection('processed_messages').doc(messageId);
+                    const processedDoc = await processedRef.get();
+                    if (processedDoc.exists) {
+                        console.log(`[Webhook] Duplicate message detected: ${messageId}. Skipping.`);
+                        return res.status(200).send('OK');
+                    }
+                    // Mark as processed immediately (pre-check)
+                    await processedRef.set({
+                        processedAt: new Date().toISOString(),
+                        from: from,
+                        text: text.substring(0, 100)
+                    });
 
                     // --- SUBSCRIPTION CHECK ---
                     const status = userData.subscriptionStatus || 'trial';
@@ -137,10 +153,14 @@ export default async function handler(req: any, res: any) {
                     const accessToken = userData.whatsappAccessToken;
                     const businessPhone = userData.businessPhone; // Optional fallback
 
-                    // B. Fetch Products & Social Media for this user
-                    const productsSnap = await db.collection('users').doc(userId).collection('products').get();
-                    const products = productsSnap.docs.map(d => d.data());
+                    // B & C. Parallel Fetch Business Info & Customer History
+                    console.log(`[Webhook] Fetching context for user ${userId}...`);
+                    const [productsSnap, customerQuery] = await Promise.all([
+                        db.collection('users').doc(userId).collection('products').get(),
+                        db.collection('users').doc(userId).collection('customers').where('phone', '==', from).limit(1).get()
+                    ]);
 
+                    const products = productsSnap.docs.map(d => d.data());
                     const businessContext = {
                         name: userData.businessName || 'Toko Kami',
                         description: userData.businessDescription || 'Toko UMKM.',
@@ -151,18 +171,18 @@ export default async function handler(req: any, res: any) {
                         businessType: userData.businessType || 'retail'
                     };
 
-                    // C. Identify Customer & Fetch History
                     let customerId = '';
                     let history: { role: string; text: string }[] = [];
                     const customersRef = db.collection('users').doc(userId).collection('customers');
-                    const customerQuery = await customersRef.where('phone', '==', from).limit(1).get();
 
                     if (!customerQuery.empty) {
-                        customerId = customerQuery.docs[0].id;
-                        // Fetch last 15 messages
+                        const customerDoc = customerQuery.docs[0];
+                        customerId = customerDoc.id;
+
+                        // Fetch last 15 messages (History)
                         const messagesSnap = await customersRef.doc(customerId)
                             .collection('messages')
-                            .orderBy('createdAt', 'asc') // Create index if needed, or filter in memory
+                            .orderBy('createdAt', 'asc')
                             .limitToLast(15)
                             .get();
 
@@ -171,10 +191,10 @@ export default async function handler(req: any, res: any) {
                             text: doc.data().text
                         }));
                     } else {
-                        // Create new customer proactively to store history
+                        // Create new customer proactively
                         const newCustomer = await customersRef.add({
                             phone: from,
-                            name: "Pelanggan Baru", // Will be updated by lead gen later
+                            name: "Pelanggan Baru",
                             status: 'new',
                             source: 'whatsapp',
                             createdAt: new Date().toISOString(),
@@ -192,10 +212,21 @@ export default async function handler(req: any, res: any) {
                         });
                     }
 
-                    // D. Get AI Response
-                    let reply = await import('../src/lib/gemini.js').then(m =>
-                        m.generateAIResponse(text, businessContext, history)
-                    );
+                    // D. Get AI Response with Timeout
+                    const timeout = (ms: number) => new Promise((_, reject) => setTimeout(() => reject(new Error('AI Timeout')), ms));
+                    let reply: string = '';
+
+                    try {
+                        console.log(`[Webhook] Generating AI response for user ${userId}...`);
+                        const aiPromise = import('../src/lib/gemini.js').then(m =>
+                            m.generateAIResponse(text, businessContext, history)
+                        );
+                        // Timeout set to 25 seconds (Meta webhook wait time is usually around that)
+                        reply = await Promise.race([aiPromise, timeout(25000)]) as string;
+                    } catch (aiErr: any) {
+                        console.error(`[Webhook] AI Error for ${userId}:`, aiErr.message);
+                        reply = "Maaf, sistem kami sedang sangat sibuk saat ini. Mohon coba kirim pesan kembali dalam beberapa saat.";
+                    }
 
                     // --- LEAD GENERATION LOGIC ---
                     const match = reply.match(/:::LEAD_DATA\s*=?\s*(\{.*?\})?:::/);
@@ -238,21 +269,30 @@ export default async function handler(req: any, res: any) {
 
                     // E. Send Message Back to WhatsApp
                     if (accessToken) {
-                        console.log(`[WhatsApp] Attempting to send reply to ${from} via v22.0...`);
-                        const waResponse = await fetch(`https://graph.facebook.com/v22.0/${phoneNumberId}/messages`, {
-                            method: 'POST',
-                            headers: {
-                                'Authorization': `Bearer ${accessToken}`,
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                messaging_product: 'whatsapp',
-                                to: from,
-                                text: { body: reply }
-                            })
-                        });
-                        const waData = await waResponse.json();
-                        console.log(`[WhatsApp] Reply sent to ${from}`, waData);
+                        try {
+                            console.log(`[WhatsApp] Sending reply to ${from} via v22.0...`);
+                            const waResponse = await fetch(`https://graph.facebook.com/v22.0/${phoneNumberId}/messages`, {
+                                method: 'POST',
+                                headers: {
+                                    'Authorization': `Bearer ${accessToken}`,
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    messaging_product: 'whatsapp',
+                                    to: from,
+                                    text: { body: reply }
+                                })
+                            });
+
+                            const waData = await waResponse.json();
+                            if (!waResponse.ok) {
+                                console.error(`[WhatsApp] API Error (${waResponse.status}):`, JSON.stringify(waData, null, 2));
+                            } else {
+                                console.log(`[WhatsApp] Reply sent successfully to ${from}`, waData.messages?.[0]?.id);
+                            }
+                        } catch (waErr: any) {
+                            console.error(`[WhatsApp] Fetch Error:`, waErr.message);
+                        }
                     }
                 } else {
                     console.warn(`[WhatsApp] No user found for Phone Number ID: ${phoneNumberId}`);
