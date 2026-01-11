@@ -44,20 +44,20 @@ const ChatSimulation = () => {
 
   return (
     <div className="space-y-6 font-sans">
-      {/* Customer Message */}
-      <div className={`transition-all duration-500 transform ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-        <div className="bg-neutral-50 p-6 rounded-2xl rounded-tl-none text-neutral-800 border border-neutral-100 shadow-sm">
-          <p className="text-[10px] text-neutral-400 mb-2 font-bold uppercase tracking-widest">Karyawan Bertanya:</p>
+      {/* Customer Message (Right) */}
+      <div className={`flex justify-end transition-all duration-500 transform ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="bg-neutral-50 p-4 md:p-6 rounded-2xl rounded-tr-none text-neutral-800 border border-neutral-100 shadow-sm max-w-[85%] ml-auto">
+          <p className="text-[10px] text-neutral-400 mb-2 font-bold uppercase tracking-widest text-right">Karyawan Bertanya:</p>
           <p className="text-sm font-medium leading-relaxed">
             {step === 1 ? displayText : customerMessage}
           </p>
         </div>
       </div>
 
-      {/* AI Typing / Response */}
+      {/* AI Typing / Response (Left) */}
       {step >= 2 && (
-        <div className={`transition-all duration-500 transform ${step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="bg-[#2D3C59] p-6 rounded-2xl rounded-tr-none text-white ml-auto max-w-[90%] shadow-xl">
+        <div className={`flex justify-start transition-all duration-500 transform ${step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="bg-[#2D3C59] p-4 md:p-6 rounded-2xl rounded-tl-none text-white shadow-xl max-w-[85%]">
             <p className="text-[10px] text-white/40 mb-2 font-bold uppercase tracking-widest">Nusavite AI Menjawab:</p>
             {step === 2 ? (
               <div className="flex gap-1.5 py-1">
@@ -77,27 +77,26 @@ const ChatSimulation = () => {
 
 const PartnerLogos = () => (
   <div className="flex items-center gap-12 md:gap-24">
-    <div className="flex items-center gap-3">
-      <span className="text-white font-bold text-sm tracking-tight opacity-70">Midtrans</span>
+    <div className="flex items-center">
       <img
-        src="/midtrans-logoo.jpg"
+        src="/Midtrans_logo.png"
         alt="Midtrans"
-        className="h-6 md:h-8 object-contain"
+        className="h-10 md:h-12 object-contain"
       />
     </div>
-    <div className="flex items-center gap-4">
+    <div className="flex items-center">
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
         alt="Google Cloud"
-        className="h-6 md:h-8 object-contain"
+        className="h-8 md:h-10 object-contain"
       />
-      <span className="text-white/60 font-bold text-sm tracking-tight">Google Cloud</span>
     </div>
-    <div className="flex items-center gap-3">
-      <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white fill-current">
-        <path d="M37.5273 0L75.0546 65H0L37.5273 0Z" fill="currentColor" />
-      </svg>
-      <span className="text-white font-bold text-sm tracking-tight opacity-90">Vercel</span>
+    <div className="flex items-center">
+      <img
+        src="/vercel_logo.png"
+        alt="Vercel"
+        className="h-8 md:h-10 object-contain"
+      />
     </div>
   </div>
 );
