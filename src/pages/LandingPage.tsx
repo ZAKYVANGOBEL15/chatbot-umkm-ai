@@ -590,17 +590,17 @@ export default function LandingPage() {
       </section>
 
       {/* CTA Footer Dark Style */}
-      <section className="bg-[#2D3C59] pt-24 pb-12 rounded-t-[3rem] mx-4 lg:mx-8">
+      <section className="bg-white pt-24 pb-12 border-t border-neutral-100">
         <div className="max-w-4xl mx-auto px-4 text-center">
-          <div className="w-24 h-1 bg-white/20 mx-auto mb-12 rounded-full"></div>
-          <h2 className="text-5xl md:text-6xl font-bold text-white mb-8 tracking-tighter">Siap Automasi Bisnis?</h2>
-          <p className="text-white/60 mb-12 text-xl font-light max-w-2xl mx-auto">
+          <div className="w-24 h-1 bg-neutral-200 mx-auto mb-12 rounded-full"></div>
+          <h2 className="text-5xl md:text-6xl font-bold text-[#2D3C59] mb-8 tracking-tighter">Siap Automasi Bisnis?</h2>
+          <p className="text-neutral-500 mb-12 text-xl font-light max-w-2xl mx-auto">
             Mulai trial gratis 5 hari dan rasakan bagaimana AI membantu menangani pertanyaan internal Anda.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <a
               href="https://chatbot.nusavite.com/register"
-              className="px-10 py-4 bg-white text-[#2D3C59] rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
+              className="px-10 py-4 bg-[#2D3C59] text-white rounded-full font-bold text-lg transition-all shadow-xl hover:shadow-2xl hover:-translate-y-1"
             >
               Coba Gratis Sekarang
             </a>
@@ -608,7 +608,7 @@ export default function LandingPage() {
               href="https://wa.me/62895402945495"
               target="_blank"
               rel="noreferrer"
-              className="px-10 py-4 bg-[#2D3C59] text-white border border-white/20 hover:border-white rounded-full font-bold text-lg transition-all"
+              className="px-10 py-4 bg-white text-[#2D3C59] border border-neutral-200 hover:border-[#2D3C59] rounded-full font-bold text-lg transition-all"
             >
               Konsultasi Dulu
             </a>
@@ -616,7 +616,7 @@ export default function LandingPage() {
           <div className="mt-24">
             {/* Partnership Logos with Infinite Scroll */}
             <div className="flex flex-col items-center mb-16 px-4 overflow-hidden">
-              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-8">Official Partners & Infrastructure</p>
+              <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-neutral-400 mb-8">Official Partners & Infrastructure</p>
 
               <div className="relative w-full overflow-hidden">
                 <div className="flex animate-marquee whitespace-nowrap w-max gap-12 md:gap-24 items-center">
@@ -639,47 +639,47 @@ export default function LandingPage() {
               `}} />
             </div>
 
-            <div className="pt-20 border-t border-white/10">
+            <div className="pt-20 border-t border-neutral-100">
               <div className="grid grid-cols-1 md:grid-cols-4 gap-12 text-left mb-16">
                 {/* Brand & Legal Name */}
                 <div className="md:col-span-2">
-                  <img src="/logo.png" alt="Logo" className="h-8 w-auto mb-6 brightness-0 invert opacity-80" />
-                  <div className="text-white text-sm font-bold tracking-widest uppercase mb-2">
+                  <img src="/logo.png" alt="Logo" className="h-8 w-auto mb-6" />
+                  <div className="text-[#2D3C59] text-sm font-bold tracking-widest uppercase mb-2">
                     MUHAMMAD ZAKY VAN GOBEL
                   </div>
-                  <p className="text-white/50 text-sm leading-relaxed max-w-xs font-light">
+                  <p className="text-neutral-500 text-sm leading-relaxed max-w-xs font-light">
                     Solusi asisten AI pintar untuk mengotomatisasi SOP dan layanan operasional bisnis Anda 24/7.
                   </p>
                 </div>
 
                 {/* Quick Links */}
                 <div>
-                  <h4 className="text-white/30 text-xs font-black uppercase tracking-[0.2em] mb-6">Navigasi</h4>
-                  <ul className="space-y-4 text-sm font-medium text-white/70">
-                    <li><a href="#how-it-works" className="hover:text-white transition-colors">Cara Kerja</a></li>
-                    <li><a href="#features" className="hover:text-white transition-colors">Fitur Utama</a></li>
-                    <li><a href="#pricing" className="hover:text-white transition-colors">Harga Paket</a></li>
+                  <h4 className="text-neutral-400 text-xs font-black uppercase tracking-[0.2em] mb-6">Navigasi</h4>
+                  <ul className="space-y-4 text-sm font-medium text-neutral-600">
+                    <li><a href="#how-it-works" className="hover:text-[#2D3C59] transition-colors">Cara Kerja</a></li>
+                    <li><a href="#features" className="hover:text-[#2D3C59] transition-colors">Fitur Utama</a></li>
+                    <li><a href="#pricing" className="hover:text-[#2D3C59] transition-colors">Harga Paket</a></li>
                   </ul>
                 </div>
 
                 {/* Contact & Legal */}
                 <div>
-                  <h4 className="text-white/30 text-xs font-black uppercase tracking-[0.2em] mb-6">Hubungi Kami</h4>
-                  <ul className="space-y-4 text-sm font-medium text-white/70">
+                  <h4 className="text-neutral-400 text-xs font-black uppercase tracking-[0.2em] mb-6">Hubungi Kami</h4>
+                  <ul className="space-y-4 text-sm font-medium text-neutral-600">
                     <li className="break-all">nusavite06@gmail.com</li>
                     <li>+62 895-4029-45495</li>
-                    <li className="text-white/40 font-light italic">Kotamobagu, Sulawesi Utara</li>
+                    <li className="text-neutral-400 font-light italic">Kotamobagu, Sulawesi Utara</li>
                   </ul>
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-white/40">
-                  <a href="/terms" className="hover:text-white transition-colors">Syarat & Ketentuan</a>
-                  <a href="/privacy" className="hover:text-white transition-colors">Kebijakan Privasi</a>
+              <div className="pt-8 border-t border-neutral-100 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                  <a href="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat & Ketentuan</a>
+                  <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
                 </div>
 
-                <div className="text-white/20 text-[10px] font-black tracking-widest uppercase">
+                <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
                   &copy; {new Date().getFullYear()} Nusavite.com • All Rights Reserved
                 </div>
               </div>
