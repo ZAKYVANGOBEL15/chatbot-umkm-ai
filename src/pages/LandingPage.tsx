@@ -184,7 +184,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 lg:pt-32 lg:pb-32 overflow-hidden">
+      <section className="relative pt-40 pb-20 lg:pt-32 lg:pb-32 overflow-hidden isolate">
         {/* Background Image with Premium Overlay */}
         <div className="absolute inset-0 -z-10">
           <img
