@@ -48,35 +48,77 @@ const ChatSimulation = () => {
   }, [step, displayText]);
 
   return (
-    <div className="space-y-6 font-sans text-base">
-      {/* Customer Message */}
-      <div className={`transition-all duration-500 transform ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-        <div className="bg-neutral-50 p-6 rounded-2xl rounded-tl-none text-neutral-800 border border-neutral-100">
-          <p className="text-xs text-neutral-500 mb-2 font-bold uppercase">Karyawan Bertanya:</p>
-          {step === 1 ? displayText : customerMessage}
+    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 md:p-6 shadow-2xl relative overflow-hidden group">
+      <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
+          <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
+          <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
+        </div>
+        <div className="bg-white/5 px-3 py-1 rounded-full text-[10px] text-white/40 font-mono tracking-wider">
+          WHATSAPP_SIMULATION_v2
         </div>
       </div>
 
-      {/* AI Typing / Response */}
-      {step >= 2 && (
-        <div className={`transition-all duration-500 transform ${step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
-          <div className="bg-[#2D3C59] p-6 rounded-2xl rounded-tr-none text-white ml-auto max-w-[90%] shadow-lg">
-            <p className="text-xs text-[#6e85b1] mb-2 font-bold uppercase">SOP Expert Menjawab:</p>
-            {step === 2 ? (
-              <div className="flex gap-1.5 py-1">
-                <span className="w-2 h-2 bg-white/40 rounded-full animate-bounce"></span>
-                <span className="w-2 h-2 bg-white/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-2 h-2 bg-white/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
-              </div>
-            ) : (
-              displayText
-            )}
+      <div className="space-y-6">
+        {step >= 1 && (
+          <div className="flex justify-end pr-2">
+            <div className="bg-[#2D3C59] text-white rounded-2xl rounded-tr-none p-3 px-4 max-w-[85%] shadow-lg transition-all animate-in slide-in-from-right-4 duration-500">
+              <p className="text-sm font-medium leading-relaxed">{step === 1 ? displayText : customerMessage}</p>
+              <span className="text-[10px] text-white/40 mt-1 block text-right">User • 12:45</span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+
+        {step === 2 && (
+          <div className="flex pl-2">
+            <div className="bg-white/10 rounded-2xl rounded-tl-none p-3 px-4 flex gap-1 items-center">
+              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce"></div>
+              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+            </div>
+          </div>
+        )}
+
+        {step >= 3 && (
+          <div className="flex pl-2">
+            <div className="bg-white/10 text-white rounded-2xl rounded-tl-none p-3 px-4 max-w-[85%] border border-white/5 shadow-inner transition-all animate-in slide-in-from-left-4 duration-500">
+              <p className="text-sm font-medium leading-relaxed">{step === 3 ? displayText : aiMessage}</p>
+              <span className="text-[10px] text-white/40 mt-1 block">Nusavite AI • 12:45</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
+
+const PartnerLogos = () => (
+  <div className="flex items-center gap-12 md:gap-24">
+    <div className="flex items-center gap-3">
+      <span className="text-white font-bold text-sm tracking-tight opacity-70">Midtrans</span>
+      <img
+        src="/midtrans-logoo.jpg"
+        alt="Midtrans"
+        className="h-6 md:h-8 object-contain"
+      />
+    </div>
+    <div className="flex items-center gap-4">
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
+        alt="Google Cloud"
+        className="h-6 md:h-8 object-contain"
+      />
+      <span className="text-white/60 font-bold text-sm tracking-tight">Google Cloud</span>
+    </div>
+    <div className="flex items-center gap-3">
+      <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-white fill-current">
+        <path d="M37.5273 0L75.0546 65H0L37.5273 0Z" fill="currentColor" />
+      </svg>
+      <span className="text-white font-bold text-sm tracking-tight opacity-90">Vercel</span>
+    </div>
+  </div>
+);
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -576,30 +618,29 @@ export default function LandingPage() {
             </a>
           </div>
           <div className="mt-24">
-            {/* Partnership Logos */}
-            <div className="flex flex-col items-center mb-16 px-4">
+            {/* Partnership Logos with Infinite Scroll */}
+            <div className="flex flex-col items-center mb-16 px-4 overflow-hidden">
               <p className="text-[10px] font-bold uppercase tracking-[0.2em] text-white/30 mb-8">Official Partners & Infrastructure</p>
-              <div className="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-40 grayscale hover:grayscale-0 transition-all duration-500">
-                <div className="flex items-center gap-3">
-                  <span className="text-white font-bold text-sm tracking-tight opacity-70">Midtrans</span>
-                  <img
-                    src="/midtrans-logoo.jpg"
-                    alt="Midtrans"
-                    className="h-6 md:h-8 object-contain brightness-0 invert"
-                  />
-                </div>
-                <img
-                  src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
-                  alt="Google Cloud"
-                  className="h-6 md:h-8 object-contain"
-                />
-                <div className="flex items-center gap-2">
-                  <svg viewBox="0 0 76 65" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-white/60 fill-current">
-                    <path d="M37.5273 0L75.0546 65H0L37.5273 0Z" fill="currentColor" />
-                  </svg>
-                  <span className="text-white font-bold text-sm tracking-tight opacity-70">Vercel Edge</span>
+
+              <div className="relative w-full overflow-hidden">
+                <div className="flex animate-marquee whitespace-nowrap w-max gap-12 md:gap-24 items-center">
+                  {/* Original Logos */}
+                  <PartnerLogos />
+                  {/* Duplicated Logos for Seamless Loop */}
+                  <PartnerLogos />
                 </div>
               </div>
+
+              <style dangerouslySetInnerHTML={{
+                __html: `
+                @keyframes marquee {
+                  0% { transform: translateX(0); }
+                  100% { transform: translateX(-50%); }
+                }
+                .animate-marquee {
+                  animation: marquee 30s linear infinite;
+                }
+              `}} />
             </div>
 
             <div className="pt-20 border-t border-white/10">
