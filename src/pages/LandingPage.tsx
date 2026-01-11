@@ -617,6 +617,10 @@ export default function LandingPage() {
                 <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
               </div>
 
+              <div className="text-neutral-500 text-xs font-bold tracking-widest uppercase mb-4">
+                MUHAMMAD ZAKY VAN GOBEL
+              </div>
+
               <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
                 &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved
               </div>
