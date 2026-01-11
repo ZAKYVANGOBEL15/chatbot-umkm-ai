@@ -602,27 +602,49 @@ export default function LandingPage() {
               </div>
             </div>
 
-            <div className="pt-12 border-t border-neutral-100">
-              <div className="flex flex-col items-center gap-4 mb-8">
-                <p className="text-neutral-500 text-sm font-medium">
-                  nusavite06@gmail.com • +62 895-4029-45495
-                </p>
-                <p className="text-neutral-400 text-xs text-center">
-                  Kotamobagu, Sulawesi Utara, Indonesia
-                </p>
+            <div className="pt-20 border-t border-neutral-100">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-12 text-left mb-16">
+                {/* Brand & Legal Name */}
+                <div className="md:col-span-2">
+                  <img src="/logo.png" alt="Logo" className="h-8 w-auto mb-6 opacity-80" />
+                  <div className="text-[#2D3C59] text-sm font-bold tracking-widest uppercase mb-2">
+                    MUHAMMAD ZAKY VAN GOBEL
+                  </div>
+                  <p className="text-neutral-400 text-sm leading-relaxed max-w-xs font-light">
+                    Solusi asisten AI pintar untuk mengotomatisasi SOP dan layanan operasional bisnis Anda 24/7.
+                  </p>
+                </div>
+
+                {/* Quick Links */}
+                <div>
+                  <h4 className="text-[#2D3C59] text-xs font-black uppercase tracking-[0.2em] mb-6">Navigasi</h4>
+                  <ul className="space-y-4 text-sm font-medium text-neutral-500">
+                    <li><a href="#how-it-works" className="hover:text-[#2D3C59] transition-colors">Cara Kerja</a></li>
+                    <li><a href="#features" className="hover:text-[#2D3C59] transition-colors">Fitur Utama</a></li>
+                    <li><a href="#pricing" className="hover:text-[#2D3C59] transition-colors">Harga Paket</a></li>
+                  </ul>
+                </div>
+
+                {/* Contact & Legal */}
+                <div>
+                  <h4 className="text-[#2D3C59] text-xs font-black uppercase tracking-[0.2em] mb-6">Hubungi Kami</h4>
+                  <ul className="space-y-4 text-sm font-medium text-neutral-500">
+                    <li className="break-all">nusavite06@gmail.com</li>
+                    <li>+62 895-4029-45495</li>
+                    <li className="text-neutral-400 font-light italic">Kotamobagu, Sulawesi Utara</li>
+                  </ul>
+                </div>
               </div>
 
-              <div className="flex justify-center gap-8 mb-8 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
-                <a href="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat & Ketentuan</a>
-                <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
-              </div>
+              <div className="pt-8 border-t border-neutral-50 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div className="flex gap-8 text-[10px] font-bold uppercase tracking-widest text-neutral-400">
+                  <a href="/terms" className="hover:text-[#2D3C59] transition-colors">Syarat & Ketentuan</a>
+                  <a href="/privacy" className="hover:text-[#2D3C59] transition-colors">Kebijakan Privasi</a>
+                </div>
 
-              <div className="text-neutral-500 text-xs font-bold tracking-widest uppercase mb-4">
-                MUHAMMAD ZAKY VAN GOBEL
-              </div>
-
-              <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
-                &copy; {new Date().getFullYear()} Nusavite.com - All Rights Reserved
+                <div className="text-neutral-300 text-[10px] font-black tracking-widest uppercase">
+                  &copy; {new Date().getFullYear()} Nusavite.com • All Rights Reserved
+                </div>
               </div>
             </div>
           </div>
