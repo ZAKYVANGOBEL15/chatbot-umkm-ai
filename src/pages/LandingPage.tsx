@@ -12,10 +12,8 @@ const ChatSimulation = () => {
     let timeout: NodeJS.Timeout;
 
     if (step === 0) {
-      // Small delay before typing starts
       timeout = setTimeout(() => setStep(1), 1000);
     } else if (step === 1) {
-      // Character by character typing for customer
       if (displayText.length < customerMessage.length) {
         timeout = setTimeout(() => {
           setDisplayText(customerMessage.slice(0, displayText.length + 1));
@@ -27,16 +25,13 @@ const ChatSimulation = () => {
         }, 1500);
       }
     } else if (step === 2) {
-      // Show AI "typing" for a bit
       timeout = setTimeout(() => setStep(3), 2000);
     } else if (step === 3) {
-      // Reveal AI message
       if (displayText.length < aiMessage.length) {
         timeout = setTimeout(() => {
           setDisplayText(aiMessage.slice(0, displayText.length + 1));
         }, 30);
       } else {
-        // Reset loop after long pause
         timeout = setTimeout(() => {
           setStep(0);
           setDisplayText('');
@@ -48,47 +43,34 @@ const ChatSimulation = () => {
   }, [step, displayText]);
 
   return (
-    <div className="bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 p-4 md:p-6 shadow-2xl relative overflow-hidden group">
-      <div className="flex justify-between items-center mb-6 border-b border-white/5 pb-4">
-        <div className="flex gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-red-500/50"></div>
-          <div className="w-3 h-3 rounded-full bg-yellow-500/50"></div>
-          <div className="w-3 h-3 rounded-full bg-green-500/50"></div>
-        </div>
-        <div className="bg-white/5 px-3 py-1 rounded-full text-[10px] text-white/40 font-mono tracking-wider">
-          WHATSAPP_SIMULATION_v2
+    <div className="space-y-6 font-sans">
+      {/* Customer Message */}
+      <div className={`transition-all duration-500 transform ${step >= 1 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+        <div className="bg-neutral-50 p-6 rounded-2xl rounded-tl-none text-neutral-800 border border-neutral-100 shadow-sm">
+          <p className="text-[10px] text-neutral-400 mb-2 font-bold uppercase tracking-widest">Karyawan Bertanya:</p>
+          <p className="text-sm font-medium leading-relaxed">
+            {step === 1 ? displayText : customerMessage}
+          </p>
         </div>
       </div>
 
-      <div className="space-y-6">
-        {step >= 1 && (
-          <div className="flex justify-end pr-2">
-            <div className="bg-[#2D3C59] text-white rounded-2xl rounded-tr-none p-3 px-4 max-w-[85%] shadow-lg transition-all animate-in slide-in-from-right-4 duration-500">
-              <p className="text-sm font-medium leading-relaxed">{step === 1 ? displayText : customerMessage}</p>
-              <span className="text-[10px] text-white/40 mt-1 block text-right">User • 12:45</span>
-            </div>
+      {/* AI Typing / Response */}
+      {step >= 2 && (
+        <div className={`transition-all duration-500 transform ${step >= 2 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}>
+          <div className="bg-[#2D3C59] p-6 rounded-2xl rounded-tr-none text-white ml-auto max-w-[90%] shadow-xl">
+            <p className="text-[10px] text-white/40 mb-2 font-bold uppercase tracking-widest">Nusavite AI Menjawab:</p>
+            {step === 2 ? (
+              <div className="flex gap-1.5 py-1">
+                <span className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce"></span>
+                <span className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                <span className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+              </div>
+            ) : (
+              <p className="text-sm font-medium leading-relaxed">{displayText}</p>
+            )}
           </div>
-        )}
-
-        {step === 2 && (
-          <div className="flex pl-2">
-            <div className="bg-white/10 rounded-2xl rounded-tl-none p-3 px-4 flex gap-1 items-center">
-              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce"></div>
-              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-              <div className="w-1.5 h-1.5 bg-white/40 rounded-full animate-bounce [animation-delay:0.4s]"></div>
-            </div>
-          </div>
-        )}
-
-        {step >= 3 && (
-          <div className="flex pl-2">
-            <div className="bg-white/10 text-white rounded-2xl rounded-tl-none p-3 px-4 max-w-[85%] border border-white/5 shadow-inner transition-all animate-in slide-in-from-left-4 duration-500">
-              <p className="text-sm font-medium leading-relaxed">{step === 3 ? displayText : aiMessage}</p>
-              <span className="text-[10px] text-white/40 mt-1 block">Nusavite AI • 12:45</span>
-            </div>
-          </div>
-        )}
-      </div>
+        </div>
+      )}
     </div>
   );
 };
