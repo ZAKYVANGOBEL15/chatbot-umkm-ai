@@ -196,7 +196,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 lg:pt-32 lg:pb-32 overflow-hidden isolate">
+      <section className="relative min-h-screen flex items-center overflow-hidden isolate">
         {/* Background Image with Premium Overlay */}
         <div className="absolute inset-0 -z-10">
           <img
@@ -215,13 +215,6 @@ export default function LandingPage() {
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
           <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-neutral-200 shadow-sm mb-6 hover:border-[#2D3C59]/30 transition-colors cursor-default">
-              <span className="relative flex h-1.5 w-1.5">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2D3C59] opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-[#2D3C59]"></span>
-              </span>
-              <span className="text-[10px] font-bold uppercase tracking-widest text-neutral-600">Smart Digital Solutions</span>
-            </div>
 
             <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 text-[#2D3C59] leading-[1.1]">
               SOP Assistant <br className="hidden md:block" />
