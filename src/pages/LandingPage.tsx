@@ -184,7 +184,18 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative pt-40 pb-20 lg:pt-32 lg:pb-32 overflow-hidden bg-gradient-to-b from-neutral-50/50 to-white">
+      <section className="relative pt-40 pb-20 lg:pt-32 lg:pb-32 overflow-hidden">
+        {/* Background Image with Premium Overlay */}
+        <div className="absolute inset-0 -z-10">
+          <img
+            src="/baground_hero.jpg"
+            alt="Hero Background"
+            className="w-full h-full object-cover opacity-30"
+          />
+          <div className="absolute inset-0 bg-gradient-to-b from-white/90 via-white/70 to-white"></div>
+          <div className="absolute inset-0 backdrop-blur-[1px]"></div>
+        </div>
+
         <div className="absolute top-0 inset-x-0 h-px bg-gradient-to-r from-transparent via-neutral-200 to-transparent"></div>
 
         {/* Decorative elements */}
