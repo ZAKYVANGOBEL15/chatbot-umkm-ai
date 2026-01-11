@@ -214,7 +214,7 @@ export default function LandingPage() {
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#2D3C59]/5 rounded-full blur-3xl -z-10 animate-pulse delay-1000"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center lg:text-left max-w-4xl mx-auto lg:mx-0">
+          <div className="text-center lg:text-left mx-auto lg:mx-0">
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 text-[#2D3C59] leading-[1.05]">
               SOP Assistant <br className="hidden md:block" />
