@@ -214,18 +214,18 @@ export default function LandingPage() {
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#2D3C59]/5 rounded-full blur-3xl -z-10 animate-pulse delay-1000"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center lg:text-left mx-auto lg:mx-0">
+          <div className="text-center max-w-4xl mx-auto">
 
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 text-[#2D3C59] leading-[1.05]">
               SOP Assistant <br className="hidden md:block" />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2D3C59] to-[#4a5f85]">Bisnis</span>
             </h1>
 
-            <p className="text-xl md:text-2xl lg:text-2xl text-neutral-500 mb-12 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light">
+            <p className="text-xl md:text-2xl lg:text-2xl text-neutral-500 mb-12 leading-relaxed max-w-2xl mx-auto font-light">
               Bantu <span className="text-[#2D3C59] font-medium">karyawan</span> bekerja lebih cepat dan efisien dengan asisten AI yang hafal seluruh <span className="text-[#2D3C59] font-medium">SOP & Prosedur</span> kantor Anda.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start items-center lg:items-start">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center items-center">
               <a
                 href="https://chatbot.nusavite.com/register"
                 className="group relative px-10 py-4 bg-[#2D3C59] text-white rounded-full font-bold text-lg transition-all shadow-xl shadow-[#2D3C59]/30 hover:shadow-[#2D3C59]/40 hover:-translate-y-1 overflow-hidden"
