@@ -103,10 +103,22 @@ const PartnerLogos = () => (
 
 export default function LandingPage() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
   return (
     <div className="min-h-screen bg-white text-neutral-900 selection:bg-[#2D3C59] selection:text-white font-sans overflow-x-hidden">
       {/* Navigation */}
-      <nav className="fixed w-full z-50 bg-white/70 backdrop-blur-lg border-b border-neutral-100 transition-all duration-300">
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${isScrolled
+        ? 'bg-white/90 backdrop-blur-lg border-b border-neutral-100 shadow-sm'
+        : 'bg-transparent'
+        }`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center h-24">
             {/* Left: Logo */}
@@ -202,7 +214,7 @@ export default function LandingPage() {
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#2D3C59]/5 rounded-full blur-3xl -z-10 animate-pulse delay-1000"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="max-w-4xl">
+          <div className="text-center max-w-4xl mx-auto">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white border border-neutral-200 shadow-sm mb-6 hover:border-[#2D3C59]/30 transition-colors cursor-default">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#2D3C59] opacity-75"></span>
@@ -216,11 +228,11 @@ export default function LandingPage() {
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2D3C59] to-[#4a5f85]">Bisnis</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-neutral-500 mb-10 leading-relaxed max-w-2xl font-light">
+            <p className="text-lg md:text-xl text-neutral-500 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
               Bantu <span className="text-[#2D3C59] font-medium">karyawan</span> bekerja lebih cepat dan efisien dengan asisten AI yang hafal seluruh <span className="text-[#2D3C59] font-medium">SOP & Prosedur</span> kantor Anda.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 items-start">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
               <a
                 href="https://chatbot.nusavite.com/register"
                 className="group relative px-8 py-3.5 bg-[#2D3C59] text-white rounded-full font-bold text-base transition-all shadow-xl shadow-[#2D3C59]/30 hover:shadow-[#2D3C59]/40 hover:-translate-y-1 overflow-hidden"
@@ -236,7 +248,7 @@ export default function LandingPage() {
               </button>
             </div>
 
-            <div className="mt-12 flex items-center gap-8 text-neutral-400 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
+            <div className="mt-12 flex items-center justify-center gap-8 text-neutral-400 opacity-60 grayscale hover:grayscale-0 transition-all duration-500">
               {/* Placeholders for logos if needed, currently empty for cleaner look or could add icons */}
               <p className="text-sm font-medium tracking-widest uppercase">Trusted by Modern Businesses</p>
             </div>
