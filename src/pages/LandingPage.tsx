@@ -196,7 +196,7 @@ export default function LandingPage() {
       </nav>
 
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center overflow-hidden isolate">
+      <section className="relative min-h-screen flex items-center pt-20 overflow-hidden isolate">
         {/* Background Image with Premium Overlay */}
         <div className="absolute inset-0 -z-10">
           <img
