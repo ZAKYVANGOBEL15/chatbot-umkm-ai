@@ -214,28 +214,28 @@ export default function LandingPage() {
         <div className="absolute bottom-10 right-10 w-96 h-96 bg-[#2D3C59]/5 rounded-full blur-3xl -z-10 animate-pulse delay-1000"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-          <div className="text-center max-w-4xl mx-auto">
+          <div className="text-center lg:text-left max-w-4xl mx-auto lg:mx-0">
 
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold tracking-tighter mb-6 text-[#2D3C59] leading-[1.1]">
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-8 text-[#2D3C59] leading-[1.05]">
               SOP Assistant <br className="hidden md:block" />
               <span className="bg-clip-text text-transparent bg-gradient-to-r from-[#2D3C59] to-[#4a5f85]">Bisnis</span>
             </h1>
 
-            <p className="text-lg md:text-xl text-neutral-500 mb-10 leading-relaxed max-w-2xl mx-auto font-light">
+            <p className="text-xl md:text-2xl lg:text-2xl text-neutral-500 mb-12 leading-relaxed max-w-2xl mx-auto lg:mx-0 font-light">
               Bantu <span className="text-[#2D3C59] font-medium">karyawan</span> bekerja lebih cepat dan efisien dengan asisten AI yang hafal seluruh <span className="text-[#2D3C59] font-medium">SOP & Prosedur</span> kantor Anda.
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+            <div className="flex flex-col sm:flex-row gap-5 justify-center lg:justify-start items-center lg:items-start">
               <a
                 href="https://chatbot.nusavite.com/register"
-                className="group relative px-8 py-3.5 bg-[#2D3C59] text-white rounded-full font-bold text-base transition-all shadow-xl shadow-[#2D3C59]/30 hover:shadow-[#2D3C59]/40 hover:-translate-y-1 overflow-hidden"
+                className="group relative px-10 py-4 bg-[#2D3C59] text-white rounded-full font-bold text-lg transition-all shadow-xl shadow-[#2D3C59]/30 hover:shadow-[#2D3C59]/40 hover:-translate-y-1 overflow-hidden"
               >
                 <span className="relative z-10">Mulai Trial Gratis 5 Hari</span>
                 <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
               </a>
               <button
                 onClick={() => document.getElementById('ai-chatbot')?.scrollIntoView({ behavior: 'smooth' })}
-                className="px-8 py-3.5 bg-white text-[#2D3C59] rounded-full font-bold text-base transition-all border border-neutral-200 hover:border-[#2D3C59] hover:bg-neutral-50"
+                className="px-10 py-4 bg-white text-[#2D3C59] rounded-full font-bold text-lg transition-all border border-neutral-200 hover:border-[#2D3C59] hover:bg-neutral-50"
               >
                 Pelajari Cara Kerjanya
               </button>
