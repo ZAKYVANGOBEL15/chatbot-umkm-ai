@@ -81,21 +81,21 @@ const PartnerLogos = () => (
       <img
         src="/Midtrans_logo.png"
         alt="Midtrans"
-        className="h-10 md:h-12 object-contain"
+        className="h-14 md:h-16 object-contain"
       />
     </div>
     <div className="flex items-center">
       <img
         src="https://upload.wikimedia.org/wikipedia/commons/5/51/Google_Cloud_logo.svg"
         alt="Google Cloud"
-        className="h-8 md:h-10 object-contain"
+        className="h-10 md:h-12 object-contain"
       />
     </div>
     <div className="flex items-center">
       <img
         src="/vercel_logo.png"
         alt="Vercel"
-        className="h-8 md:h-10 object-contain"
+        className="h-10 md:h-12 object-contain"
       />
     </div>
   </div>
