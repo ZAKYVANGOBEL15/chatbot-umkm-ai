@@ -54,7 +54,7 @@ export default function Register() {
             {/* Left Side: Brand Identity - Visible as Top on Mobile, Left on Desktop */}
             <div className="lg:w-[45%] flex flex-col items-center justify-center p-12 bg-neutral-50 border-b lg:border-b-0 lg:border-r border-neutral-100 relative overflow-hidden">
                 {/* Background Image */}
-                <div className="absolute inset-0 w-full h-full">
+                <div className="absolute inset-0 w-full h-full hidden lg:block">
                     <img
                         src="/baground_login_daftar.jpg"
                         alt="Background"
