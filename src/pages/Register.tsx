@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import { ArrowLeft } from 'lucide-react';
 import { signInWithPopup } from 'firebase/auth';
 import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { auth, db, googleProvider } from '../lib/firebase';
@@ -50,13 +49,7 @@ export default function Register() {
         <div className="min-h-screen flex flex-col lg:flex-row bg-white text-neutral-900 font-sans selection:bg-black selection:text-white">
 
             {/* Back Button */}
-            <a
-                href="https://www.nusavite.com"
-                className="fixed top-6 left-6 z-50 p-3 bg-white border border-neutral-100 rounded-2xl shadow-lg hover:shadow-xl transition-all hover:-translate-x-1 group flex items-center gap-2"
-            >
-                <ArrowLeft size={20} className="text-[#2D3C59] group-hover:scale-110 transition-transform" />
-                <span className="text-xs font-bold text-[#2D3C59] pr-1">Beranda</span>
-            </a>
+
 
             {/* Left Side: Brand Identity - Visible as Top on Mobile, Left on Desktop */}
             <div className="lg:w-[45%] flex flex-col items-center justify-center p-12 bg-neutral-50 border-b lg:border-b-0 lg:border-r border-neutral-100 relative overflow-hidden">
