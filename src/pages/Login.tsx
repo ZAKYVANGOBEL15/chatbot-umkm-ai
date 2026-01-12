@@ -94,7 +94,7 @@ export default function Login() {
                 <div className="relative z-10 flex flex-col items-center gap-8">
                     <div className="text-center">
                         <div className="h-2 w-20 bg-[#2D3C59] mx-auto rounded-full opacity-0 mb-8" />
-                        <p className="hidden lg:block text-white font-bold tracking-[0.2em] text-sm uppercase drop-shadow-md">Smart Business AI</p>
+
                     </div>
                 </div>
             </div>
