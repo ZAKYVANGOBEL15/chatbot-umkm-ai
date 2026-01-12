@@ -8,7 +8,7 @@ import { User, ShieldCheck, Users, ArrowLeft, Lock, RefreshCw } from 'lucide-rea
 export default function RoleSelector() {
     const [user, setUser] = useState(auth.currentUser);
     const [loading, setLoading] = useState(true);
-    const [step, setStep] = useState<'select' | 'pin' | 'reset'>('select');
+    const [step, setStep] = useState<'pin' | 'reset'>('pin');
     const [pin, setPin] = useState('');
     const [newPin, setNewPin] = useState('');
     const [correctPin, setCorrectPin] = useState('');
@@ -39,15 +39,6 @@ export default function RoleSelector() {
         });
         return () => unsubscribe();
     }, [navigate]);
-
-    const handleSelectRole = (role: 'admin' | 'karyawan') => {
-        if (role === 'karyawan') {
-            sessionStorage.setItem(`userRole_${user?.uid}`, 'karyawan');
-            navigate('/dashboard/chat');
-        } else {
-            setStep('pin');
-        }
-    };
 
     const handleVerifyPin = (e: React.FormEvent) => {
         e.preventDefault();
@@ -106,50 +97,13 @@ export default function RoleSelector() {
             <div className="w-full max-w-md">
                 <div className="text-center mb-10">
                     <img src="/NV.png" alt="Nusavite" className="h-16 mx-auto mb-4" />
-                    <h2 className="text-3xl font-bold text-[#061E29]">Pilih Akses</h2>
-                    <p className="text-neutral-500 mt-2">Pilih bagaimana Anda ingin masuk ke sistem hari ini</p>
+                    <h2 className="text-3xl font-bold text-[#061E29]">Verifikasi Admin</h2>
+                    <p className="text-neutral-500 mt-2">Login Google hanya untuk akses Admin</p>
                 </div>
 
                 <div className="bg-white p-8 rounded-3xl shadow-xl shadow-neutral-200/50 border border-neutral-100">
-                    {step === 'select' ? (
-                        <div className="space-y-4">
-                            {/* Admin Option */}
-                            <button
-                                onClick={() => handleSelectRole('admin')}
-                                className="w-full p-6 border-2 border-neutral-100 rounded-2xl flex items-center gap-6 hover:border-[#061E29] hover:bg-neutral-50 transition-all group text-left"
-                            >
-                                <div className="p-4 bg-neutral-100 rounded-xl group-hover:bg-[#061E29] group-hover:text-white transition-colors">
-                                    <ShieldCheck size={32} />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl text-[#061E29]">Pemilik / Admin</h3>
-                                    <p className="text-sm text-neutral-500">Akses penuh ke semua pengaturan & data Bisnis.</p>
-                                </div>
-                            </button>
-
-                            {/* Karyawan Option */}
-                            <button
-                                onClick={() => handleSelectRole('karyawan')}
-                                className="w-full p-6 border-2 border-neutral-100 rounded-2xl flex items-center gap-6 hover:border-[#061E29] hover:bg-neutral-50 transition-all group text-left"
-                            >
-                                <div className="p-4 bg-neutral-100 rounded-xl group-hover:bg-[#061E29] group-hover:text-white transition-colors">
-                                    <Users size={32} />
-                                </div>
-                                <div className="flex-1">
-                                    <h3 className="font-bold text-xl text-[#061E29]">Staf / Karyawan</h3>
-                                    <p className="text-sm text-neutral-500">Akses terbatas hanya untuk bantuan SOP (Chat AI).</p>
-                                </div>
-                            </button>
-                        </div>
-                    ) : step === 'pin' ? (
+                    {step === 'pin' ? (
                         <div className="space-y-6">
-                            <button
-                                onClick={() => setStep('select')}
-                                className="flex items-center gap-2 text-sm font-bold text-neutral-400 hover:text-[#061E29] transition-colors mb-4"
-                            >
-                                <ArrowLeft size={16} /> Kembali
-                            </button>
-
                             <div className="text-center">
                                 <div className="w-16 h-16 bg-blue-50 text-[#061E29] rounded-full flex items-center justify-center mx-auto mb-4">
                                     <Lock size={32} />
