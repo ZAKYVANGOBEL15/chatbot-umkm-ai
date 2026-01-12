@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { auth, db } from '../lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { onAuthStateChanged, GoogleAuthProvider, reauthenticateWithPopup } from 'firebase/auth';
-import { User, ShieldCheck, Users, ArrowLeft, Lock, RefreshCw } from 'lucide-react';
+import { Lock, RefreshCw } from 'lucide-react';
 
 export default function RoleSelector() {
     const [user, setUser] = useState(auth.currentUser);
@@ -190,7 +190,7 @@ export default function RoleSelector() {
                 </div>
 
                 <div className="mt-8 text-center text-xs text-neutral-400 flex items-center justify-center gap-2">
-                    <User size={12} /> Terhubung sebagai: <span className="font-bold text-neutral-600">{user?.email}</span>
+                    Terhubung sebagai: <span className="font-bold text-neutral-600">{user?.email}</span>
                 </div>
             </div>
         </div>
