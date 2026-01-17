@@ -3,7 +3,7 @@ import type { User } from 'firebase/auth';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { db } from '../lib/firebase';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { AlertCircle, Clock, Zap, MessageSquare, ShieldCheck, Info, Save, Code, Copy, Check, Mail } from 'lucide-react';
+import { AlertCircle, Clock, Zap, MessageSquare, ShieldCheck, Info, Save, Mail } from 'lucide-react';
 import { clsx } from 'clsx';
 
 interface UserProfile {
@@ -36,7 +36,7 @@ export default function Settings() {
     const [waPhoneNumberId, setWaPhoneNumberId] = useState('');
     const [waBusinessAccountId, setWaBusinessAccountId] = useState('');
     const [waAccessToken, setWaAccessToken] = useState('');
-    const [copied, setCopied] = useState(false);
+
 
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -250,8 +250,6 @@ export default function Settings() {
                     </div>
                 </div>
             </div>
-
-
 
 
             {/* Mobile App Connection Section */}
