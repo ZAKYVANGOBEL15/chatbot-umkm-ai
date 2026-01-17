@@ -1,6 +1,6 @@
 import React from 'react';
 import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
-import { LayoutDashboard, MessageSquare, Box, Settings, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, MessageSquare, Box, Settings, LogOut, Menu, X, Users, FileText } from 'lucide-react';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 
@@ -45,6 +45,8 @@ export default function Layout() {
 
     const allMenuItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/dashboard', roles: ['admin'] },
+        { icon: Users, label: 'Whitelist Karyawan', path: '/dashboard/whitelist', roles: ['admin'] },
+        { icon: FileText, label: 'Log Aktivitas', path: '/dashboard/logs', roles: ['admin'] },
         { icon: MessageSquare, label: 'Chat SOP Expert', path: '/dashboard/chat', roles: ['admin', 'karyawan'] },
         { icon: Box, label: 'SOP & Knowledge', path: '/dashboard/knowledge', roles: ['admin'] },
         { icon: Settings, label: 'Pengaturan', path: '/dashboard/settings', roles: ['admin'] },

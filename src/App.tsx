@@ -10,6 +10,9 @@ import RoleSelector from './pages/RoleSelector';
 import KnowledgeBase from './pages/KnowledgeBase';
 import ChatSimulator from './pages/ChatSimulator';
 import Settings from './pages/Settings';
+
+import WhitelistManager from './pages/WhitelistManager';
+import ActivityLogs from './pages/ActivityLogs';
 import Terms from './pages/Terms';
 import Privacy from './pages/Privacy';
 import LandingPage from './pages/LandingPage';
@@ -36,6 +39,8 @@ function App() {
             <Route path="chat" element={<ChatSimulator />} />
             <Route path="knowledge" element={<KnowledgeBase />} />
             <Route path="settings" element={<Settings />} />
+            <Route path="whitelist" element={<WhitelistManager />} />
+            <Route path="logs" element={<ActivityLogs />} />
           </Route>
         </Route>
 
