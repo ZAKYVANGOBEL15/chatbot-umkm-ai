@@ -41,13 +41,24 @@ export default function ActivityLogs() {
     };
 
     const handleDeleteLog = async (logId: string) => {
-        if (!currentUser || !window.confirm('Hapus log ini?')) return;
+        if (!currentUser || isDeleting) return;
+
+        const confirmDelete = window.confirm('Hapus log ini secara permanen?');
+        if (!confirmDelete) return;
+
+        setIsDeleting(true);
         try {
-            await deleteDoc(doc(db, 'users', currentUser.uid, 'activity_logs', logId));
-            setLogs(logs.filter(l => l.id !== logId));
-        } catch (error) {
+            const logRef = doc(db, 'users', currentUser.uid, 'activity_logs', logId);
+            await deleteDoc(logRef);
+
+            // Use functional update to ensure we use latest state
+            setLogs(prevLogs => prevLogs.filter(l => l.id !== logId));
+            console.log(`Log ${logId} deleted successfully`);
+        } catch (error: any) {
             console.error("Error deleting log:", error);
-            alert("Gagal menghapus log.");
+            alert(`Gagal menghapus log: ${error.message}`);
+        } finally {
+            setIsDeleting(false);
         }
     };
 
