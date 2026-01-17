@@ -252,57 +252,7 @@ export default function Settings() {
             </div>
 
 
-            {/* Widget Integration Section */}
-            <div className="p-8 lg:p-12 bg-[#061E29] text-white rounded-3xl border border-neutral-800 shadow-2xl relative overflow-hidden">
-                <div className="relative z-10">
-                    <div className="flex items-center gap-3 mb-6">
-                        <div className="p-2 bg-white/10 rounded-lg">
-                            <Code size={20} className="text-emerald-400" />
-                        </div>
-                        <h3 className="text-xl font-bold">Integrasi Website Lain</h3>
-                    </div>
 
-                    <p className="text-neutral-400 mb-8 max-w-2xl text-sm lg:text-base">
-                        Gunakan kode di bawah ini untuk memasang chatbot AI ini di website Vercel kamu yang lain.
-                        Pastikan kamu sudah mengisi data di Knowledge Base agar AI bisa menjawab dengan benar.
-                    </p>
-
-                    <div className="bg-black/50 border border-white/10 rounded-2xl p-6 relative group">
-                        <pre className="text-xs lg:text-sm text-emerald-400 overflow-x-auto font-mono leading-relaxed whitespace-pre-wrap">
-                            {`<script 
-  src="${window.location.origin}/widget.js" 
-  data-userid="${user?.uid || 'YOUR_USER_ID'}"
-  async>
-</script>`}
-                        </pre>
-                        <button
-                            onClick={() => {
-                                const code = `<script \n  src="${window.location.origin}/widget.js" \n  data-userid="${user?.uid}"\n  async>\n</script>`;
-                                navigator.clipboard.writeText(code);
-                                setCopied(true);
-                                setTimeout(() => setCopied(false), 2000);
-                            }}
-                            className="absolute top-4 right-4 p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all border border-white/10 flex items-center gap-2 group"
-                        >
-                            {copied ? <Check size={16} className="text-emerald-400" /> : <Copy size={16} />}
-                            <span className="text-[10px] font-bold uppercase tracking-wider">{copied ? 'Tersalin!' : 'Salin Kode'}</span>
-                        </button>
-                    </div>
-
-                    <div className="mt-8 flex flex-wrap gap-4 text-xs text-neutral-500 font-medium">
-                        <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                            Otomatis terhubung ke Knowledge Base
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-1.5 h-1.5 rounded-full bg-emerald-500"></div>
-                            Mendukung semua website Vercel/HTML
-                        </div>
-                    </div>
-                </div>
-                {/* Background Glow */}
-                <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full"></div>
-            </div>
 
             {/* Mobile App Connection Section */}
             <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
