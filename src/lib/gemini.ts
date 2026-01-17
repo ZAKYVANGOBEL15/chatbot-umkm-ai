@@ -79,32 +79,7 @@ Ingat: Anda adalah Sopia, Anda membantu karyawan agar pelayanan ke pasien menjad
  * Post-process AI response to fix common formatting issues and handle LEAD_DATA securely
  */
 function formatAIResponse(text: string): string {
-    // Fix compressed data fields - ensure each field is on a new line
-    // Pattern: "Field1: Field2: Field3:" -> "Field1:\nField2:\nField3:"
-
-    // Common medical data fields
-    const medicalFields = [
-        'Nama Lengkap:',
-        'NIK:',
-        'Tanggal Lahir',
-        'Alamat Lengkap:',
-        'Nomor WhatsApp:',
-        'Nomor Telepon:'
-    ];
-
     let formatted = text;
-
-    // Fix pattern where fields are on same line
-    // Example: "Nama Lengkap: NIK: Tanggal Lahir:" -> "Nama Lengkap:\nNIK:\nTanggal Lahir:"
-    for (let i = 0; i < medicalFields.length; i++) {
-        for (let j = 0; j < medicalFields.length; j++) {
-            if (i !== j) {
-                // Replace "Field1: Field2:" with "Field1:\n\nField2:"
-                const pattern = new RegExp(`(${medicalFields[i].replace(/[()]/g, '\\$&')})\\s+(${medicalFields[j].replace(/[()]/g, '\\$&')})`, 'g');
-                formatted = formatted.replace(pattern, '$1\n\n$2');
-            }
-        }
-    }
 
     // Handle LEAD_DATA securely by removing it from the response to the user
     // The LEAD_DATA should be processed separately by the application, not shown to users
