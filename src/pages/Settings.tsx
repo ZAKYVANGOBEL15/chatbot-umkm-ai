@@ -304,6 +304,52 @@ export default function Settings() {
                 <div className="absolute -right-20 -top-20 w-64 h-64 bg-emerald-500/10 blur-[100px] rounded-full"></div>
             </div>
 
+            {/* Mobile App Connection Section */}
+            <div className="bg-white rounded-2xl shadow-sm border border-neutral-200 overflow-hidden">
+                <div className="p-6 border-b border-neutral-100 bg-neutral-50/50">
+                    <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-100 text-blue-600 rounded-lg">
+                            <Zap size={20} />
+                        </div>
+                        <div>
+                            <h3 className="text-lg font-bold text-[#061E29]">Koneksi Aplikasi Mobile Sopia</h3>
+                            <p className="text-xs text-neutral-500">Hubungkan karyawan ke bisnis Anda via Aplikasi Mobile.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="p-8 flex flex-col md:flex-row items-center gap-8">
+                    <div className="bg-white p-4 rounded-2xl shadow-lg border border-neutral-100">
+                        <img
+                            src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${user?.uid}`}
+                            alt="QR Code Sopia"
+                            className="w-48 h-48"
+                        />
+                    </div>
+                    <div className="flex-1 space-y-4 text-center md:text-left">
+                        <h4 className="font-bold text-[#061E29] text-lg">Setup Satu Kali (Scan & Go)</h4>
+                        <p className="text-sm text-neutral-500 leading-relaxed">
+                            Tunjukkan QR Code ini kepada karyawan Anda saat pertama kali mereka membuka aplikasi <b>Sopia</b> di HP.
+                            Scan QR ini akan otomatis menghubungkan HP mereka ke sistem SOP perusahaan Anda.
+                        </p>
+                        <ul className="text-xs text-neutral-400 space-y-2">
+                            <li className="flex items-center gap-2 justify-center md:justify-start">
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                Aman & Terenkripsi
+                            </li>
+                            <li className="flex items-center gap-2 justify-center md:justify-start">
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                Tidak perlu input ID manual
+                            </li>
+                            <li className="flex items-center gap-2 justify-center md:justify-start">
+                                <div className="w-1.5 h-1.5 rounded-full bg-blue-500"></div>
+                                Bisa digunakan oleh banyak karyawan sekaligus
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
             <div className="bg-[#061E29] text-white rounded-2xl p-8 text-center shadow-xl shadow-neutral-200">
                 <h3 className="text-xl font-bold mb-2">Butuh Bantuan Teknis?</h3>
                 <p className="text-neutral-400 mb-6 max-w-md mx-auto">
