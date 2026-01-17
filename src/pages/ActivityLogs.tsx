@@ -133,7 +133,7 @@ export default function ActivityLogs() {
 
                                 <button
                                     onClick={() => handleDeleteLog(log.id)}
-                                    className="md:absolute md:top-2 md:right-2 p-2 text-neutral-300 hover:text-red-500 md:opacity-0 md:group-hover:opacity-100 transition-all"
+                                    className="p-2 text-neutral-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all z-10"
                                     title="Hapus Log"
                                 >
                                     <Trash2 size={14} />
