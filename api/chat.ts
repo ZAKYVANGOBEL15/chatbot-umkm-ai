@@ -16,13 +16,43 @@ export default async function handler(req: any, res: any) {
     res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT');
     res.setHeader('Access-Control-Allow-Headers', 'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, X-Firebase-AppCheck');
 
-    if (req.method === 'OPTIONS') {
-        return res.status(200).end();
-    }
-
     if (req.method !== 'POST') {
         return res.status(405).json({ error: 'Method Not Allowed' });
     }
+
+    // --- RATE LIMITING (THROTTLING) ---
+    // Simple in-memory storage for rate limiting. 
+    // Note: This resets on Vercel function cold starts, but provides basic protection.
+    const now = Date.now();
+    const windowMs = 60 * 1000; // 1 minute
+    const maxRequests = 10;
+    const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'unknown';
+
+    // Globally defined outside the handler would be better but Vercel functions are stateless-ish.
+    // However, global scope is shared across invocations in the same instance.
+    if (!(global as any).rateLimits) {
+        (global as any).rateLimits = new Map();
+    }
+    const rateLimits = (global as any).rateLimits;
+
+    const userRate = rateLimits.get(ip) || { count: 0, resetTime: now + windowMs };
+
+    if (now > userRate.resetTime) {
+        userRate.count = 1;
+        userRate.resetTime = now + windowMs;
+    } else {
+        userRate.count++;
+    }
+
+    rateLimits.set(ip, userRate);
+
+    if (userRate.count > maxRequests) {
+        return res.status(429).json({
+            error: 'Too Many Requests',
+            message: 'Waduh, pelan-pelan Bro! Sopia lagi narik napas dulu. Coba lagi dalam 1 menit ya.'
+        });
+    }
+    // ----------------------------------
 
     try {
         const { message, history, userId } = req.body || {};
