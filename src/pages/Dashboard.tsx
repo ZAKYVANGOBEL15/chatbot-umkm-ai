@@ -49,20 +49,7 @@ export default function Dashboard() {
                 setUserName(data.businessName || '');
 
                 // RBAC: Read role from Session Storage
-                const isTester = user.email === 'tester.nusavite@gmail.com';
-                let sessionRole = sessionStorage.getItem(`userRole_${user.uid}`);
-
-                if (isTester && !sessionRole) {
-                    sessionRole = 'admin';
-                    sessionStorage.setItem(`userRole_${user.uid}`, 'admin');
-                }
-
-                if (sessionRole === 'karyawan') {
-                    window.location.href = '/dashboard/chat';
-                    return;
-                }
-
-                const status = isTester ? 'active' : (data.subscriptionStatus || 'trial');
+                const status = data.subscriptionStatus || 'trial';
                 setSubscriptionStatus(status);
 
                 if (status === 'trial' && data.trialExpiresAt) {

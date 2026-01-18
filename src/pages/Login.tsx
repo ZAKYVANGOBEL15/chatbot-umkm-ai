@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { signInWithPopup } from 'firebase/auth';
 import { auth, db, googleProvider } from '../lib/firebase';
-import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc } from 'firebase/firestore';
 import { useNavigate, Link } from 'react-router-dom';
 import { getFriendlyErrorMessage } from '../lib/auth-errors';
 
@@ -29,37 +29,20 @@ export default function Login() {
                 await setDoc(docRef, {
                     name: user.displayName || 'User',
                     email: user.email,
-                    businessName: user.email === 'tester.nusavite@gmail.com' ? 'Nusavite Tester' : '',
-                    businessType: user.email === 'tester.nusavite@gmail.com' ? 'IT' : '',
-                    adminPin: user.email === 'tester.nusavite@gmail.com' ? '123456' : '',
-                    onboardingCompleted: user.email === 'tester.nusavite@gmail.com' ? true : false,
+                    businessName: '',
+                    businessType: '',
+                    adminPin: '',
+                    onboardingCompleted: false,
                     createdAt: now.toISOString(),
                     trialExpiresAt: trialExpiresAt.toISOString(),
-                    subscriptionStatus: user.email === 'tester.nusavite@gmail.com' ? 'active' : 'trial',
-                    subscriptionPlan: user.email === 'tester.nusavite@gmail.com' ? 'pro' : 'basic'
+                    subscriptionStatus: 'trial',
+                    subscriptionPlan: 'basic'
                 });
 
-                if (user.email === 'tester.nusavite@gmail.com') {
-                    navigate('/dashboard');
-                } else {
-                    navigate('/onboarding');
-                }
+                navigate('/onboarding');
             } else {
                 const userData = docSnap.data();
-                if (user.email === 'tester.nusavite@gmail.com') {
-                    // Force update tester data if it exists but is incomplete/trial
-                    if (userData.subscriptionStatus !== 'active' || !userData.businessName || !userData.onboardingCompleted) {
-                        await updateDoc(docRef, {
-                            businessName: 'Nusavite Tester',
-                            businessType: 'IT',
-                            adminPin: '123456',
-                            onboardingCompleted: true,
-                            subscriptionStatus: 'active',
-                            subscriptionPlan: 'pro'
-                        });
-                    }
-                    navigate('/dashboard');
-                } else if (!userData.onboardingCompleted || !userData.businessName || !userData.businessType) {
+                if (!userData.onboardingCompleted || !userData.businessName || !userData.businessType) {
                     navigate('/onboarding');
                 } else {
                     navigate('/role-selection');
